@@ -244,10 +244,11 @@ rule motus_run:
     output:
         report=output_dirs_dict['motus'] + "/motus/{sample}.motus",
         done=output_dirs_dict['motus'] + "/motus/{sample}.profile.done"
+    threads: num_threads
     conda:
         "envs/motus.yml"
     shell:
-        "motus profile -db {motus_db_path_local} -f {input.r1} -r {input.r2} -o {output.report} && touch {output.done}"
+        "motus profile -t {threads} -db {motus_db_path_local} -f {input.r1} -r {input.r2} -o {output.report} && touch {output.done}"
 
 rule motus_profile_to_condensed:
     input:
@@ -283,12 +284,13 @@ rule kraken_run:
         copy_braken_data_done=output_dirs_dict['kracken'] + "/kraken/data/done"
     benchmark:
         benchmark_dir + "/kraken/{sample}-"+str(num_threads)+"threads.benchmark"
+    threads: num_threads
     output:
         report=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken",
         done=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken.done"
     shell:
         "export PATH={kracken2_install}:$PATH && " \
-        "kraken2 --db {input.db} --threads 1 --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} && touch {output.done}"
+        "kraken2 --db {input.db} --threads {threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} && touch {output.done}"
 
 rule braken_run:
     input:
@@ -366,6 +368,7 @@ rule sourmash_run:
         done=output_dirs_dict['sourmash'] + "/sourmash/data/done"
     benchmark:
         benchmark_dir + "/sourmash/{sample}-"+str(num_threads)+"threads.benchmark"
+    threads: num_threads
     output:
         report=output_dirs_dict['sourmash'] + "/sourmash/{sample}.gather_gtdbrs207_reps.with-lineages.csv",
         done=output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile.done"
@@ -375,6 +378,7 @@ rule sourmash_run:
         output_dir = output_dirs_dict['sourmash'],
         sourmash_prefix = output_dirs_dict['sourmash'] + "/sourmash/{wildcards.sample}"
     shell:
+        # Sourmash does not seem to have a --threads option
         # sourmash tax annotate creates a file with-lineages in the CWD, so we need to cd into the output dir before running it
         "sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge {params.sourmash_prefix} -o {params.sourmash_prefix}.sig {input.r1} {input.r2} && echo 'running gather..' && sourmash gather {params.sourmash_prefix}.sig {input.db2} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv && echo 'running tax ..' && cd {params.output_dir}/sourmash && sourmash tax annotate -g {wildcards.sample}.gather_gtdbrs207_reps.csv -t ../../{input.db1} && cd - && touch {output.done}"
 
