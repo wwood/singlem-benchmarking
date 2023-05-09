@@ -2,5 +2,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - cami-opal==v1.0.11
+  - cami-opal==1.0.11
     

@@ -1,0 +1,5 @@
+.snakemake/
+benchmarks_115/
+env/
+local_reads/
+output_115_*
