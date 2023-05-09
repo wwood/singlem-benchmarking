@@ -15,10 +15,14 @@ benchmark_dir = 'benchmarks'
 
 datasets = extern.run('ls ~/m/msingle/mess/115_camisim_ish_benchmarking/simulated_reads/*.1.fq.gz').split()
 datasets = [os.path.basename(x).split('.')[0] for x in datasets]
+datasets = [datasets[0]]
 
 original_reads_dir = '/home/woodcrob/m/msingle/mess/115_camisim_ish_benchmarking/simulated_reads'
 fastq_dir = 'local_reads'
 truth_dir = '~/m/msingle/mess/115_camisim_ish_benchmarking/truths'
+
+
+singlem_git_base_directory = '~/m/msingle/mess/115_camisim_ish_benchmarking/singlem'
 
 
 ##################################################################### reference databases
@@ -62,22 +66,26 @@ rule copy_reads:
     shell:
         "pwd && mkdir -pv {fastq_dir} && cp -vL {params.in1} {params.in2} {fastq_dir}/"
 
+def get_condensed_to_biobox_extra_args(tool):
+    if tool == 'kracken':
+        return ' --no-fill'
+    else:
+        return ''
 
 rule condensed_to_biobox:
     input:
         profile = output_prefix + "{tool}/{tool}/{sample}.profile",
     params:
         truth = truth_dir + "/{sample}.condensed.biobox",
+        extra_args = lambda wildcards: get_condensed_to_biobox_extra_args(wildcards.tool)
     output:
         biobox = output_prefix + "{tool}/biobox/{sample}.biobox",
     conda:
         "singlem-dev"
-    params:
-        extra_args = lambda wildcards: ' --no-fill' if wildcards.tool == 'kracken' else ''
     shell:
         # Convert reports to singlem condense format
         # run opam against the truth
-        "~/git/singlem/extras/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
+        "{singlem_git_base_directory}/extras/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
         "--output-biobox {output.biobox} --template-biobox {params.truth} " \
         " > {output.biobox}"
 
@@ -128,7 +136,7 @@ rule singlem_run_to_profile:
     threads:
         num_threads
     shell:
-        "~/git/singlem/bin/singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} && touch {output.done}"
+        "{singlem_git_base_directory}/bin/singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} && touch {output.done}"
 
 # rule singlem_run_to_archive:
 #     input:
@@ -179,7 +187,7 @@ rule metaphlan_copy_db:
         # db2=directory(metaphlan_db_local2),
         done=output_dirs_dict['metaphlan'] + "/metaphlan/data/done"
     shell:
-        "mkdir -p {metaphlan_db_local1} && cp -rvL {metaphlan_db_original1} {metaphlan_db_local1} && touch {output.done}"
+        "cp -rvL {metaphlan_db_original1} {metaphlan_db_local1} && touch {output.done}"
 
 rule metaphlan_profile:
     input:
@@ -194,15 +202,17 @@ rule metaphlan_profile:
     conda:
         "envs/metaphlan.yml"
     threads: num_threads
+    params:
+        cat_reads = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.cat.fq.gz",
     shell:
         # Concatenate input files because metaphlan can't handle multiple input files
-        "rm -f {output.sgb_report} {wildcards.sample}.cat.fq.gz.bowtie2out.txt; cat {input.r1} {input.r2} > {wildcards.sample}.cat.fq.gz && metaphlan {wildcards.sample}.cat.fq.gz --nproc {threads} --input_type fastq --bowtie2db {metaphlan_db_local1} -o {output.sgb_report} && touch {output.done}"
+        "rm -f {output.sgb_report} {params.cat_reads}.bowtie2out.txt; cat {input.r1} {input.r2} > {params.cat_reads} && metaphlan {params.cat_reads} --nproc {threads} --input_type fastq --bowtie2db {metaphlan_db_local1} -o {output.sgb_report} && touch {output.done}"
 
 rule metaphlan_convert_profile_to_GTDB:
     input:
         report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.sgb_report"
     output:
-        gtdb_report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile",
+        gtdb_report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_profile",
         done=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_report.done"
     conda:
         "envs/metaphlan.yml"
@@ -211,7 +221,7 @@ rule metaphlan_convert_profile_to_GTDB:
 
 rule metaphlan_profile_to_condensed:
     input:
-        report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile"
+        report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_profile"
     output:
         profile = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile",
     conda:
@@ -298,23 +308,23 @@ rule braken_run:
         kraken_report=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken",
         kraken_done=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken.done"
     output:
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.S",
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.G",
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.F",
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.O",
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.C",
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.P",
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.D",
+        s=output_dirs_dict['kracken'] + "/braken/{sample}.report.S",
+        g=output_dirs_dict['kracken'] + "/braken/{sample}.report.G",
+        f=output_dirs_dict['kracken'] + "/braken/{sample}.report.F",
+        o=output_dirs_dict['kracken'] + "/braken/{sample}.report.O",
+        c=output_dirs_dict['kracken'] + "/braken/{sample}.report.C",
+        p=output_dirs_dict['kracken'] + "/braken/{sample}.report.P",
+        d=output_dirs_dict['kracken'] + "/braken/{sample}.report.D",
         done=output_dirs_dict['kracken'] + "/braken/{sample}.done"
     shell:
         "export PATH={bracken_install}:$PATH && " \
-        "bracken -d {input.db} -r 150 -l S -t 10 -o {output_dirs_dict['kracken']}/braken/{wildcards.sample}.report.S -i {input.kraken_report} && " \
-        "bracken -d {input.db} -r 150 -l G -t 10 -o {output_dirs_dict['kracken']}/braken/{wildcards.sample}.report.G -i {input.kraken_report} && " \
-        "bracken -d {input.db} -r 150 -l F -t 10 -o {output_dirs_dict['kracken']}/braken/{wildcards.sample}.report.F -i {input.kraken_report} && " \
-        "bracken -d {input.db} -r 150 -l O -t 10 -o {output_dirs_dict['kracken']}/braken/{wildcards.sample}.report.O -i {input.kraken_report} && " \
-        "bracken -d {input.db} -r 150 -l C -t 10 -o {output_dirs_dict['kracken']}/braken/{wildcards.sample}.report.C -i {input.kraken_report} && " \
-        "bracken -d {input.db} -r 150 -l P -t 10 -o {output_dirs_dict['kracken']}/braken/{wildcards.sample}.report.P -i {input.kraken_report} && " \
-        "bracken -d {input.db} -r 150 -l D -t 10 -o {output_dirs_dict['kracken']}/braken/{wildcards.sample}.report.D -i {input.kraken_report} && " \
+        "bracken -d {input.db} -r 150 -l S -t 10 -o {output.s} -i {input.kraken_report} && " \
+        "bracken -d {input.db} -r 150 -l G -t 10 -o {output.g} -i {input.kraken_report} && " \
+        "bracken -d {input.db} -r 150 -l F -t 10 -o {output.f} -i {input.kraken_report} && " \
+        "bracken -d {input.db} -r 150 -l O -t 10 -o {output.o} -i {input.kraken_report} && " \
+        "bracken -d {input.db} -r 150 -l C -t 10 -o {output.c} -i {input.kraken_report} && " \
+        "bracken -d {input.db} -r 150 -l P -t 10 -o {output.p} -i {input.kraken_report} && " \
+        "bracken -d {input.db} -r 150 -l D -t 10 -o {output.d} -i {input.kraken_report} && " \
         "touch {output.done}"
 
 
@@ -329,6 +339,8 @@ rule bracken_to_profile:
         output_dirs_dict['kracken'] + "/braken/{sample}.report.D",
         output_dirs_dict['kracken'] + "/braken/{sample}.done"
     params:
+        report_prefix = output_dirs_dict['kracken']+"/braken/{sample}.report",
+        biobox_dir = output_dirs_dict['kracken']+'/biobox',
         truth = truth_dir + "/{sample}.condensed.biobox",
     output:
         profile = output_dirs_dict['kracken'] + "/kracken/{sample}.profile",
@@ -336,8 +348,8 @@ rule bracken_to_profile:
         "singlem-dev"
     shell:
         # Convert reports to singlem condense format
-        "mkdir -p {output_dirs_dict['kracken']}/biobox && " \
-        "~/m/msingle/mess/105_novelty_testing/kraken_to_biobox.py --report-prefix {output_dirs_dict['kracken']}/braken/{wildcards.sample}.report " \
+        "mkdir -p {params.biobox_dir} && " \
+        "~/m/msingle/mess/105_novelty_testing/kraken_to_biobox.py --report-prefix {params.report_prefix} " \
         "--bacterial-taxonomy ~/m/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv " \
         "--archaeal-taxonomy ~/m/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv > {output.profile}"
 
@@ -376,11 +388,11 @@ rule sourmash_run:
         "envs/sourmash.yml"
     params:
         output_dir = output_dirs_dict['sourmash'],
-        sourmash_prefix = output_dirs_dict['sourmash'] + "/sourmash/{wildcards.sample}"
+        sourmash_prefix = lambda wildcards: output_dirs_dict['sourmash'] + "/sourmash/"+wildcards.sample
     shell:
         # Sourmash does not seem to have a --threads option
         # sourmash tax annotate creates a file with-lineages in the CWD, so we need to cd into the output dir before running it
-        "sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge {params.sourmash_prefix} -o {params.sourmash_prefix}.sig {input.r1} {input.r2} && echo 'running gather..' && sourmash gather {params.sourmash_prefix}.sig {input.db2} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv && echo 'running tax ..' && cd {params.output_dir}/sourmash && sourmash tax annotate -g {wildcards.sample}.gather_gtdbrs207_reps.csv -t ../../{input.db1} && cd - && touch {output.done}"
+        "sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge {params.sourmash_prefix} -o {params.sourmash_prefix}.sig {input.r1} {input.r2} && echo \"running gather..\" && sourmash gather {params.sourmash_prefix}.sig {input.db2} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv && echo \"running tax ..\" && cd {params.output_dir}/sourmash && sourmash tax annotate -g {wildcards.sample}.gather_gtdbrs207_reps.csv -t ../../{input.db1} && cd - && touch {output.done}"
 
 rule sourmash_to_condensed:
     input:
