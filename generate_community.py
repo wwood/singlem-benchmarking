@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.9
+#!/usr/bin/env python3.11
 
 ###############################################################################
 #
@@ -38,12 +38,6 @@ import extern
 
 sys.path = [os.path.join(os.path.dirname(os.path.realpath(__file__)),'..')] + sys.path
 
-def sim_reads(args):
-    logging.info("Simulating reads")
-    cmd = f"simreads -n {args.num_reads} -l {args.read_length} -o {args.output} {args.reference}"
-    logging.info(cmd)
-    extern.run(cmd)
-
 if __name__ == '__main__':
     parent_parser = argparse.ArgumentParser(add_help=False)
     parent_parser.add_argument('--debug', help='output debug information', action="store_true")
@@ -57,6 +51,7 @@ if __name__ == '__main__':
     parent_parser.add_argument('--output-condensed', required=True, help='Path to output file in singlem condensed format')
     parent_parser.add_argument('-1', '--read1', required=True, help='Path to output fq.gz file')
     parent_parser.add_argument('-2', '--read2', required=True, help='Path to output fq.gz file')
+    parent_parser.add_argument('--threads', type=int, default=1, help='Number of threads to use')
 
     args = parent_parser.parse_args()
 
@@ -107,16 +102,18 @@ if __name__ == '__main__':
                     tax_to_coverage[gtdb_taxonomy] = 0
                 tax_to_coverage[gtdb_taxonomy] += coverage
 
-                num_reads = int(coverage*float(genome_size)/(float(read_length)*2.0))
-                sim_commands.append(f"wgsim -N {num_reads} -1 {read_length} -2 {read_length} -e 0.01 {fasta} simulated_reads/{i}.1.fq simulated_reads/{i}.2.fq &>/dev/null")
+                # num_reads = int(coverage*float(genome_size)/(float(read_length)*2.0))
+                sim_commands.append(
+                    f"~/bioinfo/art_bin_MountRainier/art_illumina -ss HSXt -i {fasta} -p -l {read_length} -f {coverage} -m 400 -s 10 -o simulated_reads/{i}. &>/dev/null"
+                )
 
             for tax, cov in tax_to_coverage.items():
                 f.write(f"{os.path.basename(args.coverage_file)}\t{cov}\t{tax}\n")
                 
         logging.info(f"Simulating {len(sim_commands)} genomes ..")
-        extern.run_many(sim_commands)
+        extern.run_many(sim_commands, num_threads=args.threads, progress_stream=sys.stderr)
 
         logging.info("Concatenating simulated reads and compressing ..")
-        extern.run("cat simulated_reads/*1.fq |sed 's=/= =' |pigz >{}".format(output1))
-        extern.run("cat simulated_reads/*2.fq |sed 's=/= =' |pigz >{}".format(output2))
+        extern.run("cat simulated_reads/*1.fq |sed 's=/= =' |pigz -p {} >{}".format(args.threads, output1))
+        extern.run("cat simulated_reads/*2.fq |sed 's=/= =' |pigz -p {} >{}".format(args.threads, output2))
     

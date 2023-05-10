@@ -13,16 +13,19 @@ output_dirs_dict = dict(zip(tools, output_dirs))
 
 benchmark_dir = 'benchmarks'
 
-datasets = extern.run('ls ~/m/msingle/mess/115_camisim_ish_benchmarking/simulated_reads/*.1.fq.gz').split()
-datasets = [os.path.basename(x).split('.')[0] for x in datasets]
-datasets = [datasets[0]]
+datasets = list(['marine'+str(i) for i in range(10)])
+# datasets = [datasets[0]]
 
-original_reads_dir = '/home/woodcrob/m/msingle/mess/115_camisim_ish_benchmarking/simulated_reads'
 fastq_dir = 'local_reads'
-truth_dir = '~/m/msingle/mess/115_camisim_ish_benchmarking/truths'
+truth_dir = 'truths'
+genome_fasta_paths = 'shadow_genome_paths.csv'
+coverage_definitions_folder = 'coverage_definitions'
 
+
+##################################################################### things that should be in config
 
 singlem_git_base_directory = '~/m/msingle/mess/115_camisim_ish_benchmarking/singlem'
+gtdb_bac_metadata = '/work/microbiome/db/gtdb/gtdb_release207/bac120_metadata_r207.tsv'
 
 
 ##################################################################### reference databases
@@ -56,15 +59,28 @@ rule all:
         # expand("{output_dir}/{sample}.finished_all", sample=datasets, output_dir=output_dirs)
         expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools)
 
-rule copy_reads:
-    params:
-        in1=original_reads_dir + "/{sample}.1.fq.gz",
-        in2=original_reads_dir + "/{sample}.2.fq.gz"
+rule generate_community_and_reads:
     output:
         r1=fastq_dir + "/{sample}.1.fq.gz",
         r2=fastq_dir + "/{sample}.2.fq.gz",
+        condensed = truth_dir + "/{sample}.condensed",
+        done = fastq_dir + "/{sample}.finished"
+    params:
+        coverage_number = lambda wildcards: wildcards.sample.replace('marine', ''),
+    threads: num_threads
     shell:
-        "pwd && mkdir -pv {fastq_dir} && cp -vL {params.in1} {params.in2} {fastq_dir}/"
+        "./generate_community.py --threads {threads} --coverage-file coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-metadata {gtdb_bac_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz && touch {output.done}"
+
+rule truth_condensed_to_biobox:
+    input:
+        condensed = truth_dir + "/{sample}.condensed",
+    output:
+        biobox = truth_dir + "/{sample}.condensed.biobox",
+    conda:
+        "singlem-dev"
+    shell:
+        "{singlem_git_base_directory}/extras/condensed_profile_to_biobox.py --input-condensed-table {input.condensed} " \
+        "--output-biobox {output.biobox}"
 
 def get_condensed_to_biobox_extra_args(tool):
     if tool == 'kracken':
@@ -72,7 +88,7 @@ def get_condensed_to_biobox_extra_args(tool):
     else:
         return ''
 
-rule condensed_to_biobox:
+rule tool_condensed_to_biobox:
     input:
         profile = output_prefix + "{tool}/{tool}/{sample}.profile",
     params:
@@ -83,11 +99,8 @@ rule condensed_to_biobox:
     conda:
         "singlem-dev"
     shell:
-        # Convert reports to singlem condense format
-        # run opam against the truth
         "{singlem_git_base_directory}/extras/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
-        "--output-biobox {output.biobox} --template-biobox {params.truth} " \
-        " > {output.biobox}"
+        "--output-biobox {output.biobox} --template-biobox {params.truth} "
 
 rule opal:
     input:
