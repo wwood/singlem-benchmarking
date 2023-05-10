@@ -99,8 +99,8 @@ def get_condensed_to_biobox_extra_args(tool):
 rule tool_condensed_to_biobox:
     input:
         profile = output_prefix + "{tool}/{tool}/{sample}.profile",
-    params:
         truth = truth_dir + "/{sample}.condensed.biobox",
+    params:
         extra_args = lambda wildcards: get_condensed_to_biobox_extra_args(wildcards.tool)
     output:
         biobox = output_prefix + "{tool}/biobox/{sample}.biobox",
@@ -108,7 +108,7 @@ rule tool_condensed_to_biobox:
         "singlem-dev"
     shell:
         "{singlem_git_base_directory}/extras/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
-        "--output-biobox {output.biobox} --template-biobox {params.truth} "
+        "--output-biobox {output.biobox} --template-biobox {input.truth} "
 
 rule opal:
     input:
