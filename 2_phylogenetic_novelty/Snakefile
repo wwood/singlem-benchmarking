@@ -27,8 +27,8 @@ r207_novelties = pl.read_csv('stratified_gtdbtk_r207.tsv', separator='\t', has_h
 r207_novelties.columns = ['sample','r207_taxonomy']
 
 # Debug
-tools = ['singlem']
-novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
+# tools = ['singlem']
+# novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
 print("Profiling {} over {} genomes".format(tools, len(novelties)))
 
 ##################################################################### things that should be in config
@@ -77,7 +77,7 @@ rule generate_community_and_reads:
         genome_fasta = 'genomes/{sample}.fna',
         taxonomy = lambda wildcards: r207_novelties.filter(pl.col('sample')==wildcards.sample).get_column('r207_taxonomy')[0],
     shell:
-        "mkdir -p {truth_dir} {fastq_dir} && ./generate_2component_community.py --art {art} --genome-fasta {params.genome_fasta} --example-bacteria-fasta {example_bacteria_genome} --example-archaea-fasta {example_archaea_genome} --example-bacteria-taxonomy '{example_bacteria_taxonomy}'' --example-archaea-taxonomy '{example_archaea_taxonomy}'' --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --taxonomy '{params.taxonomy}' && touch {output.done}"
+        "mkdir -p {truth_dir} {fastq_dir} && ./generate_2component_community.py --art {art} --genome-fasta {params.genome_fasta} --example-bacteria-fasta {example_bacteria_genome} --example-archaea-fasta {example_archaea_genome} --example-bacteria-taxonomy '{example_bacteria_taxonomy}' --example-archaea-taxonomy '{example_archaea_taxonomy}' --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --taxonomy '{params.taxonomy}' && touch {output.done}"
 
 rule truth_condensed_to_biobox:
     input:
@@ -158,3 +158,240 @@ rule singlem_run_to_profile:
         num_threads
     shell:
         "{singlem_git_base_directory}/bin/singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} && touch {output.done}"
+
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+#########
+######### metaphlan
+
+
+rule metaphlan_copy_db:
+    input:
+        # Cannot use the directory as input/output because humann complains when
+        # there's a snakemake hidden file in the dir
+
+        # db1=directory(metaphlan_db_original1),
+        # db2=directory(metaphlan_db_original2),
+    output:
+        # db1=directory(metaphlan_db_local1),
+        # db2=directory(metaphlan_db_local2),
+        done=output_dirs_dict['metaphlan'] + "/metaphlan/data/done"
+    shell:
+        "cp -rvL {metaphlan_db_original1} {metaphlan_db_local1} && touch {output.done}"
+
+rule metaphlan_profile:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        done=output_dirs_dict['metaphlan'] + "/metaphlan/data/done"
+    benchmark:
+        benchmark_dir + "/metaphlan/{sample}-"+str(num_threads)+"threads.benchmark"
+    output:
+        sgb_report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.sgb_report",
+        done=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile.done"
+    conda:
+        "envs/metaphlan.yml"
+    threads: num_threads
+    params:
+        cat_reads = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.cat.fq.gz",
+    shell:
+        # Concatenate input files because metaphlan can't handle multiple input files
+        "rm -f {output.sgb_report} {params.cat_reads}.bowtie2out.txt; cat {input.r1} {input.r2} > {params.cat_reads} && metaphlan {params.cat_reads} --nproc {threads} --input_type fastq --bowtie2db {metaphlan_db_local1} -o {output.sgb_report} && touch {output.done}"
+
+rule metaphlan_convert_profile_to_GTDB:
+    input:
+        report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.sgb_report"
+    output:
+        gtdb_report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_profile",
+        done=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_report.done"
+    conda:
+        "envs/metaphlan.yml"
+    shell:
+        "sgb_to_gtdb_profile.py -i {input.report} -o {output.gtdb_report} -d {metaphlan_db_local1}/mpa_vOct22_CHOCOPhlAnSGB_202212.pkl && touch {output.done}"
+
+rule metaphlan_profile_to_condensed:
+    input:
+        report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_profile"
+    output:
+        profile = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile",
+    conda:
+        "singlem-dev"
+    shell:
+        "../bin/metaphlan_to_condensed.py --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+#########
+######### motus
+
+rule motus_copy_db:
+    input:
+        db=motus_db_path_original,
+    output:
+        db=directory(motus_db_path_local),
+        done=output_dirs_dict['motus'] + "/motus/data/done"
+    shell:
+        "mkdir -p {output.db} && rmdir {output.db} && cp -rvL {input.db} {output.db} && touch {output.done}"
+
+rule motus_run:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        done=output_dirs_dict['motus'] + "/motus/data/done"
+    benchmark:
+        benchmark_dir + "/motus/{sample}-"+str(num_threads)+"threads.benchmark"
+    output:
+        report=output_dirs_dict['motus'] + "/motus/{sample}.motus",
+        done=output_dirs_dict['motus'] + "/motus/{sample}.profile.done"
+    threads: num_threads
+    conda:
+        "envs/motus.yml"
+    shell:
+        "motus profile -t {threads} -db {motus_db_path_local} -f {input.r1} -r {input.r2} -o {output.report} && touch {output.done}"
+
+rule motus_profile_to_condensed:
+    input:
+        report=output_dirs_dict['motus'] + "/motus/{sample}.motus"
+    output:
+        profile = output_dirs_dict['motus'] + "/motus/{sample}.profile",
+    conda:
+        "singlem-dev"
+    shell:
+        "../bin/motus_to_condensed.py --motus {input.report} " \
+        "--gtdb {motus_gtdb_tsv} " \
+        " > {output.profile} "
+
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+######### bracken
+
+
+rule braken_copy_data:
+    output:
+        db=directory(kraken_db_local),
+        done=output_dirs_dict['kracken'] + "/kraken/data/done"
+    shell:
+        "cp -r {kracken_db} {output.db}/ && touch {output.done}"
+
+rule kraken_run:
+    input:
+        reads_copied1 = fastq_dir + "/{sample}.1.fq.gz",
+        reads_copied2 = fastq_dir + "/{sample}.2.fq.gz",
+        db=kraken_db_local,
+        copy_braken_data_done=output_dirs_dict['kracken'] + "/kraken/data/done"
+    benchmark:
+        benchmark_dir + "/kraken/{sample}-"+str(num_threads)+"threads.benchmark"
+    threads: num_threads
+    output:
+        report=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken",
+        done=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken.done"
+    shell:
+        "export PATH={kracken2_install}:$PATH && " \
+        "kraken2 --db {input.db} --threads {threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} && touch {output.done}"
+
+rule braken_run:
+    input:
+        db=kraken_db_local,
+        kraken_report=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken",
+        kraken_done=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken.done"
+    output:
+        s=output_dirs_dict['kracken'] + "/braken/{sample}.report.S",
+        g=output_dirs_dict['kracken'] + "/braken/{sample}.report.G",
+        f=output_dirs_dict['kracken'] + "/braken/{sample}.report.F",
+        o=output_dirs_dict['kracken'] + "/braken/{sample}.report.O",
+        c=output_dirs_dict['kracken'] + "/braken/{sample}.report.C",
+        p=output_dirs_dict['kracken'] + "/braken/{sample}.report.P",
+        d=output_dirs_dict['kracken'] + "/braken/{sample}.report.D",
+        done=output_dirs_dict['kracken'] + "/braken/{sample}.done"
+    shell:
+        "export PATH={bracken_install}:$PATH && " \
+        "bracken -d {input.db} -r 150 -l S -t 10 -o {output.s} -i {input.kraken_report} && " \
+        "bracken -d {input.db} -r 150 -l G -t 10 -o {output.g} -i {input.kraken_report} && " \
+        "bracken -d {input.db} -r 150 -l F -t 10 -o {output.f} -i {input.kraken_report} && " \
+        "bracken -d {input.db} -r 150 -l O -t 10 -o {output.o} -i {input.kraken_report} && " \
+        "bracken -d {input.db} -r 150 -l C -t 10 -o {output.c} -i {input.kraken_report} && " \
+        "bracken -d {input.db} -r 150 -l P -t 10 -o {output.p} -i {input.kraken_report} && " \
+        "bracken -d {input.db} -r 150 -l D -t 10 -o {output.d} -i {input.kraken_report} && " \
+        "touch {output.done}"
+
+
+rule bracken_to_profile:
+    input:
+        output_dirs_dict['kracken'] + "/braken/{sample}.report.S",
+        output_dirs_dict['kracken'] + "/braken/{sample}.report.G",
+        output_dirs_dict['kracken'] + "/braken/{sample}.report.F",
+        output_dirs_dict['kracken'] + "/braken/{sample}.report.O",
+        output_dirs_dict['kracken'] + "/braken/{sample}.report.C",
+        output_dirs_dict['kracken'] + "/braken/{sample}.report.P",
+        output_dirs_dict['kracken'] + "/braken/{sample}.report.D",
+        output_dirs_dict['kracken'] + "/braken/{sample}.done"
+    params:
+        report_prefix = output_dirs_dict['kracken']+"/braken/{sample}.report",
+        biobox_dir = output_dirs_dict['kracken']+'/biobox',
+        truth = truth_dir + "/{sample}.condensed.biobox",
+    output:
+        profile = output_dirs_dict['kracken'] + "/kracken/{sample}.profile",
+    conda:
+        "singlem-dev"
+    shell:
+        # Convert reports to singlem condense format
+        "mkdir -p {params.biobox_dir} && " \
+        "../bin/kraken_to_condensed.py --report-prefix {params.report_prefix} " \
+        "--bacterial-taxonomy ~/m/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv " \
+        "--archaeal-taxonomy ~/m/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv > {output.profile}"
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+######### sourmash
+
+rule copy_db:
+    input:
+        db1 = sourmash_db1_original,
+        db2 = sourmash_db2_original,
+    output:
+        db1=sourmash_db1,
+        db2=sourmash_db2,
+        done=output_dirs_dict['sourmash'] + "/sourmash/data/done"
+    params:
+        output_dir = output_dirs_dict['sourmash'],
+    shell:
+        "mkdir -p {params.output_dir}/sourmash/data && cp -rvL {input.db1} {output.db1} && cp -rvL {input.db2} {output.db2} && touch {output.done}"
+
+rule sourmash_run:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db1=sourmash_db1,
+        db2=sourmash_db2,
+        done=output_dirs_dict['sourmash'] + "/sourmash/data/done"
+    benchmark:
+        benchmark_dir + "/sourmash/{sample}-"+str(num_threads)+"threads.benchmark"
+    threads: num_threads
+    output:
+        report=output_dirs_dict['sourmash'] + "/sourmash/{sample}.gather_gtdbrs207_reps.with-lineages.csv",
+        done=output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile.done"
+    conda:
+        "envs/sourmash.yml"
+    params:
+        output_dir = output_dirs_dict['sourmash'],
+        sourmash_prefix = lambda wildcards: output_dirs_dict['sourmash'] + "/sourmash/"+wildcards.sample
+    shell:
+        # Sourmash does not seem to have a --threads option
+        # sourmash tax annotate creates a file with-lineages in the CWD, so we need to cd into the output dir before running it
+        "sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge {params.sourmash_prefix} -o {params.sourmash_prefix}.sig {input.r1} {input.r2} && echo \"running gather..\" && sourmash gather {params.sourmash_prefix}.sig {input.db2} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv && echo \"running tax ..\" && cd {params.output_dir}/sourmash && sourmash tax annotate -g {wildcards.sample}.gather_gtdbrs207_reps.csv -t ../../{input.db1} && cd - && touch {output.done}"
+
+rule sourmash_to_condensed:
+    input:
+        output_dirs_dict['sourmash'] + "/sourmash/{sample}.gather_gtdbrs207_reps.with-lineages.csv",
+    output:
+        profile = output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile",
+    shell:
+        "../bin/sourmash_to_condensed.py --with-lineages {input} " \
+        "--sample {wildcards.sample} " \
+        " > {output} "
