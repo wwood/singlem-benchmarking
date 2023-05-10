@@ -1,0 +1,160 @@
+import extern
+import polars as pl
+
+num_threads = config['benchmarking_threads']
+
+tools = ['singlem', 'metaphlan', 'motus', 'kracken', 'sourmash']
+
+output_prefix = 'output_'
+output_dirs = list([output_prefix+tool for tool in tools])
+output_dirs_dict = dict(zip(tools, output_dirs))
+
+benchmark_dir = 'benchmarks'
+
+fastq_dir = 'local_reads'
+truth_dir = 'truths'
+
+example_bacteria_genome = 'domain_example_genomes/GCF_001027105.1_genomic.fna'
+example_archaea_genome = 'domain_example_genomes/GCF_000024185.1_genomic.fna'
+# R207
+example_bacteria_taxonomy = 'd__Bacteria;p__Firmicutes;c__Bacilli;o__Staphylococcales;f__Staphylococcaceae;g__Staphylococcus;s__Staphylococcus aureus'
+example_archaea_taxonomy = 'd__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae;g__Methanobrevibacter;s__Methanobrevibacter ruminantium'
+
+novelties = pl.read_csv('stratified_genome_metadata.tsv', separator='\t', has_header=True)
+novelties.columns = ['sample','novelty','r214_taxonomy']
+
+r207_novelties = pl.read_csv('stratified_gtdbtk_r207.tsv', separator='\t', has_header=True)
+r207_novelties.columns = ['sample','r207_taxonomy']
+
+# Debug
+tools = ['singlem']
+novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
+print("Profiling {} over {} genomes".format(tools, len(novelties)))
+
+##################################################################### things that should be in config
+
+singlem_git_base_directory = '~/m/msingle/mess/115_camisim_ish_benchmarking/singlem'
+art = '~/bioinfo/art_bin_MountRainier/art_illumina'
+
+##################################################################### reference databases
+
+metapackage = '/home/woodcrob/git/singlem/db/S3.1.0.metapackage_20221209.smpkg.uploaded'
+# metapackage = '~/l/git/singlem/db/S3.1.0.metapackage_20221209.smpkg.uploaded'
+singlem_metapackage = output_dirs_dict['singlem'] + '/singlem/data/S3.1.0.metapackage_20221209.smpkg'
+
+metaphlan_db_original1 = '~/m/msingle/mess/115_camisim_ish_benchmarking/metaphlan_bowtiedb'
+metaphlan_db_local1 = output_dirs_dict['metaphlan'] + '/metaphlan/data/metaphlan_bowtiedb'
+
+motus_db_path_original = '/home/woodcrob/e/motus-v3.0.3/lib/python3.9/site-packages/motus/db_mOTU'
+motus_db_path_local = output_dirs_dict['motus'] + '/motus/data/db_mOTU'
+motus_gtdb_tsv = '~/m/msingle/mess/115_camisim_ish_benchmarking/motus/mOTUs_3.0.0_GTDB_tax.tsv'
+
+kracken_db = "/home/woodcrob/m/db/struo2/GTDB_release207"
+kraken_db_local = output_dirs_dict['kracken'] + "/kraken/data/GTDB_release207"
+kracken2_install = '~/bioinfo/kraken2/install/'
+bracken_install = '~/bioinfo/Bracken/'
+
+sourmash_db1_original = '/home/woodcrob/m/msingle/mess/105_novelty_testing/gtdb-rs207.taxonomy.sqldb'
+sourmash_db2_original = '/home/woodcrob/m/msingle/mess/105_novelty_testing/gtdb-rs207.genomic-reps.dna.k31.zip'
+sourmash_db1 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.taxonomy.sqldb'
+sourmash_db2 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.genomic-reps.dna.k31.zip'
+
+#####################################################################
+
+
+rule all:
+    input:
+        expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=novelties['sample'], tool=tools)
+
+rule generate_community_and_reads:
+    output:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        condensed = truth_dir + "/{sample}.condensed",
+        done = fastq_dir + "/{sample}.finished"
+    threads: 1
+    params:
+        genome_fasta = 'genomes/{sample}.fna',
+        taxonomy = lambda wildcards: r207_novelties.filter(pl.col('sample')==wildcards.sample).get_column('r207_taxonomy')[0],
+    shell:
+        "mkdir -p {truth_dir} {fastq_dir} && ./generate_2component_community.py --art {art} --genome-fasta {params.genome_fasta} --example-bacteria-fasta {example_bacteria_genome} --example-archaea-fasta {example_archaea_genome} --example-bacteria-taxonomy '{example_bacteria_taxonomy}'' --example-archaea-taxonomy '{example_archaea_taxonomy}'' --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --taxonomy '{params.taxonomy}' && touch {output.done}"
+
+rule truth_condensed_to_biobox:
+    input:
+        condensed = truth_dir + "/{sample}.condensed",
+    output:
+        biobox = truth_dir + "/{sample}.condensed.biobox",
+    conda:
+        "singlem-dev"
+    shell:
+        "{singlem_git_base_directory}/extras/condensed_profile_to_biobox.py --input-condensed-table {input.condensed} " \
+        "--output-biobox {output.biobox}"
+
+def get_condensed_to_biobox_extra_args(tool):
+    if tool == 'kracken':
+        return ' --no-fill'
+    else:
+        return ''
+
+rule tool_condensed_to_biobox:
+    input:
+        profile = output_prefix + "{tool}/{tool}/{sample}.profile",
+    params:
+        truth = truth_dir + "/{sample}.condensed.biobox",
+        extra_args = lambda wildcards: get_condensed_to_biobox_extra_args(wildcards.tool)
+    output:
+        biobox = output_prefix + "{tool}/biobox/{sample}.biobox",
+    conda:
+        "singlem-dev"
+    shell:
+        "{singlem_git_base_directory}/extras/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
+        "--output-biobox {output.biobox} --template-biobox {params.truth} "
+
+rule opal:
+    input:
+        biobox = output_prefix+"{tool}/biobox/{sample}.biobox",
+        truth = truth_dir + "/{sample}.condensed.biobox",
+    params:
+        output_dir = output_prefix+"{tool}",
+        output_opal_dir = output_prefix+"{tool}/opal/{sample}.opal_output_directory",
+    output:
+        report=output_prefix+"{tool}/opal/{sample}.opal_report",
+        done=output_prefix+"{tool}/opal/{sample}.opal_report.done",
+    conda:
+        'envs/opal.yml'
+    shell:
+        "opal.py -g {input.truth} -o {params.output_opal_dir} {input.biobox} || echo 'expected opal non-zero existatus'; mv {params.output_opal_dir}/results.tsv {output.report} && rm -rf {params.output_opal_dir} && touch {output.done}"
+
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+#########
+######### tool-specific rules - singlem first
+
+rule singlem_copy_metapackage:
+    input:
+        metapackage
+    output:
+        db=directory(singlem_metapackage),
+        done=output_dirs_dict['singlem'] + "/singlem/data/done",
+    shell:
+        "cp -rL {input} {output.db} && touch {output.done}"
+
+rule singlem_run_to_profile:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db=singlem_metapackage,
+        data_done=output_dirs_dict['singlem'] + "/singlem/data/done"
+    benchmark:
+        benchmark_dir + "/singlem/{sample}-"+str(num_threads)+"threads.benchmark"
+    output:
+        report=output_dirs_dict['singlem'] + "/singlem/{sample}.profile",
+        done=output_dirs_dict['singlem'] + "/singlem/{sample}.profile.done"
+    conda:
+        "singlem-dev"
+    threads:
+        num_threads
+    shell:
+        "{singlem_git_base_directory}/bin/singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} && touch {output.done}"

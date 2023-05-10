@@ -52,6 +52,7 @@ if __name__ == '__main__':
     parent_parser.add_argument('-1', '--read1', required=True, help='Path to output fq.gz file')
     parent_parser.add_argument('-2', '--read2', required=True, help='Path to output fq.gz file')
     parent_parser.add_argument('--threads', type=int, default=1, help='Number of threads to use')
+    parent_parser.add_argument('--art', required=True, help='Path to ART binary (art_illumina)')
 
     args = parent_parser.parse_args()
 
@@ -104,7 +105,7 @@ if __name__ == '__main__':
 
                 # num_reads = int(coverage*float(genome_size)/(float(read_length)*2.0))
                 sim_commands.append(
-                    f"~/bioinfo/art_bin_MountRainier/art_illumina -ss HSXt -i {fasta} -p -l {read_length} -f {coverage} -m 400 -s 10 -o simulated_reads/{i}. &>/dev/null"
+                    f"{args.art} -ss HSXt -i {fasta} -p -l {read_length} -f {coverage} -m 400 -s 10 -o simulated_reads/{i}. &>/dev/null"
                 )
 
             for tax, cov in tax_to_coverage.items():

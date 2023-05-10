@@ -56,7 +56,6 @@ sourmash_db2 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.genomic
 
 rule all:
     input:
-        # expand("{output_dir}/{sample}.finished_all", sample=datasets, output_dir=output_dirs)
         expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools)
 
 rule generate_community_and_reads:
