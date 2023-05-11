@@ -3,6 +3,7 @@ import extern
 import pandas as pd
 
 num_threads = config['benchmarking_threads']
+kracken_num_threads = 999 # never let kracken be parallelised, because otherwise it will exhaust the RAM.
 
 tools = ['singlem', 'metaphlan', 'motus', 'kracken', 'sourmash']
 # tools = ['singlem']
@@ -277,13 +278,13 @@ rule kraken_run:
         copy_braken_data_done=output_dirs_dict['kracken'] + "/kraken/data/done"
     benchmark:
         benchmark_dir + "/kraken/{sample}-"+str(num_threads)+"threads.benchmark"
-    threads: num_threads
+    threads: kracken_num_threads
     output:
         report=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken",
         done=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken.done"
     shell:
         "export PATH={kracken2_install}:$PATH && " \
-        "kraken2 --db {input.db} --threads {threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} && touch {output.done}"
+        "kraken2 --db {input.db} --threads {num_threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} && touch {output.done}"
 
 rule braken_run:
     input:
