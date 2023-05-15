@@ -26,7 +26,6 @@ coverage_definitions_folder = 'coverage_definitions'
 ##################################################################### things that should be in config
 
 singlem_git_base_directory = '~/m/msingle/mess/115_camisim_ish_benchmarking/singlem'
-art = '~/bioinfo/art_bin_MountRainier/art_illumina'
 gtdb_bac_metadata = '/work/microbiome/db/gtdb/gtdb_release207/bac120_metadata_r207.tsv'
 
 
@@ -69,8 +68,10 @@ rule generate_community_and_reads:
     params:
         coverage_number = lambda wildcards: wildcards.sample.replace('marine', ''),
     threads: num_threads
+    conda:
+        'envs/art.yml'
     shell:
-        "./generate_community.py --art {art} --threads {threads} --coverage-file coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-metadata {gtdb_bac_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz && touch {output.done}"
+        "./generate_community.py --art art_illumina --threads {threads} --coverage-file coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-metadata {gtdb_bac_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz && touch {output.done}"
 
 rule truth_condensed_to_biobox:
     input:
