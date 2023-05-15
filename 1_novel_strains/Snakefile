@@ -42,10 +42,8 @@ motus_db_path_original = '/home/woodcrob/e/motus-v3.0.3/lib/python3.9/site-packa
 motus_db_path_local = output_dirs_dict['motus'] + '/motus/data/db_mOTU'
 motus_gtdb_tsv = '~/m/msingle/mess/115_camisim_ish_benchmarking/motus/mOTUs_3.0.0_GTDB_tax.tsv'
 
-kracken_db = "/home/woodcrob/m/db/struo2/GTDB_release207"
+kracken_db = "/work/microbiome/db/struo2/GTDB_release207"
 kraken_db_local = output_dirs_dict['kracken'] + "/kraken/data/GTDB_release207"
-kracken2_install = '~/bioinfo/kraken2/install/'
-bracken_install = '~/bioinfo/Bracken/'
 
 sourmash_db1_original = '/home/woodcrob/m/msingle/mess/105_novelty_testing/gtdb-rs207.taxonomy.sqldb'
 sourmash_db2_original = '/home/woodcrob/m/msingle/mess/105_novelty_testing/gtdb-rs207.genomic-reps.dna.k31.zip'
@@ -284,8 +282,9 @@ rule kraken_run:
     output:
         report=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken",
         done=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken.done"
+    conda:
+        "envs/kraken.yml"
     shell:
-        "export PATH={kracken2_install}:$PATH && " \
         "kraken2 --db {input.db} --threads {num_threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} && touch {output.done}"
 
 rule braken_run:
@@ -302,8 +301,9 @@ rule braken_run:
         p=output_dirs_dict['kracken'] + "/braken/{sample}.report.P",
         d=output_dirs_dict['kracken'] + "/braken/{sample}.report.D",
         done=output_dirs_dict['kracken'] + "/braken/{sample}.done"
+    conda:
+        "envs/bracken.yml"
     shell:
-        "export PATH={bracken_install}:$PATH && " \
         "bracken -d {input.db} -r 150 -l S -t 10 -o {output.s} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l G -t 10 -o {output.g} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l F -t 10 -o {output.f} -i {input.kraken_report} && " \
