@@ -38,7 +38,7 @@ singlem_metapackage = output_dirs_dict['singlem'] + '/singlem/data/S3.1.0.metapa
 metaphlan_db_original1 = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/metaphlan_bowtiedb'
 metaphlan_db_local1 = output_dirs_dict['metaphlan'] + '/metaphlan/data/metaphlan_bowtiedb'
 
-motus_db_path_original = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus/db_mOTU'
+motus_db_path_original = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus'
 motus_db_path_local = output_dirs_dict['motus'] + '/motus/data/db_mOTU'
 motus_gtdb_tsv = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus/mOTUs_3.0.0_GTDB_tax.tsv'
 
