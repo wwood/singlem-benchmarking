@@ -19,8 +19,8 @@ datasets = list(['marine'+str(i) for i in range(10)])
 # datasets = [datasets[0]]
 
 fastq_dir = 'local_reads'
-truth_dir = 'truths'
-genome_fasta_paths = 'shadow_genome_paths.csv'
+truth_dir = os.path.join(workflow.basedir, 'truths')
+genome_fasta_paths = os.path.join(workflow.basedir, 'shadow_genome_paths.csv')
 coverage_definitions_folder = 'coverage_definitions'
 
 
@@ -69,12 +69,11 @@ rule generate_community_and_reads:
         done = fastq_dir + "/{sample}.finished"
     params:
         coverage_number = lambda wildcards: wildcards.sample.replace('marine', ''),
-        script = workflow.source_path("generate_community.py")
     threads: num_threads
     conda:
         'envs/art.yml'
     shell:
-        "{params.script} --art art_illumina --threads {threads} --coverage-file coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-metadata {gtdb_bac_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz && touch {output.done}"
+        "{workflow.basedir}/generate_community.py --art art_illumina --threads {threads} --coverage-file {workflow.basedir}/coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-metadata {gtdb_bac_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz && touch {output.done}"
 
 rule truth_condensed_to_biobox:
     input:
@@ -213,12 +212,10 @@ rule metaphlan_profile_to_condensed:
         report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_profile"
     output:
         profile = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile",
-    params:
-        script = workflow.source_path("../bin/metaphlan_to_condensed.py")
     conda:
         "singlem-dev"
     shell:
-        "{params.script} --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
+        "{workflow.basedir}/../bin/metaphlan_to_condensed.py --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
 
 ###############################################################################################
 ###############################################################################################
@@ -256,12 +253,10 @@ rule motus_profile_to_condensed:
         report=output_dirs_dict['motus'] + "/motus/{sample}.motus"
     output:
         profile = output_dirs_dict['motus'] + "/motus/{sample}.profile",
-    params:
-        script = workflow.source_path("../bin/motus_to_condensed.py")
     conda:
         "singlem-dev"
     shell:
-        "{params.script} --motus {input.report} " \
+        "{workflow.basedir}/../bin/motus_to_condensed.py --motus {input.report} " \
         "--gtdb {motus_gtdb_tsv} " \
         " > {output.profile} "
 
@@ -337,7 +332,6 @@ rule bracken_to_profile:
         report_prefix = output_dirs_dict['kracken']+"/braken/{sample}.report",
         biobox_dir = output_dirs_dict['kracken']+'/biobox',
         truth = truth_dir + "/{sample}.condensed.biobox",
-        script = workflow.source_path("../bin/kraken_to_condensed.py")
     output:
         profile = output_dirs_dict['kracken'] + "/kracken/{sample}.profile",
     conda:
@@ -345,7 +339,7 @@ rule bracken_to_profile:
     shell:
         # Convert reports to singlem condense format
         "mkdir -p {params.biobox_dir} && " \
-        "{params.script} --report-prefix {params.report_prefix} " \
+        "{workflow.basedir}/../bin/kraken_to_condensed.py --report-prefix {params.report_prefix} " \
         "--bacterial-taxonomy /work/microbiome/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv " \
         "--archaeal-taxonomy /work/microbiome/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv > {output.profile}"
 
@@ -395,10 +389,8 @@ rule sourmash_to_condensed:
         output_dirs_dict['sourmash'] + "/sourmash/{sample}.gather_gtdbrs207_reps.with-lineages.csv",
     output:
         profile = output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile",
-    params:
-        script = workflow.source_path("../bin/sourmash_to_condensed.py")
     shell:
-        "{params.script} --with-lineages {input} " \
+        "{workflow.basedir}/../bin/sourmash_to_condensed.py --with-lineages {input} " \
         "--sample {wildcards.sample} " \
         " > {output} "
 
@@ -451,8 +443,10 @@ rule coverm_to_condensed:
     params:
         bac_tax=coverm_bac_tax,
         arc_tax=coverm_arc_tax,
-        script = workflow.source_path("../bin/coverm_to_condensed.py")
     shell:
-        "{params.script} --with-lineages {input} " \
-        "--sample {wildcards.sample} " \
-        " > {output} "
+        "{workflow.basedir}/../bin/coverm_to_condensed.py "
+        "--bam-summary {input} "
+        "--sample {wildcards.sample} "
+        "--bac-tax {params.bac_tax} "
+        "--arc-tax {params.arc_tax} "
+        "> {output} "
