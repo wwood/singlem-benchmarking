@@ -50,7 +50,9 @@ sourmash_db2_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-
 sourmash_db1 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.taxonomy.sqldb'
 sourmash_db2 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.genomic-reps.dna.k31.zip'
 
-coverm_db = '/work/msingle/sam/6_singlem_benchmarking/coverm_db/gtdb_r207.mmi'
+coverm_db = '/work/microbiome/msingle/sam/6_singlem_benchmarking/coverm_db/gtdb_r207_genomes.mmi'
+coverm_bac_tax = '/work/microbiome/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv'
+coverm_arc_tax = '/work/microbiome/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv'
 
 #####################################################################
 
@@ -403,6 +405,7 @@ rule coverm_run:
         r2=fastq_dir + "/{sample}.2.fq.gz",
         db=coverm_db,
     output:
+        bam=output_dirs_dict['coverm'] + "/coverm/{sample}/gtdb_r207_genomes.mmi.{sample}.1.fq.gz.bam",
         done=output_dirs_dict['coverm'] + "/coverm/{sample}.profile.done",
     threads: num_threads
     benchmark:
@@ -421,11 +424,25 @@ rule coverm_run:
         "-t {threads} "
         "&& touch {output.done}"
 
+rule coverm_process_bam:
+    input:
+        output_dirs_dict['coverm'] + "/coverm/{sample}/gtdb_r207_genomes.mmi.{sample}.1.fq.gz.bam",
+    output:
+        output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
+    conda:
+        "envs/coverm.yml"
+    shell:
+        "samtools view -c -f12 {input} | tr '\n' '\t' >> {output} && "
+        "samtools view -c {input} >> {output} "
+
 rule coverm_to_condensed:
     input:
-        output_dirs_dict['coverm'] + "",
+        output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
     output:
         profile = output_dirs_dict['coverm'] + "/coverm/{sample}.profile",
+    params:
+        bac_tax=coverm_bac_tax,
+        arc_tax=coverm_arc_tax,
     shell:
         "../bin/coverm_to_condensed.py --with-lineages {input} " \
         "--sample {wildcards.sample} " \
