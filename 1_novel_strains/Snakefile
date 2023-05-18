@@ -413,7 +413,7 @@ rule coverm_run:
     conda:
         "envs/coverm.yml"
     params:
-        output_dir = output_dirs_dict['coverm'],
+        output_dir = output_dirs_dict['coverm'] + "/coverm/{sample}",
         coverm_prefix = lambda wildcards: output_dirs_dict['coverm'] + "/coverm/"+wildcards.sample
     shell:
         "coverm make "
@@ -432,8 +432,8 @@ rule coverm_process_bam:
     conda:
         "envs/coverm.yml"
     shell:
-        "samtools view -c -f12 {input} | tr '\n' '\t' >> {output} && "
-        "samtools view -c {input} >> {output} "
+        "samtools index {input} && "
+        "samtools idxstats {input} > {output} "
 
 rule coverm_to_condensed:
     input:
