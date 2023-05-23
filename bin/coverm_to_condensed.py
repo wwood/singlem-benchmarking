@@ -41,7 +41,7 @@ if __name__ == '__main__':
     #parent_parser.add_argument('--version', help='output version information and quit',  action='version', version=repeatm.__version__)
     parent_parser.add_argument('--quiet', help='only output errors', action="store_true")
 
-    parent_parser.add_argument('--bam-summary', required=True)
+    parent_parser.add_argument('--coverm-genome', required=True)
     parent_parser.add_argument('--sample', required=True)
     parent_parser.add_argument('--bac-tax', required=True)
     parent_parser.add_argument('--arc-tax', required=True)
@@ -61,50 +61,33 @@ if __name__ == '__main__':
 
     NCBI_GENOME_ID_REGEX = r'GC[AF]_([0-9]{9})'
 
-    taxonomy = pl.concat([
-        pl.read_csv(args.bac_tax, separator='\t', has_header=False, new_columns=['genome', 'taxonomy']),
-        pl.read_csv(args.arc_tax, separator='\t', has_header=False, new_columns=['genome', 'taxonomy'])
-    ]).with_columns(
-        pl.col('genome').str.extract(NCBI_GENOME_ID_REGEX).alias('genome')
+    taxonomy = (
+        pl.concat([
+            pl.read_csv(args.bac_tax, separator='\t', has_header=False, new_columns=['genome', 'taxonomy']),
+            pl.read_csv(args.arc_tax, separator='\t', has_header=False, new_columns=['genome', 'taxonomy'])
+            ])
+        .with_columns(
+            pl.col('genome').str.extract(NCBI_GENOME_ID_REGEX).alias('genome')
+            )
     )
 
-    bam_summary = pl.read_csv(
-        args.bam_summary, separator='\t',
-        has_header=False, new_columns=['sequence', 'length', 'mapped_reads', 'unmapped_reads']
-        ).with_columns(
-            pl.col('sequence').str.extract(NCBI_GENOME_ID_REGEX).alias('genome')
-        )
+    coverm_genome = (
+        pl.read_csv(args.coverm_genome, separator='\t', new_columns=['genome', 'trimmed_mean'])
+        .filter(pl.col('trimmed_mean') != 0)
+        .with_columns(pl.col('genome').str.extract(NCBI_GENOME_ID_REGEX))
+        .filter(pl.col("genome").is_not_null())
+        .join(taxonomy, on="genome", how="left")
+        .groupby("taxonomy")
+        .agg(pl.sum("trimmed_mean"))
+        .select([
+            pl.lit(args.sample).alias("sample"),
+            pl.col("trimmed_mean").alias("coverage"),
+            pl.col("taxonomy"),
+            ])
+    )
 
+    output = coverm_genome.write_csv(has_header=False, separator='\t')
+    print(output)
 
-
-    ## git tag version 3.0.3 |  motus version 3.0.3 | map_tax 3.0.3 | gene database: nr3.0.3 | calc_mgc 3.0.3 -y insert.scaled_counts -l 75 | calc_motu 3.0.3 -k mOTU -C no_CAMI -g 3 | taxonomy: ref_mOTU_3.0.3 meta_mOTU_3.0.3
-    ## call: python /home/woodcrob/e/motus-v3.0.3/bin/motus profile -f 1.fq -r 2.fq -o test.motus
-    ## consensus_taxonomy     unnamed sample
-    # Leptospira alexanderi [ref_mOTU_v3_00001]       0.0000000000
-    # Leptospira weilii [ref_mOTU_v3_00002]   0.0000000000
-    # Chryseobacterium sp. [ref_mOTU_v3_00004]        0.0000000000
-    d = pd.read_csv(args.motus, sep='\t', names=['motu_full','coverage'], header=None, comment='#')
-    d['motu'] = [n.split(' ')[-1].replace('[','').replace(']','') for n in d['motu_full']]
-
-    gtdb = pd.read_csv(args.gtdb_map, sep='\t', header=None)
-
-    gtdb2 = pd.DataFrame({
-        'motu': gtdb.loc[:,0],
-        'taxonomy': ['; '.join(r[1:]) for _, r in gtdb.iterrows()]
-    })
-
-    d2 = pd.merge(d[d['coverage']>0], gtdb2, on='motu')
-
-    taxon_to_cov = {}
-    for i, row in d2.iterrows():
-        tax = row['taxonomy']
-        if tax not in taxon_to_cov:
-            taxon_to_cov[tax] = 0.
-        taxon_to_cov[tax] += row['coverage']
-
-    for taxon, cov in taxon_to_cov.items():
-        print('sample_name\t{coverage}\t{taxon}'.format(
-            coverage=cov, taxon=taxon))
-            
     logging.info("Done")
 

@@ -405,35 +405,21 @@ rule coverm_run:
         r2=fastq_dir + "/{sample}.2.fq.gz",
         db=coverm_db,
     output:
-        bam=output_dirs_dict['coverm'] + "/coverm/{sample}/gtdb_r207_genomes.mmi.{sample}.1.fq.gz.bam",
-        done=output_dirs_dict['coverm'] + "/coverm/{sample}.profile.done",
+        tsv=output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
     threads: num_threads
     benchmark:
         benchmark_dir + "/coverm/{sample}-"+str(num_threads)+"threads.benchmark"
     conda:
         "envs/coverm.yml"
-    params:
-        output_dir = output_dirs_dict['coverm'] + "/coverm/{sample}",
-        coverm_prefix = lambda wildcards: output_dirs_dict['coverm'] + "/coverm/"+wildcards.sample
     shell:
-        "coverm make "
+        "coverm genome "
         "-1 {input.r1} "
         "-2 {input.r2} "
         "-r {input.db} --minimap2-reference-is-index "
-        "-o {params.output_dir} "
+        "-o {output.tsv} "
         "-t {threads} "
-        "&& touch {output.done}"
-
-rule coverm_process_bam:
-    input:
-        output_dirs_dict['coverm'] + "/coverm/{sample}/gtdb_r207_genomes.mmi.{sample}.1.fq.gz.bam",
-    output:
-        output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
-    conda:
-        "envs/coverm.yml"
-    shell:
-        "samtools index {input} && "
-        "samtools idxstats {input} > {output} "
+        "-m trimmed_mean "
+        "--separator '~' "
 
 rule coverm_to_condensed:
     input:
@@ -445,7 +431,7 @@ rule coverm_to_condensed:
         arc_tax=coverm_arc_tax,
     shell:
         "{workflow.basedir}/../bin/coverm_to_condensed.py "
-        "--bam-summary {input} "
+        "--coverm-genome {input} "
         "--sample {wildcards.sample} "
         "--bac-tax {params.bac_tax} "
         "--arc-tax {params.arc_tax} "
