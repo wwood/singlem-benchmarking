@@ -87,7 +87,7 @@ if __name__ == '__main__':
     )
 
     output = coverm_genome.write_csv(has_header=False, separator='\t')
-    print(output)
+    print(output, end="")
 
     logging.info("Done")
 
