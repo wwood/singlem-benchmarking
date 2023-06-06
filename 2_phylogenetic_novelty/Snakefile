@@ -4,7 +4,9 @@ import polars as pl
 num_threads = config['benchmarking_threads']
 kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
 
-tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju']
+relabund_tools = ['singlem', 'metaphlan', 'motus', 'sourmash']
+reads_wise_tools = ['kraken', 'kaiju']
+tools = relabund_tools + reads_wise_tools
 
 output_prefix = 'output_'
 output_dirs = list([output_prefix+tool for tool in tools])
@@ -28,8 +30,8 @@ r207_novelties = pl.read_csv('stratified_gtdbtk_r207.tsv', separator='\t', has_h
 r207_novelties.columns = ['sample','r207_taxonomy']
 
 # Debug
-tools = ['kraken']
-novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
+# tools = ['singlem']
+# novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
 print("Profiling {} over {} genomes".format(tools, len(novelties)))
 
 ##################################################################### things that should be in config
@@ -44,7 +46,7 @@ singlem_metapackage = output_dirs_dict['singlem'] + '/singlem/data/S3.1.0.metapa
 metaphlan_db_original1 = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/metaphlan_bowtiedb'
 metaphlan_db_local1 = output_dirs_dict['metaphlan'] + '/metaphlan/data/metaphlan_bowtiedb'
 
-motus_db_path_original = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus'
+motus_db_path_original = '/work/microbiome/msingle/mess/124_singlem-benchmarking/db_mOTU'
 motus_db_path_local = output_dirs_dict['motus'] + '/motus/data/db_mOTU'
 motus_gtdb_tsv = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus/mOTUs_3.0.0_GTDB_tax.tsv'
 
@@ -73,13 +75,17 @@ kaiju_db_progenomes_names = output_dirs_dict['kaiju'] + '/kaiju/data/names.dmp'
 
 rule all:
     input:
-        expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=novelties['sample'], tool=tools)
+        expand(output_prefix+"{tool}/opal/{sample}.relabund.opal_report", sample=novelties['sample'], 
+            tool=[t for t in tools if t in relabund_tools]),
+        expand(output_prefix+"{tool}/opal/{sample}.reads_wise.opal_report", sample=novelties['sample'],
+            tool=[t for t in tools if t in reads_wise_tools]),
 
 rule generate_community_and_reads:
     output:
         r1=fastq_dir + "/{sample}.1.fq.gz",
         r2=fastq_dir + "/{sample}.2.fq.gz",
-        condensed = truth_dir + "/{sample}.condensed",
+        condensed = truth_dir + "/{sample}.relabund_condensed",
+        reads_wise_condensed = truth_dir + "/{sample}.reads_wise_condensed",
         done = fastq_dir + "/{sample}.finished"
     threads: 1
     conda:
@@ -88,13 +94,13 @@ rule generate_community_and_reads:
         genome_fasta = 'genomes/{sample}.fna',
         taxonomy = lambda wildcards: r207_novelties.filter(pl.col('sample')==wildcards.sample).get_column('r207_taxonomy')[0],
     shell:
-        "mkdir -p {truth_dir} {fastq_dir} && ./generate_2component_community.py --art art_illumina --genome-fasta {params.genome_fasta} --example-bacteria-fasta {example_bacteria_genome} --example-archaea-fasta {example_archaea_genome} --example-bacteria-taxonomy '{example_bacteria_taxonomy}' --example-archaea-taxonomy '{example_archaea_taxonomy}' --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --taxonomy '{params.taxonomy}' && touch {output.done}"
+        "mkdir -p {truth_dir} {fastq_dir} && ./generate_2component_community.py --art art_illumina --genome-fasta {params.genome_fasta} --example-bacteria-fasta {example_bacteria_genome} --example-archaea-fasta {example_archaea_genome} --example-bacteria-taxonomy '{example_bacteria_taxonomy}' --example-archaea-taxonomy '{example_archaea_taxonomy}' --output-condensed {output.condensed} --output-reads-wise-condensed {output.reads_wise_condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --taxonomy '{params.taxonomy}' && touch {output.done}"
 
 rule truth_condensed_to_biobox:
     input:
-        condensed = truth_dir + "/{sample}.condensed",
+        condensed = truth_dir + "/{sample}.{method}_condensed",
     output:
-        biobox = truth_dir + "/{sample}.condensed.biobox",
+        biobox = truth_dir + "/{sample}.{method}_condensed.biobox",
     conda:
         "singlem-dev"
     shell:
@@ -107,10 +113,10 @@ def get_condensed_to_biobox_extra_args(tool):
     else:
         return ''
 
-rule tool_condensed_to_biobox:
+rule tool_relabund_condensed_to_biobox:
     input:
         profile = output_prefix + "{tool}/{tool}/{sample}.profile",
-        truth = truth_dir + "/{sample}.condensed.biobox",
+        truth = truth_dir + "/{sample}.relabund_condensed.biobox",
     params:
         extra_args = lambda wildcards: get_condensed_to_biobox_extra_args(wildcards.tool)
     output:
@@ -124,13 +130,13 @@ rule tool_condensed_to_biobox:
 rule opal:
     input:
         biobox = output_prefix+"{tool}/biobox/{sample}.biobox",
-        truth = truth_dir + "/{sample}.condensed.biobox",
+        truth = truth_dir + "/{sample}.{method}_condensed.biobox",
     params:
         output_dir = output_prefix+"{tool}",
-        output_opal_dir = output_prefix+"{tool}/opal/{sample}.opal_output_directory",
+        output_opal_dir = output_prefix+"{tool}/opal/{sample}.{method}.opal_output_directory",
     output:
-        report=output_prefix+"{tool}/opal/{sample}.opal_report",
-        done=output_prefix+"{tool}/opal/{sample}.opal_report.done",
+        report=output_prefix+"{tool}/opal/{sample}.{method}.opal_report",
+        done=output_prefix+"{tool}/opal/{sample}.{method}.opal_report.done",
     conda:
         'envs/opal.yml'
     shell:
