@@ -2,9 +2,9 @@ import extern
 import polars as pl
 
 num_threads = config['benchmarking_threads']
-kracken_num_threads = 999 # never let kracken be parallelised, because otherwise it will exhaust the RAM.
+kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
 
-tools = ['singlem', 'metaphlan', 'motus', 'kracken', 'sourmash', 'kaiju']
+tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju']
 
 output_prefix = 'output_'
 output_dirs = list([output_prefix+tool for tool in tools])
@@ -28,39 +28,39 @@ r207_novelties = pl.read_csv('stratified_gtdbtk_r207.tsv', separator='\t', has_h
 r207_novelties.columns = ['sample','r207_taxonomy']
 
 # Debug
-tools = ['kaiju']
-# novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
+tools = ['kraken']
+novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
 print("Profiling {} over {} genomes".format(tools, len(novelties)))
 
 ##################################################################### things that should be in config
 
-singlem_git_base_directory = '~/m/msingle/mess/115_camisim_ish_benchmarking/singlem'
-art = '~/bioinfo/art_bin_MountRainier/art_illumina'
+singlem_git_base_directory = os.path.join(workflow.basedir, '../singlem')
 
 ##################################################################### reference databases
 
-metapackage = '/home/woodcrob/git/singlem/db/S3.1.0.metapackage_20221209.smpkg.uploaded'
-# metapackage = '~/l/git/singlem/db/S3.1.0.metapackage_20221209.smpkg.uploaded'
+metapackage = '/work/microbiome/db/singlem/S3.1.0.metapackage_20221209.smpkg.zb'
 singlem_metapackage = output_dirs_dict['singlem'] + '/singlem/data/S3.1.0.metapackage_20221209.smpkg'
 
-metaphlan_db_original1 = '~/m/msingle/mess/115_camisim_ish_benchmarking/metaphlan_bowtiedb'
+metaphlan_db_original1 = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/metaphlan_bowtiedb'
 metaphlan_db_local1 = output_dirs_dict['metaphlan'] + '/metaphlan/data/metaphlan_bowtiedb'
 
-motus_db_path_original = '/home/woodcrob/e/motus-v3.0.3/lib/python3.9/site-packages/motus/db_mOTU'
+motus_db_path_original = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus'
 motus_db_path_local = output_dirs_dict['motus'] + '/motus/data/db_mOTU'
-motus_gtdb_tsv = '~/m/msingle/mess/115_camisim_ish_benchmarking/motus/mOTUs_3.0.0_GTDB_tax.tsv'
+motus_gtdb_tsv = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus/mOTUs_3.0.0_GTDB_tax.tsv'
 
-kracken_db = "/home/woodcrob/m/db/struo2/GTDB_release207"
-kraken_db_local = output_dirs_dict['kracken'] + "/kraken/data/GTDB_release207"
-kracken2_install = '~/bioinfo/kraken2/install/'
-bracken_install = '~/bioinfo/Bracken/'
+kraken_db = "/work/microbiome/db/struo2/GTDB_release207"
+kraken_db_local = output_dirs_dict['kraken'] + "/kraken/data/GTDB_release207"
 
-sourmash_db1_original = '/home/woodcrob/m/msingle/mess/105_novelty_testing/gtdb-rs207.taxonomy.sqldb'
-sourmash_db2_original = '/home/woodcrob/m/msingle/mess/105_novelty_testing/gtdb-rs207.genomic-reps.dna.k31.zip'
+sourmash_db1_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-rs207.taxonomy.sqldb'
+sourmash_db2_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-rs207.genomic-reps.dna.k31.zip'
 sourmash_db1 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.taxonomy.sqldb'
 sourmash_db2 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.genomic-reps.dna.k31.zip'
 
-kaiju_db_original_dir = '/home/woodcrob/m/msingle/mess/128_kaiju/progenomes'
+coverm_db = '/work/microbiome/msingle/sam/6_singlem_benchmarking/coverm_db/gtdb_r207_genomes.mmi'
+coverm_bac_tax = '/work/microbiome/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv'
+coverm_arc_tax = '/work/microbiome/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv'
+
+kaiju_db_original_dir = '/work/microbiome/msingle/mess/128_kaiju/progenomes'
 kaiju_db_original_progenomes_fmi = kaiju_db_original_dir + '/kaiju_db_progenomes.fmi'
 kaiju_db_original_progenomes_nodes = kaiju_db_original_dir + '/nodes.dmp'
 kaiju_db_original_progenomes_names = kaiju_db_original_dir + '/names.dmp'
@@ -82,11 +82,13 @@ rule generate_community_and_reads:
         condensed = truth_dir + "/{sample}.condensed",
         done = fastq_dir + "/{sample}.finished"
     threads: 1
+    conda:
+        'envs/art.yml'
     params:
         genome_fasta = 'genomes/{sample}.fna',
         taxonomy = lambda wildcards: r207_novelties.filter(pl.col('sample')==wildcards.sample).get_column('r207_taxonomy')[0],
     shell:
-        "mkdir -p {truth_dir} {fastq_dir} && ./generate_2component_community.py --art {art} --genome-fasta {params.genome_fasta} --example-bacteria-fasta {example_bacteria_genome} --example-archaea-fasta {example_archaea_genome} --example-bacteria-taxonomy '{example_bacteria_taxonomy}' --example-archaea-taxonomy '{example_archaea_taxonomy}' --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --taxonomy '{params.taxonomy}' && touch {output.done}"
+        "mkdir -p {truth_dir} {fastq_dir} && ./generate_2component_community.py --art art_illumina --genome-fasta {params.genome_fasta} --example-bacteria-fasta {example_bacteria_genome} --example-archaea-fasta {example_archaea_genome} --example-bacteria-taxonomy '{example_bacteria_taxonomy}' --example-archaea-taxonomy '{example_archaea_taxonomy}' --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --taxonomy '{params.taxonomy}' && touch {output.done}"
 
 rule truth_condensed_to_biobox:
     input:
@@ -100,7 +102,7 @@ rule truth_condensed_to_biobox:
         "--output-biobox {output.biobox}"
 
 def get_condensed_to_biobox_extra_args(tool):
-    if tool == 'kracken':
+    if tool == 'kraken':
         return ' --no-fill'
     else:
         return ''
@@ -283,42 +285,44 @@ rule motus_profile_to_condensed:
 rule braken_copy_data:
     output:
         db=directory(kraken_db_local),
-        done=output_dirs_dict['kracken'] + "/kraken/data/done"
+        done=output_dirs_dict['kraken'] + "/kraken/data/done"
     shell:
-        "cp -r {kracken_db} {output.db}/ && touch {output.done}"
+        "cp -r {kraken_db} {output.db}/ && touch {output.done}"
 
 rule kraken_run:
     input:
         reads_copied1 = fastq_dir + "/{sample}.1.fq.gz",
         reads_copied2 = fastq_dir + "/{sample}.2.fq.gz",
         db=kraken_db_local,
-        copy_braken_data_done=output_dirs_dict['kracken'] + "/kraken/data/done"
+        copy_braken_data_done=output_dirs_dict['kraken'] + "/kraken/data/done"
     benchmark:
         benchmark_dir + "/kraken/{sample}-"+str(num_threads)+"threads.benchmark"
-    threads: kracken_num_threads
+    threads: kraken_num_threads
     output:
-        report=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken",
-        done=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken.done"
+        report=output_dirs_dict['kraken'] + "/kraken/{sample}.kraken",
+        done=output_dirs_dict['kraken'] + "/kraken/{sample}.kraken.done"
+    conda:
+        "envs/kraken.yml"
     shell:
-        "export PATH={kracken2_install}:$PATH && " \
         "kraken2 --db {input.db} --threads {num_threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} && touch {output.done}"
 
 rule braken_run:
     input:
         db=kraken_db_local,
-        kraken_report=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken",
-        kraken_done=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken.done"
+        kraken_report=output_dirs_dict['kraken'] + "/kraken/{sample}.kraken",
+        kraken_done=output_dirs_dict['kraken'] + "/kraken/{sample}.kraken.done"
     output:
-        s=output_dirs_dict['kracken'] + "/braken/{sample}.report.S",
-        g=output_dirs_dict['kracken'] + "/braken/{sample}.report.G",
-        f=output_dirs_dict['kracken'] + "/braken/{sample}.report.F",
-        o=output_dirs_dict['kracken'] + "/braken/{sample}.report.O",
-        c=output_dirs_dict['kracken'] + "/braken/{sample}.report.C",
-        p=output_dirs_dict['kracken'] + "/braken/{sample}.report.P",
-        d=output_dirs_dict['kracken'] + "/braken/{sample}.report.D",
-        done=output_dirs_dict['kracken'] + "/braken/{sample}.done"
+        s=output_dirs_dict['kraken'] + "/braken/{sample}.report.S",
+        g=output_dirs_dict['kraken'] + "/braken/{sample}.report.G",
+        f=output_dirs_dict['kraken'] + "/braken/{sample}.report.F",
+        o=output_dirs_dict['kraken'] + "/braken/{sample}.report.O",
+        c=output_dirs_dict['kraken'] + "/braken/{sample}.report.C",
+        p=output_dirs_dict['kraken'] + "/braken/{sample}.report.P",
+        d=output_dirs_dict['kraken'] + "/braken/{sample}.report.D",
+        done=output_dirs_dict['kraken'] + "/braken/{sample}.done"
+    conda:
+        "envs/bracken.yml"
     shell:
-        "export PATH={bracken_install}:$PATH && " \
         "bracken -d {input.db} -r 150 -l S -t 10 -o {output.s} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l G -t 10 -o {output.g} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l F -t 10 -o {output.f} -i {input.kraken_report} && " \
@@ -331,20 +335,20 @@ rule braken_run:
 
 rule bracken_to_profile:
     input:
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.S",
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.G",
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.F",
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.O",
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.C",
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.P",
-        output_dirs_dict['kracken'] + "/braken/{sample}.report.D",
-        output_dirs_dict['kracken'] + "/braken/{sample}.done"
+        output_dirs_dict['kraken'] + "/braken/{sample}.report.S",
+        output_dirs_dict['kraken'] + "/braken/{sample}.report.G",
+        output_dirs_dict['kraken'] + "/braken/{sample}.report.F",
+        output_dirs_dict['kraken'] + "/braken/{sample}.report.O",
+        output_dirs_dict['kraken'] + "/braken/{sample}.report.C",
+        output_dirs_dict['kraken'] + "/braken/{sample}.report.P",
+        output_dirs_dict['kraken'] + "/braken/{sample}.report.D",
+        output_dirs_dict['kraken'] + "/braken/{sample}.done"
     params:
-        report_prefix = output_dirs_dict['kracken']+"/braken/{sample}.report",
-        biobox_dir = output_dirs_dict['kracken']+'/biobox',
+        report_prefix = output_dirs_dict['kraken']+"/braken/{sample}.report",
+        biobox_dir = output_dirs_dict['kraken']+'/biobox',
         truth = truth_dir + "/{sample}.condensed.biobox",
     output:
-        profile = output_dirs_dict['kracken'] + "/kracken/{sample}.profile",
+        profile = output_dirs_dict['kraken'] + "/kraken/{sample}.profile",
     conda:
         "singlem-dev"
     shell:
