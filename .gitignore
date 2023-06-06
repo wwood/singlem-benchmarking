@@ -3,3 +3,7 @@ benchmarks_115/
 env/
 local_reads/
 output_115_*
+truths/
+output_*/
+benchmarks/
+*.log
