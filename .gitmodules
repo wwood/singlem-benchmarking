@@ -1,0 +1,3 @@
+[submodule "singlem"]
+	path = singlem
+	url = https://github.com/wwood/singlem
