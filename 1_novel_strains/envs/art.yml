@@ -6,3 +6,4 @@ dependencies:
   - art
   - pandas
   - extern
+  - polars
