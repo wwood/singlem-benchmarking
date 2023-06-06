@@ -1,11 +1,12 @@
 
 import extern
 import pandas as pd
+import os
 
 num_threads = config['benchmarking_threads']
 kracken_num_threads = 999 # never let kracken be parallelised, because otherwise it will exhaust the RAM.
 
-tools = ['singlem', 'metaphlan', 'motus', 'kracken', 'sourmash']
+tools = ['singlem', 'metaphlan', 'motus', 'kracken', 'sourmash', 'coverm']
 # tools = ['singlem']
 
 output_prefix = 'output_'
@@ -18,40 +19,40 @@ datasets = list(['marine'+str(i) for i in range(10)])
 # datasets = [datasets[0]]
 
 fastq_dir = 'local_reads'
-truth_dir = 'truths'
-genome_fasta_paths = 'shadow_genome_paths.csv'
+truth_dir = os.path.join(workflow.basedir, 'truths')
+genome_fasta_paths = os.path.join(workflow.basedir, 'shadow_genome_paths.csv')
 coverage_definitions_folder = 'coverage_definitions'
 
 
 ##################################################################### things that should be in config
 
-singlem_git_base_directory = '~/m/msingle/mess/115_camisim_ish_benchmarking/singlem'
-art = '~/bioinfo/art_bin_MountRainier/art_illumina'
+singlem_git_base_directory = os.path.join(workflow.basedir, '../../singlem')
 gtdb_bac_metadata = '/work/microbiome/db/gtdb/gtdb_release207/bac120_metadata_r207.tsv'
 
 
 ##################################################################### reference databases
 
-metapackage = '/home/woodcrob/git/singlem/db/S3.1.0.metapackage_20221209.smpkg.uploaded'
-# metapackage = '~/l/git/singlem/db/S3.1.0.metapackage_20221209.smpkg.uploaded'
+metapackage = '/work/microbiome/db/singlem/S3.1.0.metapackage_20221209.smpkg.zb'
 singlem_metapackage = output_dirs_dict['singlem'] + '/singlem/data/S3.1.0.metapackage_20221209.smpkg'
 
-metaphlan_db_original1 = '~/m/msingle/mess/115_camisim_ish_benchmarking/metaphlan_bowtiedb'
+metaphlan_db_original1 = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/metaphlan_bowtiedb'
 metaphlan_db_local1 = output_dirs_dict['metaphlan'] + '/metaphlan/data/metaphlan_bowtiedb'
 
-motus_db_path_original = '/home/woodcrob/e/motus-v3.0.3/lib/python3.9/site-packages/motus/db_mOTU'
+motus_db_path_original = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus'
 motus_db_path_local = output_dirs_dict['motus'] + '/motus/data/db_mOTU'
-motus_gtdb_tsv = '~/m/msingle/mess/115_camisim_ish_benchmarking/motus/mOTUs_3.0.0_GTDB_tax.tsv'
+motus_gtdb_tsv = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus/mOTUs_3.0.0_GTDB_tax.tsv'
 
-kracken_db = "/home/woodcrob/m/db/struo2/GTDB_release207"
+kracken_db = "/work/microbiome/db/struo2/GTDB_release207"
 kraken_db_local = output_dirs_dict['kracken'] + "/kraken/data/GTDB_release207"
-kracken2_install = '~/bioinfo/kraken2/install/'
-bracken_install = '~/bioinfo/Bracken/'
 
-sourmash_db1_original = '/home/woodcrob/m/msingle/mess/105_novelty_testing/gtdb-rs207.taxonomy.sqldb'
-sourmash_db2_original = '/home/woodcrob/m/msingle/mess/105_novelty_testing/gtdb-rs207.genomic-reps.dna.k31.zip'
+sourmash_db1_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-rs207.taxonomy.sqldb'
+sourmash_db2_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-rs207.genomic-reps.dna.k31.zip'
 sourmash_db1 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.taxonomy.sqldb'
 sourmash_db2 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.genomic-reps.dna.k31.zip'
+
+coverm_db = '/work/microbiome/msingle/sam/6_singlem_benchmarking/coverm_db/gtdb_r207_genomes.mmi'
+coverm_bac_tax = '/work/microbiome/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv'
+coverm_arc_tax = '/work/microbiome/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv'
 
 #####################################################################
 
@@ -69,8 +70,10 @@ rule generate_community_and_reads:
     params:
         coverage_number = lambda wildcards: wildcards.sample.replace('marine', ''),
     threads: num_threads
+    conda:
+        'envs/art.yml'
     shell:
-        "./generate_community.py --art {art} --threads {threads} --coverage-file coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-metadata {gtdb_bac_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz && touch {output.done}"
+        "{workflow.basedir}/generate_community.py --art art_illumina --threads {threads} --coverage-file {workflow.basedir}/coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-metadata {gtdb_bac_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz && touch {output.done}"
 
 rule truth_condensed_to_biobox:
     input:
@@ -212,7 +215,7 @@ rule metaphlan_profile_to_condensed:
     conda:
         "singlem-dev"
     shell:
-        "../bin/metaphlan_to_condensed.py --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
+        "{workflow.basedir}/../bin/metaphlan_to_condensed.py --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
 
 ###############################################################################################
 ###############################################################################################
@@ -253,7 +256,7 @@ rule motus_profile_to_condensed:
     conda:
         "singlem-dev"
     shell:
-        "../bin/motus_to_condensed.py --motus {input.report} " \
+        "{workflow.basedir}/../bin/motus_to_condensed.py --motus {input.report} " \
         "--gtdb {motus_gtdb_tsv} " \
         " > {output.profile} "
 
@@ -283,8 +286,9 @@ rule kraken_run:
     output:
         report=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken",
         done=output_dirs_dict['kracken'] + "/kraken/{sample}.kraken.done"
+    conda:
+        "envs/kraken.yml"
     shell:
-        "export PATH={kracken2_install}:$PATH && " \
         "kraken2 --db {input.db} --threads {num_threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} && touch {output.done}"
 
 rule braken_run:
@@ -301,8 +305,9 @@ rule braken_run:
         p=output_dirs_dict['kracken'] + "/braken/{sample}.report.P",
         d=output_dirs_dict['kracken'] + "/braken/{sample}.report.D",
         done=output_dirs_dict['kracken'] + "/braken/{sample}.done"
+    conda:
+        "envs/bracken.yml"
     shell:
-        "export PATH={bracken_install}:$PATH && " \
         "bracken -d {input.db} -r 150 -l S -t 10 -o {output.s} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l G -t 10 -o {output.g} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l F -t 10 -o {output.f} -i {input.kraken_report} && " \
@@ -334,9 +339,9 @@ rule bracken_to_profile:
     shell:
         # Convert reports to singlem condense format
         "mkdir -p {params.biobox_dir} && " \
-        "../bin/kraken_to_condensed.py --report-prefix {params.report_prefix} " \
-        "--bacterial-taxonomy ~/m/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv " \
-        "--archaeal-taxonomy ~/m/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv > {output.profile}"
+        "{workflow.basedir}/../bin/kraken_to_condensed.py --report-prefix {params.report_prefix} " \
+        "--bacterial-taxonomy /work/microbiome/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv " \
+        "--archaeal-taxonomy /work/microbiome/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv > {output.profile}"
 
 ###############################################################################################
 ###############################################################################################
@@ -385,6 +390,49 @@ rule sourmash_to_condensed:
     output:
         profile = output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile",
     shell:
-        "../bin/sourmash_to_condensed.py --with-lineages {input} " \
+        "{workflow.basedir}/../bin/sourmash_to_condensed.py --with-lineages {input} " \
         "--sample {wildcards.sample} " \
         " > {output} "
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+######### CoverM
+
+rule coverm_run:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db=coverm_db,
+    output:
+        tsv=output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
+    threads: num_threads
+    benchmark:
+        benchmark_dir + "/coverm/{sample}-"+str(num_threads)+"threads.benchmark"
+    conda:
+        "envs/coverm.yml"
+    shell:
+        "coverm genome "
+        "-1 {input.r1} "
+        "-2 {input.r2} "
+        "-r {input.db} --minimap2-reference-is-index "
+        "-o {output.tsv} "
+        "-t {threads} "
+        "-m trimmed_mean "
+        "--separator '~' "
+
+rule coverm_to_condensed:
+    input:
+        output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
+    output:
+        profile = output_dirs_dict['coverm'] + "/coverm/{sample}.profile",
+    params:
+        bac_tax=coverm_bac_tax,
+        arc_tax=coverm_arc_tax,
+    shell:
+        "{workflow.basedir}/../bin/coverm_to_condensed.py "
+        "--coverm-genome {input} "
+        "--sample {wildcards.sample} "
+        "--bac-tax {params.bac_tax} "
+        "--arc-tax {params.arc_tax} "
+        "> {output} "
