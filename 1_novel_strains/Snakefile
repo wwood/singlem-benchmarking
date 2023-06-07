@@ -26,7 +26,7 @@ coverage_definitions_folder = 'coverage_definitions'
 
 ##################################################################### things that should be in config
 
-singlem_git_base_directory = os.path.join(workflow.basedir, '../../singlem')
+singlem_git_base_directory = os.path.join(workflow.basedir, '../singlem')
 gtdb_bac_metadata = '/work/microbiome/db/gtdb/gtdb_release207/bac120_metadata_r207.tsv'
 
 
