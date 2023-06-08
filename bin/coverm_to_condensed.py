@@ -72,7 +72,7 @@ if __name__ == '__main__':
     )
 
     coverm_genome = (
-        pl.read_csv(args.coverm_genome, separator='\t', new_columns=['genome', 'trimmed_mean'])
+        pl.read_csv(args.coverm_genome, separator='\t', new_columns=['genome', 'trimmed_mean'], dtypes=[pl.Utf8, pl.Float64])
         .filter(pl.col('trimmed_mean') != 0)
         .with_columns(pl.col('genome').str.extract(NCBI_GENOME_ID_REGEX))
         .filter(pl.col("genome").is_not_null())
