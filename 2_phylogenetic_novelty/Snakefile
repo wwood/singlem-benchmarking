@@ -5,7 +5,7 @@ num_threads = config['benchmarking_threads']
 kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
 
 relabund_tools = ['singlem', 'metaphlan', 'motus', 'sourmash']
-reads_wise_tools = ['kraken', 'kaiju']
+reads_wise_tools = ['kraken', 'kaiju', 'coverm']
 tools = relabund_tools + reads_wise_tools
 
 output_prefix = 'output_'
@@ -17,20 +17,20 @@ benchmark_dir = 'benchmarks'
 fastq_dir = 'local_reads'
 truth_dir = 'truths'
 
-example_bacteria_genome = 'domain_example_genomes/GCF_001027105.1_genomic.fna'
-example_archaea_genome = 'domain_example_genomes/GCF_000024185.1_genomic.fna'
+example_bacteria_genome = os.path.join(workflow.basedir, 'domain_example_genomes/GCF_001027105.1_genomic.fna')
+example_archaea_genome = os.path.join(workflow.basedir, 'domain_example_genomes/GCF_000024185.1_genomic.fna')
 # R207
 example_bacteria_taxonomy = 'd__Bacteria;p__Firmicutes;c__Bacilli;o__Staphylococcales;f__Staphylococcaceae;g__Staphylococcus;s__Staphylococcus aureus'
 example_archaea_taxonomy = 'd__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae;g__Methanobrevibacter;s__Methanobrevibacter ruminantium'
 
-novelties = pl.read_csv('stratified_genome_metadata.tsv', separator='\t', has_header=True)
+novelties = pl.read_csv(os.path.join(workflow.basedir, 'stratified_genome_metadata.tsv'), separator='\t', has_header=True)
 novelties.columns = ['sample','novelty','r214_taxonomy']
 
-r207_novelties = pl.read_csv('stratified_gtdbtk_r207.tsv', separator='\t', has_header=True)
+r207_novelties = pl.read_csv(os.path.join(workflow.basedir, 'stratified_gtdbtk_r207.tsv'), separator='\t', has_header=True)
 r207_novelties.columns = ['sample','r207_taxonomy']
 
 # Debug
-# tools = ['singlem']
+# tools = ['coverm']
 # novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
 print("Profiling {} over {} genomes".format(tools, len(novelties)))
 
@@ -91,10 +91,10 @@ rule generate_community_and_reads:
     conda:
         'envs/art.yml'
     params:
-        genome_fasta = 'genomes/{sample}.fna',
+        genome_fasta = os.path.join(workflow.basedir, 'genomes/{sample}.fna'),
         taxonomy = lambda wildcards: r207_novelties.filter(pl.col('sample')==wildcards.sample).get_column('r207_taxonomy')[0],
     shell:
-        "mkdir -p {truth_dir} {fastq_dir} && ./generate_2component_community.py --art art_illumina --genome-fasta {params.genome_fasta} --example-bacteria-fasta {example_bacteria_genome} --example-archaea-fasta {example_archaea_genome} --example-bacteria-taxonomy '{example_bacteria_taxonomy}' --example-archaea-taxonomy '{example_archaea_taxonomy}' --output-condensed {output.condensed} --output-reads-wise-condensed {output.reads_wise_condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --taxonomy '{params.taxonomy}' && touch {output.done}"
+        "mkdir -p {truth_dir} {fastq_dir} && {workflow.basedir}/generate_2component_community.py --art art_illumina --genome-fasta {params.genome_fasta} --example-bacteria-fasta {example_bacteria_genome} --example-archaea-fasta {example_archaea_genome} --example-bacteria-taxonomy '{example_bacteria_taxonomy}' --example-archaea-taxonomy '{example_archaea_taxonomy}' --output-condensed {output.condensed} --output-reads-wise-condensed {output.reads_wise_condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --taxonomy '{params.taxonomy}' && touch {output.done}"
 
 rule truth_condensed_to_biobox:
     input:
@@ -418,7 +418,7 @@ rule sourmash_to_condensed:
 ###############################################################################################
 ###############################################################################################
 ###############################################################################################
-######### sourmash
+######### kaiju
 
 rule kaiju_copy_db:
     # input:
@@ -485,3 +485,46 @@ rule kaiju_to_condensed:
         "--sample {wildcards.sample} " \
         "--data-dir {kaiju_db_original_dir} " \
         " > {output} "
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+######### CoverM
+
+rule coverm_run:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db=coverm_db,
+    output:
+        tsv=output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
+    threads: num_threads
+    benchmark:
+        benchmark_dir + "/coverm/{sample}-"+str(num_threads)+"threads.benchmark"
+    conda:
+        "envs/coverm.yml"
+    shell:
+        "coverm genome "
+        "-1 {input.r1} "
+        "-2 {input.r2} "
+        "-r {input.db} --minimap2-reference-is-index "
+        "-o {output.tsv} "
+        "-t {threads} "
+        "-m trimmed_mean "
+        "--separator '~' "
+
+rule coverm_to_condensed:
+    input:
+        output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
+    output:
+        profile = output_dirs_dict['coverm'] + "/coverm/{sample}.profile",
+    params:
+        bac_tax=coverm_bac_tax,
+        arc_tax=coverm_arc_tax,
+    shell:
+        "{workflow.basedir}/../bin/coverm_to_condensed.py "
+        "--coverm-genome {input} "
+        "--sample {wildcards.sample} "
+        "--bac-tax {params.bac_tax} "
+        "--arc-tax {params.arc_tax} "
+        "> {output} "
