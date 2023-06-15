@@ -259,7 +259,7 @@ rule metaphlan_profile_to_condensed:
     conda:
         "singlem-dev"
     shell:
-        "../bin/metaphlan_to_condensed.py --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
+        "{workflow.basedir}/../bin/metaphlan_to_condensed.py --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
 
 ###############################################################################################
 ###############################################################################################
@@ -300,7 +300,7 @@ rule motus_profile_to_condensed:
     conda:
         "singlem-dev"
     shell:
-        "../bin/motus_to_condensed.py --motus {input.report} " \
+        "{workflow.basedir}/../bin/motus_to_condensed.py --motus {input.report} " \
         "--gtdb {motus_gtdb_tsv} " \
         " > {output.profile} "
 
@@ -383,7 +383,7 @@ rule bracken_to_profile:
     shell:
         # Convert reports to singlem condense format
         "mkdir -p {params.biobox_dir} && " \
-        "../bin/kraken_to_condensed.py --report-prefix {params.report_prefix} " \
+        "{workflow.basedir}/../bin/kraken_to_condensed.py --report-prefix {params.report_prefix} " \
         "--bacterial-taxonomy ~/m/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv " \
         "--archaeal-taxonomy ~/m/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv > {output.profile}"
 
@@ -434,7 +434,7 @@ rule sourmash_to_condensed:
     output:
         profile = output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile",
     shell:
-        "../bin/sourmash_to_condensed.py --with-lineages {input} " \
+        "{workflow.basedir}/../bin/sourmash_to_condensed.py --with-lineages {input} " \
         "--sample {wildcards.sample} " \
         " > {output} "
 
@@ -504,7 +504,7 @@ rule kaiju_to_condensed:
     conda:
         "envs/kaiju_to_kingdom.yml"
     shell:
-        "../bin/kaiju_to_kingdom_condensed.py --input {input} " \
+        "{workflow.basedir}/../bin/kaiju_to_kingdom_condensed.py --input {input} " \
         "--sample {wildcards.sample} " \
         "--data-dir {kaiju_db_original_dir} " \
         " > {output} "
