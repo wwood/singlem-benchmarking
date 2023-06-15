@@ -92,10 +92,8 @@ if __name__ == '__main__':
     parent_parser.add_argument('-2', '--read2', required=True, help='Path to output fq.gz file')
     parent_parser.add_argument('--art', required=True, help='Path to ART binary (art_illumina)')
 
-    parent_parser.add_argument('--example-bacteria-fasta', required=True, help='Path to example bacteria genome fasta')
-    parent_parser.add_argument('--example-archaea-fasta', required=True, help='Path to example archaea genome fasta')
-    parent_parser.add_argument('--example-bacteria-taxonomy', required=True, help='Taxonomy of example bacteria genome')
-    parent_parser.add_argument('--example-archaea-taxonomy', required=True, help='Taxonomy of example archaea genome')
+    parent_parser.add_argument('--example-fasta', required=True, help='Path to example genome fasta')
+    parent_parser.add_argument('--example-taxonomy', required=True, help='Taxonomy of example genome')
     parent_parser.add_argument('--genome-fasta', required=True, help='Path to novel genome fasta file')
     parent_parser.add_argument('--taxonomy', required=True, help='Taxonomy of novel genome')
     
@@ -129,20 +127,11 @@ if __name__ == '__main__':
             r.write("sample\tcoverage\ttaxonomy\n")
 
             # Write example genome
-            if 'Bacteria' in args.taxonomy:
-                example_genome = os.path.abspath(args.example_archaea_fasta)
-                f.write(f"{sample_name}\t{coverage}\t{args.example_archaea_taxonomy}\n")
+            example_genome = os.path.abspath(args.example_fasta)
+            f.write(f"{sample_name}\t{coverage}\t{args.example_taxonomy}\n")
 
-                example_genome_length = calculate_genome_length(example_genome)
-                r.write(f"{sample_name}\t{example_genome_length}\t{args.example_archaea_taxonomy}\n")
-            elif 'Archaea' in args.taxonomy:
-                example_genome = os.path.abspath(args.example_bacteria_fasta)
-                f.write(f"{sample_name}\t{coverage}\t{args.example_bacteria_taxonomy}\n")
-
-                example_genome_length = calculate_genome_length(example_genome)
-                r.write(f"{sample_name}\t{example_genome_length}\t{args.example_bacteria_taxonomy}\n")
-            else:
-                raise Exception(f"Unknown taxonomy {args.taxonomy}")
+            example_genome_length = calculate_genome_length(example_genome)
+            r.write(f"{sample_name}\t{example_genome_length}\t{args.example_taxonomy}\n")
             
             # Write novel genome
             f.write(f"{sample_name}\t{coverage}\t{args.taxonomy}\n")
