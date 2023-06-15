@@ -17,20 +17,24 @@ benchmark_dir = 'benchmarks'
 fastq_dir = 'local_reads'
 truth_dir = 'truths'
 
-example_bacteria_genome = os.path.join(workflow.basedir, 'domain_example_genomes/GCF_001027105.1_genomic.fna')
-example_archaea_genome = os.path.join(workflow.basedir, 'domain_example_genomes/GCF_000024185.1_genomic.fna')
-# R207
-example_bacteria_taxonomy = 'd__Bacteria;p__Firmicutes;c__Bacilli;o__Staphylococcales;f__Staphylococcaceae;g__Staphylococcus;s__Staphylococcus aureus'
-example_archaea_taxonomy = 'd__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae;g__Methanobrevibacter;s__Methanobrevibacter ruminantium'
-
 novelties = pl.read_csv(os.path.join(workflow.basedir, 'stratified_genome_metadata.tsv'), separator='\t', has_header=True)
 novelties.columns = ['sample','novelty','r214_taxonomy']
 
 r207_novelties = pl.read_csv(os.path.join(workflow.basedir, 'stratified_gtdbtk_r207.tsv'), separator='\t', has_header=True)
 r207_novelties.columns = ['sample','r207_taxonomy']
 
+paired_genomes = (
+    pl.read_csv(os.path.join(workflow.basedir, 'genome_pairs.tsv'), separator='\t', has_header=True)
+    .with_columns(
+        pl.col("paired_genome")
+            .str.replace("^", os.path.join(workflow.basedir, "genome_pairs", ""))
+            .str.replace("$", ".fna"),
+        )
+    )
+paired_genomes.columns = ['sample','example_genome','example_taxonomy']
+
 # Debug
-# tools = ['coverm']
+# tools = ['singlem', 'kraken']
 # novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
 print("Profiling {} over {} genomes".format(tools, len(novelties)))
 
@@ -80,6 +84,12 @@ rule all:
         expand(output_prefix+"{tool}/opal/{sample}.reads_wise.opal_report", sample=novelties['sample'],
             tool=[t for t in tools if t in reads_wise_tools]),
 
+def get_paired_genome_fasta(wildcards):
+    return paired_genomes.filter(pl.col('sample')==wildcards.sample).get_column('example_genome')[0]
+
+def get_paired_taxonomy(wildcards):
+    return paired_genomes.filter(pl.col('sample')==wildcards.sample).get_column('example_taxonomy')[0]
+
 rule generate_community_and_reads:
     output:
         r1=fastq_dir + "/{sample}.1.fq.gz",
@@ -93,8 +103,21 @@ rule generate_community_and_reads:
     params:
         genome_fasta = os.path.join(workflow.basedir, 'genomes/{sample}.fna'),
         taxonomy = lambda wildcards: r207_novelties.filter(pl.col('sample')==wildcards.sample).get_column('r207_taxonomy')[0],
+        paired_genome_fasta = get_paired_genome_fasta,
+        paired_taxonomy = get_paired_taxonomy,
     shell:
-        "mkdir -p {truth_dir} {fastq_dir} && {workflow.basedir}/generate_2component_community.py --art art_illumina --genome-fasta {params.genome_fasta} --example-bacteria-fasta {example_bacteria_genome} --example-archaea-fasta {example_archaea_genome} --example-bacteria-taxonomy '{example_bacteria_taxonomy}' --example-archaea-taxonomy '{example_archaea_taxonomy}' --output-condensed {output.condensed} --output-reads-wise-condensed {output.reads_wise_condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --taxonomy '{params.taxonomy}' && touch {output.done}"
+        "mkdir -p {truth_dir} {fastq_dir} && "
+        "{workflow.basedir}/generate_2component_community.py "
+        "--art art_illumina "
+        "--genome-fasta {params.genome_fasta} "
+        "--example-fasta {params.paired_genome_fasta} "
+        "--example-taxonomy '{params.paired_taxonomy}' "
+        "--output-condensed {output.condensed} "
+        "--output-reads-wise-condensed {output.reads_wise_condensed} "
+        "-1 {fastq_dir}/{wildcards.sample}.1.fq.gz "
+        "-2 {fastq_dir}/{wildcards.sample}.2.fq.gz "
+        "--taxonomy '{params.taxonomy}' "
+        "&& touch {output.done}"
 
 rule truth_condensed_to_biobox:
     input:
