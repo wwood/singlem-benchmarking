@@ -7,3 +7,4 @@ truths/
 output_*/
 benchmarks/
 *.log
+genome_pairs/
