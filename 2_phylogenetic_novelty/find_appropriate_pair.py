@@ -71,7 +71,10 @@ def pipeline(genome_metadata, old_gtdb_bac, old_gtdb_arc, new_gtdb_bac, new_gtdb
             paired_taxonomy = pl.when(pl.col("domain") == "d__Bacteria")
                 .then(pl.col("arc_taxonomy"))
                 .otherwise(pl.col("bac_taxonomy")),
-        )
+            )
+        .with_columns(
+            pl.col("paired_genome").str.replace("^.._", "").str.replace("$", "_genomic")
+            )
     )
 
     return paired_genomes
