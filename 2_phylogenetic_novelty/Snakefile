@@ -256,10 +256,16 @@ rule metaphlan_profile_to_condensed:
         report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_profile"
     output:
         profile = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile",
+    params:
+        genome_pairs = os.path.join(workflow.basedir, 'genome_pairs.tsv'),
     conda:
         "singlem-dev"
     shell:
-        "{workflow.basedir}/../bin/metaphlan_to_condensed.py --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
+        "{workflow.basedir}/../bin/metaphlan_to_condensed.py "
+        "--metaphlan {input} "
+        "--sample {wildcards.sample} "
+        "--genome-pairs {params.genome_pairs} "
+        "> {output.profile} "
 
 ###############################################################################################
 ###############################################################################################
@@ -297,12 +303,16 @@ rule motus_profile_to_condensed:
         report=output_dirs_dict['motus'] + "/motus/{sample}.motus"
     output:
         profile = output_dirs_dict['motus'] + "/motus/{sample}.profile",
+    params:
+        genome_pairs = os.path.join(workflow.basedir, 'genome_pairs.tsv'),
     conda:
         "singlem-dev"
     shell:
-        "{workflow.basedir}/../bin/motus_to_condensed.py --motus {input.report} " \
-        "--gtdb {motus_gtdb_tsv} " \
-        " > {output.profile} "
+        "{workflow.basedir}/../bin/motus_to_condensed.py --motus {input.report} "
+        "--gtdb {motus_gtdb_tsv} "
+        "--sample {wildcards.sample} "
+        "--genome-pairs {params.genome_pairs} "
+        "> {output.profile} "
 
 
 ###############################################################################################
