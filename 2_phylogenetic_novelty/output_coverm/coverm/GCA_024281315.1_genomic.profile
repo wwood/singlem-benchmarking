@@ -1,0 +1,2 @@
+sample	coverage	taxonomy
+GCA_024281315.1_genomic	8.75715	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Ruminococcaceae;g__Ruminococcus;s__Ruminococcus sp002414125

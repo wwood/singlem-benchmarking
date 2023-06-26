@@ -1,0 +1,3 @@
+sample	coverage	taxonomy
+GCA_020845635.1_genomic	7.0	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Haloferacaceae;g__Haloprofundus;s__Haloprofundus halophilus
+GCA_020845635.1_genomic	8.0	d__Archaea;p__Thermoproteota;c__Nitrososphaeria;o__Nitrososphaerales;f__Nitrososphaeraceae;g__QCWD01;s__QCWD01 sp013114725

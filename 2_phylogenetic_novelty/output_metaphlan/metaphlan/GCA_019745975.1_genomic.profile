@@ -1,0 +1,2 @@
+sample	coverage	taxonomy
+GCA_019745975.1_genomic	100.0	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__Pacearchaeales;f__ARS1160;g__ARS10;s__ARS10 sp002690445

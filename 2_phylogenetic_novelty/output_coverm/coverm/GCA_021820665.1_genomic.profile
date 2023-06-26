@@ -1,0 +1,2 @@
+sample	coverage	taxonomy
+GCA_021820665.1_genomic	9.922296	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanomicrobiaceae;g__Methanoplanus;s__Methanoplanus limicola

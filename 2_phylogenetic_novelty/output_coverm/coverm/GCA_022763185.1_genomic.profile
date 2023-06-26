@@ -1,0 +1,2 @@
+sample	coverage	taxonomy
+GCA_022763185.1_genomic	10.039228	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanogasteraceae;g__Methanogaster;s__Methanogaster sp003661105
