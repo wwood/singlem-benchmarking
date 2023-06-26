@@ -1,0 +1,2 @@
+sample	coverage	taxonomy
+sample_name	1.0	d__Archaea; p__Halobacteriota; c__Methanonatronarchaeia; o__Methanonatronarchaeales; f__Methanohalarchaeaceae; g__Methanohalarchaeum; s__Methanohalarchaeum thermophilum

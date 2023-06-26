@@ -1,0 +1,2 @@
+sample	coverage	taxonomy
+GCA_020052375.1_genomic	9.914725	d__Archaea;p__Thermoproteota;c__Nitrososphaeria;o__Nitrososphaerales;f__Nitrosopumilaceae;g__Nitrosopumilus;s__Nitrosopumilus koreensis

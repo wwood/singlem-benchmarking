@@ -1,0 +1,2 @@
+sample	coverage	taxonomy
+GCA_022562795.1_genomic	7.0	d__Archaea;p__Halobacteriota;c__Archaeoglobi;o__Archaeoglobales;f__Archaeoglobaceae;g__Archaeoglobus_A;s__Archaeoglobus_A sp003662985

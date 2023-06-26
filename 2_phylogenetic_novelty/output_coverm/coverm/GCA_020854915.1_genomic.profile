@@ -1,0 +1,2 @@
+sample	coverage	taxonomy
+GCA_020854915.1_genomic	9.392876	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia;o__PCC-6307;f__Cyanobiaceae;g__Prochlorococcus_A;s__Prochlorococcus_A sp003216635
