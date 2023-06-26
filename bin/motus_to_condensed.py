@@ -47,6 +47,8 @@ if __name__ == '__main__':
 
     parent_parser.add_argument('--motus', required=True)
     parent_parser.add_argument('--gtdb-map', required=True)
+    parent_parser.add_argument('--sample')
+    parent_parser.add_argument('--genome-pairs')
 
     args = parent_parser.parse_args()
 
@@ -86,9 +88,18 @@ if __name__ == '__main__':
             taxon_to_cov[tax] = 0.
         taxon_to_cov[tax] += row['coverage']
 
-    for taxon, cov in taxon_to_cov.items():
-        print('sample_name\t{coverage}\t{taxon}'.format(
-            coverage=cov, taxon=taxon))
-            
+    if len(taxon_to_cov) > 0:
+        for taxon, cov in taxon_to_cov.items():
+            print('sample_name\t{coverage}\t{taxon}'.format(
+                coverage=cov, taxon=taxon))
+    else:
+        if bool(args.genome_pairs) & bool(args.sample):
+            logging.warning(f'No taxa identified in {args.sample}, setting known taxonomy to 100%')
+            genome_pairs = pd.read_csv(args.genome_pairs, sep='\t')
+            paired_taxonomy = genome_pairs[genome_pairs['genome_ID'] == args.sample]['paired_taxonomy'].values[0]
+
+            print(f'{args.sample}\t100.0\t{paired_taxonomy}')
+
+
     logging.info("Done")
 

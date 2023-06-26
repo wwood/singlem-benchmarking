@@ -47,6 +47,7 @@ if __name__ == '__main__':
 
     parent_parser.add_argument('--metaphlan', required=True)
     parent_parser.add_argument('--sample', required=True)
+    parent_parser.add_argument('--genome-pairs')
 
     args = parent_parser.parse_args()
 
@@ -81,15 +82,25 @@ if __name__ == '__main__':
             else:
                 taxon_to_coverage[taxons] = row['relative_abundance']
             total_coverage += float(row['relative_abundance'])
-    if total_coverage < 99:
+    if total_coverage < 99 & total_coverage > 0:
         raise Exception(f'Total coverage is less than 99%: {total_coverage}')
     elif total_coverage > 101:
         raise Exception(f'Total coverage is greater than 101%: {total_coverage}')
+
+    if total_coverage == 0:
+        if args.genome_pairs:
+            logging.warning(f'No coverage for {args.sample}, setting known taxonomy to 100%')
+            genome_pairs = pd.read_csv(args.genome_pairs, sep='\t')
+            paired_taxonomy = genome_pairs[genome_pairs['genome_ID'] == args.sample]['paired_taxonomy'].values[0]
+
+            print(f'{args.sample}\t100.0\t{paired_taxonomy}')
+        else:
+            raise Exception(f'No coverage for {args.sample}')
 
     # Print lines in alphabetical order so less specific names go before more specific
     taxons_sorted = sorted(taxon_to_coverage.keys())
     for taxons in taxons_sorted:
         print(f'{args.sample}\t{taxon_to_coverage[taxons]}\t{taxons}')
-            
+
     logging.info("Done")
 
