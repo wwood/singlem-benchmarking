@@ -4,8 +4,8 @@ import polars as pl
 num_threads = config['benchmarking_threads']
 kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
 
-relabund_tools = ['singlem', 'metaphlan', 'motus', 'sourmash']
-reads_wise_tools = ['kraken', 'kaiju', 'coverm']
+relabund_tools = ['singlem', 'metaphlan', 'motus', 'sourmash', 'coverm']
+reads_wise_tools = ['kraken', 'kaiju']
 tools = relabund_tools + reads_wise_tools
 
 output_prefix = 'output_'
