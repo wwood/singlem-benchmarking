@@ -26,10 +26,17 @@ Results can be viewed by rerunning the plot.ipynb in each benchmark directory.
 Using NCBI datasets CLI (on conda as `ncbi-datasets-cli=14.29.0`)
 
 ```bash
-cd genome_pairs
+cd genomes
+datasets download genome accession --inputfile ../genome_accessions.txt
+unzip ncbi_dataset.zip
+
+# Rename files to simple names (e.g. GCA_000508305.1_genomic.fna)
+parallel --col-sep "\t" cp {1} {2} :::: ../genome_ncbi_names.tsv
+
+cd ../genome_pairs
 datasets download genome accession --inputfile ../genome_pairs_accessions.txt
 unzip ncbi_dataset.zip
 
 # Rename files to simple names (e.g. GCA_000508305.1_genomic.fna)
-cat ../ncbi_dataset.tsv | parallel --col-sep "\t" cp {1} {2}
+parallel --col-sep "\t" cp {1} {2} :::: ../genome_pairs_ncbi_names.tsv
 ```
