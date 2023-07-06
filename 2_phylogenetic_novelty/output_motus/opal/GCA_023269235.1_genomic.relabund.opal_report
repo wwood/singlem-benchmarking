@@ -107,8 +107,8 @@ GCA_023269235.1_genomic.biobox	family	Shannon diversity	SAMPLEID	0.0
 GCA_023269235.1_genomic.biobox	family	Shannon equitability	SAMPLEID	0.0
 GCA_023269235.1_genomic.biobox	genus	Shannon diversity	SAMPLEID	0.0
 GCA_023269235.1_genomic.biobox	genus	Shannon equitability	SAMPLEID	0.0
-GCA_023269235.1_genomic.biobox	species	Shannon diversity	SAMPLEID	0.6835225264097733
-GCA_023269235.1_genomic.biobox	species	Shannon equitability	SAMPLEID	0.9861145591872755
+GCA_023269235.1_genomic.biobox	species	Shannon diversity	SAMPLEID	0.9611805475430563
+GCA_023269235.1_genomic.biobox	species	Shannon equitability	SAMPLEID	0.8749042382443516
 GCA_023269235.1_genomic.biobox	kingdom	True positives	SAMPLEID	1.0
 GCA_023269235.1_genomic.biobox	kingdom	False negatives	SAMPLEID	1.0
 GCA_023269235.1_genomic.biobox	kingdom	False positives	SAMPLEID	0.0
@@ -153,7 +153,7 @@ GCA_023269235.1_genomic.biobox	genus	F1 score	SAMPLEID	0.6666666666666666
 GCA_023269235.1_genomic.biobox	genus	Jaccard index	SAMPLEID	0.5
 GCA_023269235.1_genomic.biobox	species	True positives	SAMPLEID	0.0
 GCA_023269235.1_genomic.biobox	species	False negatives	SAMPLEID	2.0
-GCA_023269235.1_genomic.biobox	species	False positives	SAMPLEID	2.0
+GCA_023269235.1_genomic.biobox	species	False positives	SAMPLEID	3.0
 GCA_023269235.1_genomic.biobox	species	Completeness	SAMPLEID	0.0
 GCA_023269235.1_genomic.biobox	species	Purity	SAMPLEID	0.0
 GCA_023269235.1_genomic.biobox	species	Jaccard index	SAMPLEID	0.0
@@ -165,9 +165,9 @@ GCA_023269235.1_genomic.biobox	family	L1 norm error	SAMPLEID	1.0
 GCA_023269235.1_genomic.biobox	genus	L1 norm error	SAMPLEID	1.0
 GCA_023269235.1_genomic.biobox	species	L1 norm error	SAMPLEID	2.0
 GCA_023269235.1_genomic.biobox	na	Weighted UniFrac error	SAMPLEID	0.09575
-GCA_023269235.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	1.0550964187327823
+GCA_023269235.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	1.5550964187327823
 GCA_023269235.1_genomic.biobox	na	Weighted UniFrac (CAMI)	SAMPLEID	8.0
-GCA_023269235.1_genomic.biobox	na	Unweighted UniFrac (CAMI)	SAMPLEID	16.0
+GCA_023269235.1_genomic.biobox	na	Unweighted UniFrac (CAMI)	SAMPLEID	23.0
 GCA_023269235.1_genomic.biobox	phylum	Sum of abundances	SAMPLEID	1.0
 GCA_023269235.1_genomic.biobox	class	Sum of abundances	SAMPLEID	1.0
 GCA_023269235.1_genomic.biobox	order	Sum of abundances	SAMPLEID	1.0
@@ -179,4 +179,4 @@ GCA_023269235.1_genomic.biobox	class	Taxon counts	SAMPLEID	1.0
 GCA_023269235.1_genomic.biobox	order	Taxon counts	SAMPLEID	1.0
 GCA_023269235.1_genomic.biobox	family	Taxon counts	SAMPLEID	1.0
 GCA_023269235.1_genomic.biobox	genus	Taxon counts	SAMPLEID	1.0
-GCA_023269235.1_genomic.biobox	species	Taxon counts	SAMPLEID	2.0
+GCA_023269235.1_genomic.biobox	species	Taxon counts	SAMPLEID	3.0

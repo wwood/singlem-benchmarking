@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_023150535.1_genomic	9.868602	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Natrialbaceae;g__Natronococcus;s__Natronococcus amylolyticus
+GCA_023150535.1_genomic	9.865506	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Natrialbaceae;g__Natronococcus;s__Natronococcus amylolyticus

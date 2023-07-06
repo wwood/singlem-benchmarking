@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_020723935.1_genomic	9.92125	d__Bacteria;p__Dependentiae;c__Babeliae;o__Babeliales;f__Babeliaceae;g__UBA12395;s__UBA12395 sp000996275
+GCA_020723935.1_genomic	9.927974	d__Bacteria;p__Dependentiae;c__Babeliae;o__Babeliales;f__Babeliaceae;g__UBA12395;s__UBA12395 sp000996275

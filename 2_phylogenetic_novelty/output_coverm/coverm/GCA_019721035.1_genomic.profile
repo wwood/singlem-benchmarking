@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_019721035.1_genomic	9.874708	d__Bacteria;p__Campylobacterota;c__Campylobacteria;o__Campylobacterales;f__Helicobacteraceae;g__Helicobacter_A;s__Helicobacter_A aurati
+GCA_019721035.1_genomic	9.873281	d__Bacteria;p__Campylobacterota;c__Campylobacteria;o__Campylobacterales;f__Helicobacteraceae;g__Helicobacter_A;s__Helicobacter_A aurati

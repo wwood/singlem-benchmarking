@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-sample_name	0.9671070779	d__Archaea; p__Methanobacteriota; c__Methanobacteria; o__Methanobacteriales; f__Methanobacteriaceae; g__Methanobacterium; s__Methanobacterium formicicum_A
+sample_name	0.9684578699	d__Archaea; p__Methanobacteriota; c__Methanobacteria; o__Methanobacteriales; f__Methanobacteriaceae; g__Methanobacterium; s__Methanobacterium formicicum_A

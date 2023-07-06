@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_023379805.1_genomic	100.0	d__Bacteria;p__Planctomycetota;c__Phycisphaerae;o__Phycisphaerales;f__SM1A02;g__GCA-2732755;s__GCA-2732755 sp002732755
+GCA_023379805.1_genomic	100.0	d__Bacteria;p__Planctomycetota;c__Phycisphaerae;o__Phycisphaerales;f__UBA1924;g__GCA-2732755;s__GCA-2732755 sp002732755

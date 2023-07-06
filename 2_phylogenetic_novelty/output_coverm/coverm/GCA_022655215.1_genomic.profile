@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_022655215.1_genomic	9.8039465	d__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae;g__UBA587;s__UBA587 sp002504725
+GCA_022655215.1_genomic	9.815579	d__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae;g__UBA587;s__UBA587 sp002504725

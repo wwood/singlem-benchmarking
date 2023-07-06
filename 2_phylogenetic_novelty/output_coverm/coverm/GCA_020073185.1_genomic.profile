@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_020073185.1_genomic	9.937993	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Natrialbaceae;g__Natronorubrum;s__Natronorubrum sp003670115
+GCA_020073185.1_genomic	9.934817	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Natrialbaceae;g__Natronorubrum;s__Natronorubrum sp003670115
