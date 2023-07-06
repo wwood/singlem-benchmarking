@@ -1,2 +1,0 @@
-sample	coverage	taxonomy
-GCA_025059235.1_genomic	100.0	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__UBA583;f__UBA583;g__UBA583;s__UBA583 sp002506365

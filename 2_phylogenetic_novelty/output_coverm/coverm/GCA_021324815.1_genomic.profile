@@ -1,0 +1,2 @@
+sample	coverage	taxonomy
+GCA_021324815.1_genomic	9.739662	d__Archaea;p__Thermoproteota;c__Thermoproteia;o__Thermoproteales;f__Thermocladiaceae;g__Vulcanisaeta;s__Vulcanisaeta distributa

@@ -1,3 +1,0 @@
-sample	coverage	taxonomy
-GCF_023566055.1_genomic	7.0	d__Bacteria;p__Spirochaetota;c__Leptospirae;o__Leptospirales;f__Leptospiraceae;g__Leptospira;s__Leptospira interrogans
-GCF_023566055.1_genomic	7.0	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Natrialbaceae;g__Haloterrigena;s__Haloterrigena sp017352155

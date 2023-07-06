@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_023265395.1_genomic	100.0	d__Bacteria;p__Desulfobacterota;c__MBNT15;o__MBNT15;f__MBNT15;g__UBA2219;s__UBA2219 sp002327765
+GCA_023265395.1_genomic	100.0	d__Bacteria;p__Desulfobacterota_E;c__MBNT15;o__MBNT15;f__MBNT15;g__UBA2219;s__UBA2219 sp002327765

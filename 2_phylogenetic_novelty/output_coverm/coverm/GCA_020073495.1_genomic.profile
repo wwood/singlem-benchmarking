@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_020073495.1_genomic	9.7968	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Haloferacaceae;g__Haloferax;s__Haloferax larsenii
+GCA_020073495.1_genomic	9.792861	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Haloferacaceae;g__Haloferax;s__Haloferax larsenii

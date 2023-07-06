@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_024860865.1_genomic	9.936711	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Christensenellales;f__CAG-917;g__Limadaptatus;s__Limadaptatus stercorigallinarum
+GCA_024860865.1_genomic	9.945041	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Christensenellales;f__CAG-917;g__Limadaptatus;s__Limadaptatus stercorigallinarum

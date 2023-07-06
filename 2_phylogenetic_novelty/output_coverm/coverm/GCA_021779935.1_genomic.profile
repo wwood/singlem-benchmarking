@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_021779935.1_genomic	9.640314	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Natrialbaceae;g__Halobiforma;s__Halobiforma haloterrestris
+GCA_021779935.1_genomic	9.649359	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Natrialbaceae;g__Halobiforma;s__Halobiforma haloterrestris

@@ -1,2 +1,0 @@
-sample	coverage	taxonomy
-GCA_025054935.1_genomic	9.877296	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Haloferacaceae;g__Halorubrum;s__Halorubrum persicum
