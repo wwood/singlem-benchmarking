@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_021799275.1_genomic	9.883846	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Haloarculaceae;g__Halorhabdus;s__Halorhabdus tiamatea
+GCA_021799275.1_genomic	9.884072	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Haloarculaceae;g__Halorhabdus;s__Halorhabdus tiamatea

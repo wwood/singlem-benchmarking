@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_023475165.1_genomic	100.0	d__Archaea;p__Thermoproteota;c__Nitrososphaeria;o__Nitrososphaerales;f__Nitrososphaeraceae;g__UBA10452;s__UBA10452 sp002501855
+sample_name	0.0443750848	d__Archaea; p__Thermoproteota; c__Nitrososphaeria; o__Nitrososphaerales; f__Nitrososphaeraceae; g__UBA10452; Not_annotated [g__UBA10452]

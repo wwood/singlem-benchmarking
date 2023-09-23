@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_022615805.1_genomic	9.864534	d__Bacteria;p__Firmicutes;c__Bacilli;o__Acholeplasmatales;f__UBA5453;g__Acholeplasma_E;s__Acholeplasma_E sp002441525
+GCA_022615805.1_genomic	9.850669	d__Bacteria;p__Firmicutes;c__Bacilli;o__Acholeplasmatales;f__UBA5453;g__Acholeplasma_E;s__Acholeplasma_E sp002441525

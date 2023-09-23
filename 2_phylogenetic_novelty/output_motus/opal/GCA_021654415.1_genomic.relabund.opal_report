@@ -107,8 +107,8 @@ GCA_021654415.1_genomic.biobox	family	Shannon diversity	SAMPLEID	0.0
 GCA_021654415.1_genomic.biobox	family	Shannon equitability	SAMPLEID	0.0
 GCA_021654415.1_genomic.biobox	genus	Shannon diversity	SAMPLEID	0.0
 GCA_021654415.1_genomic.biobox	genus	Shannon equitability	SAMPLEID	0.0
-GCA_021654415.1_genomic.biobox	species	Shannon diversity	SAMPLEID	0.3571657122190639
-GCA_021654415.1_genomic.biobox	species	Shannon equitability	SAMPLEID	0.32510624166790425
+GCA_021654415.1_genomic.biobox	species	Shannon diversity	SAMPLEID	0.49626594664449175
+GCA_021654415.1_genomic.biobox	species	Shannon equitability	SAMPLEID	0.4517207314749175
 GCA_021654415.1_genomic.biobox	kingdom	True positives	SAMPLEID	1.0
 GCA_021654415.1_genomic.biobox	kingdom	False negatives	SAMPLEID	1.0
 GCA_021654415.1_genomic.biobox	kingdom	False positives	SAMPLEID	0.0
@@ -166,15 +166,15 @@ GCA_021654415.1_genomic.biobox	family	L1 norm error	SAMPLEID	1.0
 GCA_021654415.1_genomic.biobox	genus	L1 norm error	SAMPLEID	1.0
 GCA_021654415.1_genomic.biobox	species	L1 norm error	SAMPLEID	1.0
 GCA_021654415.1_genomic.biobox	na	Weighted UniFrac error	SAMPLEID	0.09075
-GCA_021654415.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	1.972451790633609
-GCA_021654415.1_genomic.biobox	na	Weighted UniFrac (CAMI)	SAMPLEID	7.0
-GCA_021654415.1_genomic.biobox	na	Unweighted UniFrac (CAMI)	SAMPLEID	27.0
+GCA_021654415.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	1.5000000000000002
+GCA_021654415.1_genomic.biobox	na	Weighted UniFrac (CAMI)	SAMPLEID	7.000000000000001
+GCA_021654415.1_genomic.biobox	na	Unweighted UniFrac (CAMI)	SAMPLEID	21.0
 GCA_021654415.1_genomic.biobox	phylum	Sum of abundances	SAMPLEID	1.0
 GCA_021654415.1_genomic.biobox	class	Sum of abundances	SAMPLEID	1.0
 GCA_021654415.1_genomic.biobox	order	Sum of abundances	SAMPLEID	1.0
 GCA_021654415.1_genomic.biobox	family	Sum of abundances	SAMPLEID	1.0
 GCA_021654415.1_genomic.biobox	genus	Sum of abundances	SAMPLEID	1.0
-GCA_021654415.1_genomic.biobox	species	Sum of abundances	SAMPLEID	1.0000000000000002
+GCA_021654415.1_genomic.biobox	species	Sum of abundances	SAMPLEID	1.0
 GCA_021654415.1_genomic.biobox	phylum	Taxon counts	SAMPLEID	1.0
 GCA_021654415.1_genomic.biobox	class	Taxon counts	SAMPLEID	1.0
 GCA_021654415.1_genomic.biobox	order	Taxon counts	SAMPLEID	1.0

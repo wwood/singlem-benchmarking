@@ -6,7 +6,7 @@ import os
 num_threads = config['benchmarking_threads']
 kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
 
-tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'coverm']
+tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'map2b', 'kaiju']
 # tools = ['singlem']
 
 output_prefix = 'output_'
@@ -50,9 +50,21 @@ sourmash_db2_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-
 sourmash_db1 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.taxonomy.sqldb'
 sourmash_db2 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.genomic-reps.dna.k31.zip'
 
-coverm_db = '/work/microbiome/msingle/sam/6_singlem_benchmarking/coverm_db/gtdb_r207_genomes.mmi'
-coverm_bac_tax = '/work/microbiome/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv'
-coverm_arc_tax = '/work/microbiome/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv'
+# coverm_db = '/work/microbiome/msingle/sam/6_singlem_benchmarking/coverm_db/gtdb_r207_genomes.mmi'
+# coverm_bac_tax = '/work/microbiome/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv'
+# coverm_arc_tax = '/work/microbiome/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv'
+
+kaiju_db_original_dir = '/work/microbiome/msingle/mess/128_kaiju/progenomes'
+kaiju_db_original_progenomes_fmi = kaiju_db_original_dir + '/kaiju_db_progenomes.fmi'
+kaiju_db_original_progenomes_nodes = kaiju_db_original_dir + '/nodes.dmp'
+kaiju_db_original_progenomes_names = kaiju_db_original_dir + '/names.dmp'
+kaiju_db = output_dirs_dict['kaiju'] + '/kaiju/data/kaiju_db_progenomes.fmi'
+kaiju_db_progenomes_nodes = output_dirs_dict['kaiju'] + '/kaiju/data/nodes.dmp'
+kaiju_db_progenomes_names = output_dirs_dict['kaiju'] + '/kaiju/data/names.dmp'
+
+map2b_checkout_dir = '/home/woodcrob/bioinfo/MAP2B'
+map2b_db = os.path.join(map2b_checkout_dir, 'database.bak/GTDB')
+map2b_db_local = output_dirs_dict['map2b'] + '/map2b/data/GTDB'
 
 #####################################################################
 
@@ -399,40 +411,91 @@ rule sourmash_to_condensed:
 ###############################################################################################
 ######### CoverM
 
-rule coverm_run:
+# rule coverm_run:
+#     input:
+#         r1=fastq_dir + "/{sample}.1.fq.gz",
+#         r2=fastq_dir + "/{sample}.2.fq.gz",
+#         db=coverm_db,
+#     output:
+#         tsv=output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
+#     threads: num_threads
+#     benchmark:
+#         benchmark_dir + "/coverm/{sample}-"+str(num_threads)+"threads.benchmark"
+#     conda:
+#         "envs/coverm.yml"
+#     shell:
+#         "coverm genome "
+#         "-1 {input.r1} "
+#         "-2 {input.r2} "
+#         "-r {input.db} --minimap2-reference-is-index "
+#         "-o {output.tsv} "
+#         "-t {threads} "
+#         "-m trimmed_mean "
+#         "--separator '~' "
+
+# rule coverm_to_condensed:
+#     input:
+#         output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
+#     output:
+#         profile = output_dirs_dict['coverm'] + "/coverm/{sample}.profile",
+#     params:
+#         bac_tax=coverm_bac_tax,
+#         arc_tax=coverm_arc_tax,
+#     shell:
+#         "{workflow.basedir}/../bin/coverm_to_condensed.py "
+#         "--coverm-genome {input} "
+#         "--sample {wildcards.sample} "
+#         "--bac-tax {params.bac_tax} "
+#         "--arc-tax {params.arc_tax} "
+#         "> {output} "
+
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+######### MAP2B
+
+rule map2b_copy_data:
+    output:
+        db=directory(map2b_db_local),
+        done=touch(output_dirs_dict['map2b'] + "/map2b/data/done")
+    shell:
+        "cp -r {map2b_db} {output.db}/"
+
+rule map2b_sample_setup:
     input:
         r1=fastq_dir + "/{sample}.1.fq.gz",
         r2=fastq_dir + "/{sample}.2.fq.gz",
-        db=coverm_db,
     output:
-        tsv=output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
+        listfile=output_dirs_dict['map2b'] + "/map2b/listfiles/{sample}",
+        done=touch(output_dirs_dict['map2b'] + "/map2b/done/setup/{sample}.done")
+    shell:
+        "echo {wildcards.sample} {input.r1} {input.r2} |sed 's/ /\t/g' > {output.listfile}"
+
+rule map2b_run:
+    input:
+        listfile=output_dirs_dict['map2b'] + "/map2b/listfiles/{sample}",
+        done=output_dirs_dict['map2b'] + "/map2b/data/done"
+    output:
+        tsv=output_dirs_dict['map2b'] + "/map2b/{sample}/Abundance.xls",
+        done=touch(output_dirs_dict['map2b'] + "/map2b/done/run/{sample}.done")
     threads: num_threads
     benchmark:
-        benchmark_dir + "/coverm/{sample}-"+str(num_threads)+"threads.benchmark"
+        benchmark_dir + "/map2b/{sample}-"+str(num_threads)+"threads.benchmark"
     conda:
-        "envs/coverm.yml"
-    shell:
-        "coverm genome "
-        "-1 {input.r1} "
-        "-2 {input.r2} "
-        "-r {input.db} --minimap2-reference-is-index "
-        "-o {output.tsv} "
-        "-t {threads} "
-        "-m trimmed_mean "
-        "--separator '~' "
-
-rule coverm_to_condensed:
-    input:
-        output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
-    output:
-        profile = output_dirs_dict['coverm'] + "/coverm/{sample}.profile",
+        "envs/MAP2B-20230420-conda.yml"
     params:
-        bac_tax=coverm_bac_tax,
-        arc_tax=coverm_arc_tax,
+        output_dir = lambda wildcards, output: os.path.dirname(output.tsv),
     shell:
-        "{workflow.basedir}/../bin/coverm_to_condensed.py "
-        "--coverm-genome {input} "
+        "python3 {map2b_checkout_dir}/bin/MAP2B.py -i {input.listfile} -d {map2b_db_local} -o {params.output_dir} -p {threads}"
+
+rule map2b_to_biobox:
+    input:
+        tsv=output_dirs_dict['map2b'] + "/map2b/{sample}/Abundance.xls",
+    output:
+        profile = output_dirs_dict['map2b'] + "/map2b/{sample}.profile",
+    shell:
+        "{workflow.basedir}/../bin/map2b_to_condensed.py "
+        "--abundance {input} "
         "--sample {wildcards.sample} "
-        "--bac-tax {params.bac_tax} "
-        "--arc-tax {params.arc_tax} "
         "> {output} "

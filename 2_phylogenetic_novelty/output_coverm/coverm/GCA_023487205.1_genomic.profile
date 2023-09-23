@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_023487205.1_genomic	9.684011	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Tissierellales;f__Peptoniphilaceae;g__Parvimonas;s__Parvimonas sp000214475
+GCA_023487205.1_genomic	9.689894	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Tissierellales;f__Peptoniphilaceae;g__Parvimonas;s__Parvimonas sp000214475

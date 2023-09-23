@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_020072845.1_genomic	9.582742	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Haloarculaceae;g__Haloarcula;s__Haloarcula amylolytica
+GCA_020072845.1_genomic	9.577571	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Haloarculaceae;g__Haloarcula;s__Haloarcula amylolytica

@@ -105,10 +105,10 @@ GCA_020845635.1_genomic.biobox	order	Shannon diversity	SAMPLEID	0.0
 GCA_020845635.1_genomic.biobox	order	Shannon equitability	SAMPLEID	0.0
 GCA_020845635.1_genomic.biobox	family	Shannon diversity	SAMPLEID	0.0
 GCA_020845635.1_genomic.biobox	family	Shannon equitability	SAMPLEID	0.0
-GCA_020845635.1_genomic.biobox	genus	Shannon diversity	SAMPLEID	0.6894611669044174
-GCA_020845635.1_genomic.biobox	genus	Shannon equitability	SAMPLEID	0.9946822063785209
-GCA_020845635.1_genomic.biobox	species	Shannon diversity	SAMPLEID	0.6894611669044174
-GCA_020845635.1_genomic.biobox	species	Shannon equitability	SAMPLEID	0.9946822063785209
+GCA_020845635.1_genomic.biobox	genus	Shannon diversity	SAMPLEID	0.663892066837786
+GCA_020845635.1_genomic.biobox	genus	Shannon equitability	SAMPLEID	0.9577937925123982
+GCA_020845635.1_genomic.biobox	species	Shannon diversity	SAMPLEID	0.663892066837786
+GCA_020845635.1_genomic.biobox	species	Shannon equitability	SAMPLEID	0.9577937925123982
 GCA_020845635.1_genomic.biobox	kingdom	True positives	SAMPLEID	1.0
 GCA_020845635.1_genomic.biobox	kingdom	False negatives	SAMPLEID	1.0
 GCA_020845635.1_genomic.biobox	kingdom	False positives	SAMPLEID	0.0
@@ -165,9 +165,9 @@ GCA_020845635.1_genomic.biobox	family	L1 norm error	SAMPLEID	1.0
 GCA_020845635.1_genomic.biobox	genus	L1 norm error	SAMPLEID	1.0
 GCA_020845635.1_genomic.biobox	species	L1 norm error	SAMPLEID	2.0
 GCA_020845635.1_genomic.biobox	na	Weighted UniFrac error	SAMPLEID	0.09575
-GCA_020845635.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	1.4954086317722683
+GCA_020845635.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	1.0550964187327823
 GCA_020845635.1_genomic.biobox	na	Weighted UniFrac (CAMI)	SAMPLEID	8.0
-GCA_020845635.1_genomic.biobox	na	Unweighted UniFrac (CAMI)	SAMPLEID	21.0
+GCA_020845635.1_genomic.biobox	na	Unweighted UniFrac (CAMI)	SAMPLEID	16.0
 GCA_020845635.1_genomic.biobox	phylum	Sum of abundances	SAMPLEID	1.0
 GCA_020845635.1_genomic.biobox	class	Sum of abundances	SAMPLEID	1.0
 GCA_020845635.1_genomic.biobox	order	Sum of abundances	SAMPLEID	1.0

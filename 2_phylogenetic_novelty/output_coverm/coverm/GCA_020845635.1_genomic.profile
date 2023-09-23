@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_020845635.1_genomic	8.060435	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Haloferacaceae;g__Haloprofundus;s__Haloprofundus halophilus
+GCA_020845635.1_genomic	8.044673	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Haloferacaceae;g__Haloprofundus;s__Haloprofundus halophilus

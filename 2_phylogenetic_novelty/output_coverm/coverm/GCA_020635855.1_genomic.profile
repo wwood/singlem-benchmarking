@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_020635855.1_genomic	9.921477	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Halococcaceae;g__Halococcus;s__Halococcus sediminicola
+GCA_020635855.1_genomic	9.92187	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Halococcaceae;g__Halococcus;s__Halococcus sediminicola
