@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_021163205.1_genomic	9.911391	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rs-D84;f__Rs-D84;g__Enterousia;s__Enterousia sp900550565
+GCA_021163205.1_genomic	9.927296	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rs-D84;f__Rs-D84;g__Enterousia;s__Enterousia sp900550565

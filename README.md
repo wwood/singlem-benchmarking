@@ -26,6 +26,7 @@ Results can be viewed by rerunning the plot.ipynb in each benchmark directory.
 Using NCBI datasets CLI (on conda as `ncbi-datasets-cli=14.29.0`)
 
 ```bash
+cd 2_phylogenetic_novelty
 cd genomes
 datasets download genome accession --inputfile ../genome_accessions.txt
 unzip ncbi_dataset.zip

@@ -1,579 +1,523 @@
 sample	coverage	taxonomy
-GCA_020696385.1_genomic.report	0.97101	d__Bacteria
-GCA_020696385.1_genomic.report	0.02898	d__Archaea
-GCA_020696385.1_genomic.report	0.90935	d__Bacteria;p__Actinobacteriota
-GCA_020696385.1_genomic.report	0.01314	d__Bacteria;p__Proteobacteria
-GCA_020696385.1_genomic.report	0.0148	d__Bacteria;p__Firmicutes_A
-GCA_020696385.1_genomic.report	0.01027	d__Bacteria;p__Bacteroidota
-GCA_020696385.1_genomic.report	0.00571	d__Bacteria;p__Firmicutes
-GCA_020696385.1_genomic.report	0.00253	d__Bacteria;p__Desulfobacterota
-GCA_020696385.1_genomic.report	0.0021	d__Bacteria;p__Chloroflexota
-GCA_020696385.1_genomic.report	0.00168	d__Bacteria;p__Cyanobacteria
-GCA_020696385.1_genomic.report	0.00148	d__Bacteria;p__Patescibacteria
-GCA_020696385.1_genomic.report	0.00109	d__Bacteria;p__Acidobacteriota
-GCA_020696385.1_genomic.report	0.00094	d__Bacteria;p__Spirochaetota
-GCA_020696385.1_genomic.report	0.00086	d__Bacteria;p__Planctomycetota
-GCA_020696385.1_genomic.report	0.00084	d__Bacteria;p__Verrucomicrobiota
-GCA_020696385.1_genomic.report	0.00154	d__Bacteria;p__Firmicutes_B
-GCA_020696385.1_genomic.report	0.00047	d__Bacteria;p__Omnitrophota
-GCA_020696385.1_genomic.report	0.00055	d__Bacteria;p__Nitrospirota
-GCA_020696385.1_genomic.report	0.00039	d__Bacteria;p__Marinisomatota
-GCA_020696385.1_genomic.report	0.00036	d__Bacteria;p__Myxococcota
-GCA_020696385.1_genomic.report	0.0006	d__Bacteria;p__Krumholzibacteriota
-GCA_020696385.1_genomic.report	0.00034	d__Bacteria;p__Desulfobacterota_I
+GCA_020696385.1_genomic.report	0.97168	d__Bacteria
+GCA_020696385.1_genomic.report	0.0283	d__Archaea
+GCA_020696385.1_genomic.report	0.91118	d__Bacteria;p__Actinobacteriota
+GCA_020696385.1_genomic.report	0.01258	d__Bacteria;p__Proteobacteria
+GCA_020696385.1_genomic.report	0.01051	d__Bacteria;p__Bacteroidota
+GCA_020696385.1_genomic.report	0.01469	d__Bacteria;p__Firmicutes_A
+GCA_020696385.1_genomic.report	0.00469	d__Bacteria;p__Firmicutes
+GCA_020696385.1_genomic.report	0.00282	d__Bacteria;p__Desulfobacterota
+GCA_020696385.1_genomic.report	0.00172	d__Bacteria;p__Chloroflexota
+GCA_020696385.1_genomic.report	0.0014	d__Bacteria;p__Verrucomicrobiota
+GCA_020696385.1_genomic.report	0.00133	d__Bacteria;p__Cyanobacteria
+GCA_020696385.1_genomic.report	0.00159	d__Bacteria;p__Patescibacteria
+GCA_020696385.1_genomic.report	0.00095	d__Bacteria;p__Acidobacteriota
+GCA_020696385.1_genomic.report	0.00134	d__Bacteria;p__Firmicutes_B
+GCA_020696385.1_genomic.report	0.00079	d__Bacteria;p__Planctomycetota
+GCA_020696385.1_genomic.report	0.00072	d__Bacteria;p__Spirochaetota
+GCA_020696385.1_genomic.report	0.00077	d__Bacteria;p__Nitrospirota
+GCA_020696385.1_genomic.report	0.00052	d__Bacteria;p__Myxococcota
+GCA_020696385.1_genomic.report	0.00079	d__Bacteria;p__Firmicutes_C
+GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Marinisomatota
+GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Omnitrophota
 GCA_020696385.1_genomic.report	0.00032	d__Bacteria;p__Bipolaricaulota
-GCA_020696385.1_genomic.report	0.00053	d__Bacteria;p__Firmicutes_C
-GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Chlamydiota
-GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__WOR-3
-GCA_020696385.1_genomic.report	0.00045	d__Bacteria;p__Campylobacterota
-GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Zixibacteria
-GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__UBA10199
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Synergistota
-GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Firmicutes_G
-GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Elusimicrobiota
-GCA_020696385.1_genomic.report	0.00029	d__Bacteria;p__Firmicutes_D
-GCA_020696385.1_genomic.report	0.00027	d__Bacteria;p__Cloacimonadota
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_H
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes_F
-GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Bdellovibrionota_C
-GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Deinococcota
-GCA_020696385.1_genomic.report	0.01723	d__Archaea;p__Thermoplasmatota
-GCA_020696385.1_genomic.report	0.00391	d__Archaea;p__Halobacteriota
-GCA_020696385.1_genomic.report	0.00215	d__Archaea;p__Thermoproteota
-GCA_020696385.1_genomic.report	0.00152	d__Archaea;p__Nanoarchaeota
-GCA_020696385.1_genomic.report	0.00107	d__Archaea;p__Asgardarchaeota
-GCA_020696385.1_genomic.report	0.00051	d__Archaea;p__Methanobacteriota
-GCA_020696385.1_genomic.report	0.00024	d__Archaea;p__Methanobacteriota_B
-GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Altiarchaeota
-GCA_020696385.1_genomic.report	0.00012	d__Archaea;p__B1Sed10-29
-GCA_020696385.1_genomic.report	0.90853	d__Bacteria;p__Actinobacteriota;c__Thermoleophilia
-GCA_020696385.1_genomic.report	0.00299	d__Bacteria;p__Actinobacteriota;c__Actinomycetia
-GCA_020696385.1_genomic.report	0.00043	d__Bacteria;p__Actinobacteriota;c__Acidimicrobiia
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Actinobacteriota;c__Coriobacteriia
-GCA_020696385.1_genomic.report	0.00749	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria
-GCA_020696385.1_genomic.report	0.00544	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria
-GCA_020696385.1_genomic.report	0.01494	d__Bacteria;p__Firmicutes_A;c__Clostridia
-GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Firmicutes_A;c__Thermoanaerobacteria
-GCA_020696385.1_genomic.report	0.00881	d__Bacteria;p__Bacteroidota;c__Bacteroidia
-GCA_020696385.1_genomic.report	0.00061	d__Bacteria;p__Bacteroidota;c__Ignavibacteria
-GCA_020696385.1_genomic.report	0.00029	d__Bacteria;p__Bacteroidota;c__Chlorobia
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Bacteroidota;c__UBA10030
-GCA_020696385.1_genomic.report	0.00022	d__Bacteria;p__Bacteroidota;c__Kapabacteria
-GCA_020696385.1_genomic.report	0.00587	d__Bacteria;p__Firmicutes;c__Bacilli
-GCA_020696385.1_genomic.report	0.00078	d__Bacteria;p__Desulfobacterota;c__Desulfuromonadia
-GCA_020696385.1_genomic.report	0.00093	d__Bacteria;p__Desulfobacterota;c__Desulfobacteria
-GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Desulfobacterota;c__DSM-4660
-GCA_020696385.1_genomic.report	0.00022	d__Bacteria;p__Desulfobacterota;c__GWC2-55-46
-GCA_020696385.1_genomic.report	0.00082	d__Bacteria;p__Chloroflexota;c__Anaerolineae
-GCA_020696385.1_genomic.report	0.00091	d__Bacteria;p__Chloroflexota;c__Dehalococcoidia
-GCA_020696385.1_genomic.report	0.00032	d__Bacteria;p__Chloroflexota;c__Chloroflexia
-GCA_020696385.1_genomic.report	0.0016	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia
-GCA_020696385.1_genomic.report	0.00029	d__Bacteria;p__Patescibacteria;c__Microgenomatia
-GCA_020696385.1_genomic.report	0.00026	d__Bacteria;p__Patescibacteria;c__Paceibacteria
-GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Patescibacteria;c__ABY1
-GCA_020696385.1_genomic.report	0.00038	d__Bacteria;p__Acidobacteriota;c__Acidobacteriae
+GCA_020696385.1_genomic.report	0.00054	d__Bacteria;p__Campylobacterota
+GCA_020696385.1_genomic.report	0.00066	d__Bacteria;p__Krumholzibacteriota
+GCA_020696385.1_genomic.report	0.0003	d__Bacteria;p__Zixibacteria
+GCA_020696385.1_genomic.report	0.00029	d__Bacteria;p__Desulfobacterota_I
+GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Synergistota
+GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Chlamydiota
+GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Firmicutes_D
+GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Elusimicrobiota
+GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__WOR-3
+GCA_020696385.1_genomic.report	0.00071	d__Bacteria;p__Latescibacterota
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Bdellovibrionota
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Cloacimonadota
+GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Firmicutes_G
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_F
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Deinococcota
+GCA_020696385.1_genomic.report	0.01689	d__Archaea;p__Thermoplasmatota
+GCA_020696385.1_genomic.report	0.00338	d__Archaea;p__Halobacteriota
+GCA_020696385.1_genomic.report	0.00247	d__Archaea;p__Thermoproteota
+GCA_020696385.1_genomic.report	0.00134	d__Archaea;p__Nanoarchaeota
+GCA_020696385.1_genomic.report	0.001	d__Archaea;p__Asgardarchaeota
+GCA_020696385.1_genomic.report	0.00054	d__Archaea;p__Methanobacteriota
+GCA_020696385.1_genomic.report	0.00037	d__Archaea;p__Methanobacteriota_B
+GCA_020696385.1_genomic.report	0.00012	d__Archaea;p__Aenigmatarchaeota
+GCA_020696385.1_genomic.report	0.91078	d__Bacteria;p__Actinobacteriota;c__Thermoleophilia
+GCA_020696385.1_genomic.report	0.00285	d__Bacteria;p__Actinobacteriota;c__Actinomycetia
+GCA_020696385.1_genomic.report	0.00061	d__Bacteria;p__Actinobacteriota;c__Acidimicrobiia
+GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Actinobacteriota;c__Coriobacteriia
+GCA_020696385.1_genomic.report	0.00756	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria
+GCA_020696385.1_genomic.report	0.00477	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria
+GCA_020696385.1_genomic.report	0.00943	d__Bacteria;p__Bacteroidota;c__Bacteroidia
+GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Bacteroidota;c__Ignavibacteria
+GCA_020696385.1_genomic.report	0.00022	d__Bacteria;p__Bacteroidota;c__UBA10030
+GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Bacteroidota;c__Rhodothermia
+GCA_020696385.1_genomic.report	0.01497	d__Bacteria;p__Firmicutes_A;c__Clostridia
+GCA_020696385.1_genomic.report	0.00045	d__Bacteria;p__Firmicutes_A;c__Thermoanaerobacteria
+GCA_020696385.1_genomic.report	0.0049	d__Bacteria;p__Firmicutes;c__Bacilli
+GCA_020696385.1_genomic.report	0.00087	d__Bacteria;p__Desulfobacterota;c__Desulfobacteria
+GCA_020696385.1_genomic.report	0.00043	d__Bacteria;p__Desulfobacterota;c__Desulfuromonadia
+GCA_020696385.1_genomic.report	0.00034	d__Bacteria;p__Desulfobacterota;c__DSM-4660
+GCA_020696385.1_genomic.report	0.0004	d__Bacteria;p__Desulfobacterota;c__GWC2-55-46
+GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Desulfobacterota;c__Desulfomonilia
+GCA_020696385.1_genomic.report	0.00039	d__Bacteria;p__Desulfobacterota;c__Desulfobulbia
+GCA_020696385.1_genomic.report	0.00084	d__Bacteria;p__Chloroflexota;c__Anaerolineae
+GCA_020696385.1_genomic.report	0.0007	d__Bacteria;p__Chloroflexota;c__Dehalococcoidia
+GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Chloroflexota;c__Chloroflexia
+GCA_020696385.1_genomic.report	0.00067	d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae
+GCA_020696385.1_genomic.report	0.00061	d__Bacteria;p__Verrucomicrobiota;c__Kiritimatiellae
+GCA_020696385.1_genomic.report	0.00128	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia
+GCA_020696385.1_genomic.report	0.00031	d__Bacteria;p__Patescibacteria;c__Microgenomatia
+GCA_020696385.1_genomic.report	0.00048	d__Bacteria;p__Patescibacteria;c__Paceibacteria
+GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Patescibacteria;c__ABY1
+GCA_020696385.1_genomic.report	0.00032	d__Bacteria;p__Acidobacteriota;c__Acidobacteriae
 GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Acidobacteriota;c__Aminicenantia
-GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Acidobacteriota;c__CAIWXX01
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Acidobacteriota;c__B3-B38
-GCA_020696385.1_genomic.report	0.00073	d__Bacteria;p__Spirochaetota;c__Spirochaetia
-GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Spirochaetota;c__UBA6919
-GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Planctomycetota;c__Planctomycetia
+GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Acidobacteriota;c__CAIWXX01
+GCA_020696385.1_genomic.report	0.00027	d__Bacteria;p__Firmicutes_B;c__Desulfitobacteriia
+GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Planctomycetota;c__Planctomycetia
 GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Planctomycetota;c__Phycisphaerae
-GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Planctomycetota;c__UBA1135
-GCA_020696385.1_genomic.report	0.00046	d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae
-GCA_020696385.1_genomic.report	0.00029	d__Bacteria;p__Verrucomicrobiota;c__Kiritimatiellae
-GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Firmicutes_B;c__Desulfitobacteriia
-GCA_020696385.1_genomic.report	0.00099	d__Bacteria;p__Firmicutes_B;c__Syntrophomonadia
-GCA_020696385.1_genomic.report	0.00048	d__Bacteria;p__Omnitrophota;c__Koll11
-GCA_020696385.1_genomic.report	0.00045	d__Bacteria;p__Nitrospirota;c__Thermodesulfovibrionia
-GCA_020696385.1_genomic.report	0.00034	d__Bacteria;p__Marinisomatota;c__Marinisomatia
-GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Myxococcota;c__JACRCW01
-GCA_020696385.1_genomic.report	0.00061	d__Bacteria;p__Krumholzibacteriota;c__Krumholzibacteria
-GCA_020696385.1_genomic.report	0.00034	d__Bacteria;p__Desulfobacterota_I;c__Desulfovibrionia
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Planctomycetota;c__Brocadiae
+GCA_020696385.1_genomic.report	0.00057	d__Bacteria;p__Spirochaetota;c__Spirochaetia
+GCA_020696385.1_genomic.report	0.00059	d__Bacteria;p__Nitrospirota;c__Thermodesulfovibrionia
+GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Myxococcota;c__Polyangia
+GCA_020696385.1_genomic.report	0.00084	d__Bacteria;p__Firmicutes_C;c__Negativicutes
+GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Marinisomatota;c__Marinisomatia
+GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Omnitrophota;c__Koll11
 GCA_020696385.1_genomic.report	0.00032	d__Bacteria;p__Bipolaricaulota;c__Bipolaricaulia
-GCA_020696385.1_genomic.report	0.00055	d__Bacteria;p__Firmicutes_C;c__Negativicutes
-GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Chlamydiota;c__Chlamydiia
+GCA_020696385.1_genomic.report	0.00054	d__Bacteria;p__Campylobacterota;c__Campylobacteria
+GCA_020696385.1_genomic.report	0.00071	d__Bacteria;p__Krumholzibacteriota;c__Krumholzibacteria
+GCA_020696385.1_genomic.report	0.00031	d__Bacteria;p__Zixibacteria;c__MSB-5A5
+GCA_020696385.1_genomic.report	0.00029	d__Bacteria;p__Desulfobacterota_I;c__Desulfovibrionia
+GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Synergistota;c__Synergistia
+GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Chlamydiota;c__Chlamydiia
+GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Firmicutes_D;c__Dethiobacteria
+GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Elusimicrobiota;c__Elusimicrobia
 GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__WOR-3;c__UBA3073
-GCA_020696385.1_genomic.report	0.00045	d__Bacteria;p__Campylobacterota;c__Campylobacteria
-GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Zixibacteria;c__MSB-5A5
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Synergistota;c__Synergistia
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes_G;c__Limnochordia
-GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Elusimicrobiota;c__Elusimicrobia
-GCA_020696385.1_genomic.report	0.00029	d__Bacteria;p__Firmicutes_D;c__Dethiobacteria
-GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Cloacimonadota;c__Cloacimonadia
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_H;c__UBA994
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes_F;c__Halanaerobiia
-GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Bdellovibrionota_C;c__UBA2361
-GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Deinococcota;c__Deinococci
-GCA_020696385.1_genomic.report	0.01344	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata
-GCA_020696385.1_genomic.report	0.00304	d__Archaea;p__Thermoplasmatota;c__Poseidoniia
-GCA_020696385.1_genomic.report	0.00063	d__Archaea;p__Thermoplasmatota;c__E2
-GCA_020696385.1_genomic.report	0.00022	d__Archaea;p__Thermoplasmatota;c__EX4484-6
-GCA_020696385.1_genomic.report	0.00204	d__Archaea;p__Halobacteriota;c__Methanosarcinia
-GCA_020696385.1_genomic.report	0.00088	d__Archaea;p__Halobacteriota;c__Methanomicrobia
-GCA_020696385.1_genomic.report	0.00039	d__Archaea;p__Halobacteriota;c__Archaeoglobi
-GCA_020696385.1_genomic.report	0.00037	d__Archaea;p__Halobacteriota;c__Syntropharchaeia
-GCA_020696385.1_genomic.report	0.00017	d__Archaea;p__Halobacteriota;c__Halobacteria
-GCA_020696385.1_genomic.report	0.00144	d__Archaea;p__Thermoproteota;c__Bathyarchaeia
-GCA_020696385.1_genomic.report	0.00023	d__Archaea;p__Thermoproteota;c__EX4484-205
-GCA_020696385.1_genomic.report	0.00023	d__Archaea;p__Thermoproteota;c__Nitrososphaeria
-GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Thermoproteota;c__Thermoproteia
-GCA_020696385.1_genomic.report	0.00152	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia
-GCA_020696385.1_genomic.report	0.0005	d__Archaea;p__Asgardarchaeota;c__Lokiarchaeia
-GCA_020696385.1_genomic.report	0.00027	d__Archaea;p__Asgardarchaeota;c__Thorarchaeia
-GCA_020696385.1_genomic.report	0.00018	d__Archaea;p__Asgardarchaeota;c__Heimdallarchaeia
-GCA_020696385.1_genomic.report	0.00051	d__Archaea;p__Methanobacteriota;c__Methanobacteria
-GCA_020696385.1_genomic.report	0.00024	d__Archaea;p__Methanobacteriota_B;c__Thermococci
-GCA_020696385.1_genomic.report	0.00024	d__Archaea;p__Altiarchaeota;c__Altiarchaeia
-GCA_020696385.1_genomic.report	0.91725	d__Bacteria;p__Actinobacteriota;c__Thermoleophilia;o__Solirubrobacterales
-GCA_020696385.1_genomic.report	0.00095	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Mycobacteriales
-GCA_020696385.1_genomic.report	0.00063	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Actinomycetales
-GCA_020696385.1_genomic.report	0.00048	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptomycetales
-GCA_020696385.1_genomic.report	0.00036	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptosporangiales
-GCA_020696385.1_genomic.report	0.00032	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Propionibacteriales
-GCA_020696385.1_genomic.report	0.00025	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Nanopelagicales
-GCA_020696385.1_genomic.report	0.00048	d__Bacteria;p__Actinobacteriota;c__Acidimicrobiia;o__Acidimicrobiales
-GCA_020696385.1_genomic.report	0.00255	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales
-GCA_020696385.1_genomic.report	0.00193	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales
-GCA_020696385.1_genomic.report	0.0017	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales
-GCA_020696385.1_genomic.report	0.00032	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Xanthomonadales
-GCA_020696385.1_genomic.report	0.00026	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Methylococcales
-GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__UBA11654
-GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Chromatiales
-GCA_020696385.1_genomic.report	0.001	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales
+GCA_020696385.1_genomic.report	0.00078	d__Bacteria;p__Latescibacterota;c__UBA2968
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Cloacimonadota;c__Cloacimonadia
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_F;c__Halanaerobiia
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Deinococcota;c__Deinococci
+GCA_020696385.1_genomic.report	0.0131	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata
+GCA_020696385.1_genomic.report	0.0029	d__Archaea;p__Thermoplasmatota;c__Poseidoniia
+GCA_020696385.1_genomic.report	0.00071	d__Archaea;p__Thermoplasmatota;c__E2
+GCA_020696385.1_genomic.report	0.00024	d__Archaea;p__Thermoplasmatota;c__EX4484-6
+GCA_020696385.1_genomic.report	0.00185	d__Archaea;p__Halobacteriota;c__Methanosarcinia
+GCA_020696385.1_genomic.report	0.00051	d__Archaea;p__Halobacteriota;c__Methanomicrobia
+GCA_020696385.1_genomic.report	0.00034	d__Archaea;p__Halobacteriota;c__Archaeoglobi
+GCA_020696385.1_genomic.report	0.00032	d__Archaea;p__Halobacteriota;c__Halobacteria
+GCA_020696385.1_genomic.report	0.00031	d__Archaea;p__Halobacteriota;c__Syntropharchaeia
+GCA_020696385.1_genomic.report	0.00164	d__Archaea;p__Thermoproteota;c__Bathyarchaeia
+GCA_020696385.1_genomic.report	0.00053	d__Archaea;p__Thermoproteota;c__Nitrososphaeria
+GCA_020696385.1_genomic.report	0.00018	d__Archaea;p__Thermoproteota;c__EX4484-205
+GCA_020696385.1_genomic.report	0.00135	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia
+GCA_020696385.1_genomic.report	0.00051	d__Archaea;p__Asgardarchaeota;c__Lokiarchaeia
+GCA_020696385.1_genomic.report	0.00027	d__Archaea;p__Asgardarchaeota;c__Heimdallarchaeia
+GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Asgardarchaeota;c__Thorarchaeia
+GCA_020696385.1_genomic.report	0.00054	d__Archaea;p__Methanobacteriota;c__Methanobacteria
+GCA_020696385.1_genomic.report	0.00037	d__Archaea;p__Methanobacteriota_B;c__Thermococci
+GCA_020696385.1_genomic.report	0.00012	d__Archaea;p__Aenigmatarchaeota;c__Aenigmatarchaeia
+GCA_020696385.1_genomic.report	0.91916	d__Bacteria;p__Actinobacteriota;c__Thermoleophilia;o__Solirubrobacterales
+GCA_020696385.1_genomic.report	0.0009	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Mycobacteriales
+GCA_020696385.1_genomic.report	0.00059	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptomycetales
+GCA_020696385.1_genomic.report	0.00068	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Actinomycetales
+GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptosporangiales
+GCA_020696385.1_genomic.report	0.00026	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Propionibacteriales
+GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Nanopelagicales
+GCA_020696385.1_genomic.report	0.00069	d__Bacteria;p__Actinobacteriota;c__Acidimicrobiia;o__Acidimicrobiales
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales
+GCA_020696385.1_genomic.report	0.00238	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales
+GCA_020696385.1_genomic.report	0.00164	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales
+GCA_020696385.1_genomic.report	0.00198	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales
+GCA_020696385.1_genomic.report	0.00032	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Methylococcales
+GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Xanthomonadales
+GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__UBA11654
+GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__SAR86
+GCA_020696385.1_genomic.report	0.0011	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales
 GCA_020696385.1_genomic.report	0.00047	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhodobacterales
-GCA_020696385.1_genomic.report	0.00039	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Pelagibacterales
-GCA_020696385.1_genomic.report	0.0006	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Sphingomonadales
-GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Caulobacterales
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Parvibaculales
-GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Acetobacterales
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales_A
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__UBA1280
-GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rs-D84
-GCA_020696385.1_genomic.report	0.00634	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales
-GCA_020696385.1_genomic.report	0.00287	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales
-GCA_020696385.1_genomic.report	0.00289	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Peptostreptococcales
-GCA_020696385.1_genomic.report	0.0007	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Christensenellales
-GCA_020696385.1_genomic.report	0.0016	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Acetivibrionales
-GCA_020696385.1_genomic.report	0.00038	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Clostridiales
-GCA_020696385.1_genomic.report	0.00027	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Tissierellales
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__TANB77
-GCA_020696385.1_genomic.report	0.00027	d__Bacteria;p__Firmicutes_A;c__Thermoanaerobacteria;o__Caldicellulosiruptorales
-GCA_020696385.1_genomic.report	0.00419	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales
-GCA_020696385.1_genomic.report	0.00249	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales
-GCA_020696385.1_genomic.report	0.00119	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales
-GCA_020696385.1_genomic.report	0.00065	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Cytophagales
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Sphingobacteriales
-GCA_020696385.1_genomic.report	0.00031	d__Bacteria;p__Bacteroidota;c__Ignavibacteria;o__SJA-28
-GCA_020696385.1_genomic.report	0.00031	d__Bacteria;p__Bacteroidota;c__Ignavibacteria;o__Ignavibacteriales
-GCA_020696385.1_genomic.report	0.00039	d__Bacteria;p__Bacteroidota;c__Chlorobia;o__Chlorobiales
-GCA_020696385.1_genomic.report	0.00025	d__Bacteria;p__Bacteroidota;c__Kapabacteria;o__Kapabacteriales
-GCA_020696385.1_genomic.report	0.00091	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales
-GCA_020696385.1_genomic.report	0.00049	d__Bacteria;p__Firmicutes;c__Bacilli;o__Paenibacillales
-GCA_020696385.1_genomic.report	0.001	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_B
-GCA_020696385.1_genomic.report	0.00044	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_D
-GCA_020696385.1_genomic.report	0.00094	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales
-GCA_020696385.1_genomic.report	0.00129	d__Bacteria;p__Firmicutes;c__Bacilli;o__Erysipelotrichales
-GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_A
-GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_H
-GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Firmicutes;c__Bacilli;o__Acholeplasmatales
-GCA_020696385.1_genomic.report	0.00059	d__Bacteria;p__Desulfobacterota;c__Desulfuromonadia;o__Geobacterales
-GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Desulfobacterota;c__Desulfuromonadia;o__Desulfuromonadales
-GCA_020696385.1_genomic.report	0.00099	d__Bacteria;p__Desulfobacterota;c__Desulfobacteria;o__Desulfobacterales
-GCA_020696385.1_genomic.report	0.00034	d__Bacteria;p__Desulfobacterota;c__DSM-4660;o__Desulfatiglandales
+GCA_020696385.1_genomic.report	0.00036	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Sphingomonadales
+GCA_020696385.1_genomic.report	0.00032	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Pelagibacterales
+GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales_A
+GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Caulobacterales
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Acetobacterales
+GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Micropepsales
+GCA_020696385.1_genomic.report	0.00475	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales
+GCA_020696385.1_genomic.report	0.00252	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales
+GCA_020696385.1_genomic.report	0.0012	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales
+GCA_020696385.1_genomic.report	0.00077	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Cytophagales
+GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Sphingobacteriales
+GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Bacteroidota;c__Ignavibacteria;o__Ignavibacteriales
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Bacteroidota;c__Rhodothermia;o__Balneolales
+GCA_020696385.1_genomic.report	0.00712	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales
+GCA_020696385.1_genomic.report	0.00385	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales
+GCA_020696385.1_genomic.report	0.00194	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Peptostreptococcales
+GCA_020696385.1_genomic.report	0.00088	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Christensenellales
+GCA_020696385.1_genomic.report	0.00037	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Clostridiales
+GCA_020696385.1_genomic.report	0.00093	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Acetivibrionales
+GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Tissierellales
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Saccharofermentanales
+GCA_020696385.1_genomic.report	0.00052	d__Bacteria;p__Firmicutes_A;c__Thermoanaerobacteria;o__Caldicellulosiruptorales
+GCA_020696385.1_genomic.report	0.00056	d__Bacteria;p__Firmicutes;c__Bacilli;o__Paenibacillales
+GCA_020696385.1_genomic.report	0.00122	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales
+GCA_020696385.1_genomic.report	0.0008	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales
+GCA_020696385.1_genomic.report	0.00027	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_D
+GCA_020696385.1_genomic.report	0.00031	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_H
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Firmicutes;c__Bacilli;o__Staphylococcales
+GCA_020696385.1_genomic.report	0.0006	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_B
+GCA_020696385.1_genomic.report	0.00059	d__Bacteria;p__Firmicutes;c__Bacilli;o__Erysipelotrichales
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes;c__Bacilli;o__Acholeplasmatales
+GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Firmicutes;c__Bacilli;o__RFN20
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_A
+GCA_020696385.1_genomic.report	0.00094	d__Bacteria;p__Desulfobacterota;c__Desulfobacteria;o__Desulfobacterales
+GCA_020696385.1_genomic.report	0.00022	d__Bacteria;p__Desulfobacterota;c__Desulfuromonadia;o__Desulfuromonadales
+GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Desulfobacterota;c__Desulfuromonadia;o__Geobacterales
+GCA_020696385.1_genomic.report	0.00043	d__Bacteria;p__Desulfobacterota;c__DSM-4660;o__Desulfatiglandales
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Desulfobacterota;c__Desulfomonilia;o__UBA1062
+GCA_020696385.1_genomic.report	0.00047	d__Bacteria;p__Desulfobacterota;c__Desulfobulbia;o__Desulfobulbales
 GCA_020696385.1_genomic.report	0.00058	d__Bacteria;p__Chloroflexota;c__Anaerolineae;o__Anaerolineales
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Chloroflexota;c__Anaerolineae;o__4572-78
-GCA_020696385.1_genomic.report	0.00027	d__Bacteria;p__Chloroflexota;c__Dehalococcoidia;o__Dehalococcoidales
-GCA_020696385.1_genomic.report	0.00051	d__Bacteria;p__Chloroflexota;c__Dehalococcoidia;o__GIF9
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Chloroflexota;c__Chloroflexia;o__Chloroflexales
-GCA_020696385.1_genomic.report	0.00094	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia;o__PCC-6307
-GCA_020696385.1_genomic.report	0.00059	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia;o__Cyanobacteriales
-GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Patescibacteria;c__Paceibacteria;o__UBA9983_A
-GCA_020696385.1_genomic.report	0.0003	d__Bacteria;p__Acidobacteriota;c__Acidobacteriae;o__Acidobacteriales
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Chloroflexota;c__Dehalococcoidia;o__Dehalococcoidales
+GCA_020696385.1_genomic.report	0.00035	d__Bacteria;p__Chloroflexota;c__Dehalococcoidia;o__GIF9
+GCA_020696385.1_genomic.report	0.00036	d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Opitutales
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Verrucomicrobiales
+GCA_020696385.1_genomic.report	0.0003	d__Bacteria;p__Verrucomicrobiota;c__Kiritimatiellae;o__Kiritimatiellales
+GCA_020696385.1_genomic.report	0.00069	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia;o__Cyanobacteriales
+GCA_020696385.1_genomic.report	0.00054	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia;o__PCC-6307
+GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Patescibacteria;c__Microgenomatia;o__JADHYG01
 GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Acidobacteriota;c__Aminicenantia;o__Aminicenantales
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Acidobacteriota;c__B3-B38;o__JAFGBY01
-GCA_020696385.1_genomic.report	0.00042	d__Bacteria;p__Spirochaetota;c__Spirochaetia;o__Treponematales
-GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Spirochaetota;c__Spirochaetia;o__Sphaerochaetales
-GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Spirochaetota;c__UBA6919;o__GWB1-36-13
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Planctomycetota;c__Planctomycetia;o__Pirellulales
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Opitutales
-GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Pedosphaerales
-GCA_020696385.1_genomic.report	0.00113	d__Bacteria;p__Firmicutes_B;c__Syntrophomonadia;o__Syntrophomonadales
-GCA_020696385.1_genomic.report	0.00048	d__Bacteria;p__Nitrospirota;c__Thermodesulfovibrionia;o__Thermodesulfovibrionales
-GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Marinisomatota;c__Marinisomatia;o__Marinisomatales
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Marinisomatota;c__Marinisomatia;o__SCGC-AAA003-L08
-GCA_020696385.1_genomic.report	0.0003	d__Bacteria;p__Krumholzibacteriota;c__Krumholzibacteria;o__Krumholzibacteriales
-GCA_020696385.1_genomic.report	0.00034	d__Bacteria;p__Desulfobacterota_I;c__Desulfovibrionia;o__Desulfovibrionales
+GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Firmicutes_B;c__Desulfitobacteriia;o__Desulfitobacteriales
+GCA_020696385.1_genomic.report	0.00022	d__Bacteria;p__Planctomycetota;c__Planctomycetia;o__Pirellulales
+GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Planctomycetota;c__Phycisphaerae;o__Sedimentisphaerales
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Planctomycetota;c__Brocadiae;o__Brocadiales
+GCA_020696385.1_genomic.report	0.00035	d__Bacteria;p__Spirochaetota;c__Spirochaetia;o__Sphaerochaetales
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Spirochaetota;c__Spirochaetia;o__Treponematales
+GCA_020696385.1_genomic.report	0.00064	d__Bacteria;p__Nitrospirota;c__Thermodesulfovibrionia;o__Thermodesulfovibrionales
+GCA_020696385.1_genomic.report	0.00053	d__Bacteria;p__Firmicutes_C;c__Negativicutes;o__Sporomusales
+GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Firmicutes_C;c__Negativicutes;o__Selenomonadales
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Marinisomatota;c__Marinisomatia;o__SCGC-AAA003-L08
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Marinisomatota;c__Marinisomatia;o__Marinisomatales
 GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Bipolaricaulota;c__Bipolaricaulia;o__M55B111
-GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Bipolaricaulota;c__Bipolaricaulia;o__UBA7950
-GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Firmicutes_C;c__Negativicutes;o__Sporomusales
-GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Chlamydiota;c__Chlamydiia;o__Chlamydiales
+GCA_020696385.1_genomic.report	0.00054	d__Bacteria;p__Campylobacterota;c__Campylobacteria;o__Campylobacterales
+GCA_020696385.1_genomic.report	0.00059	d__Bacteria;p__Krumholzibacteriota;c__Krumholzibacteria;o__Krumholzibacteriales
+GCA_020696385.1_genomic.report	0.0003	d__Bacteria;p__Desulfobacterota_I;c__Desulfovibrionia;o__Desulfovibrionales
+GCA_020696385.1_genomic.report	0.00025	d__Bacteria;p__Synergistota;c__Synergistia;o__Synergistales
+GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Chlamydiota;c__Chlamydiia;o__Chlamydiales
+GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Firmicutes_D;c__Dethiobacteria;o__Dethiobacterales
 GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__WOR-3;c__UBA3073;o__JACQXS01
-GCA_020696385.1_genomic.report	0.00047	d__Bacteria;p__Campylobacterota;c__Campylobacteria;o__Campylobacterales
-GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__UBA10199;c__UBA10199;o__GCA-002796325
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Synergistota;c__Synergistia;o__Synergistales
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes_G;c__Limnochordia;o__DTU010
-GCA_020696385.1_genomic.report	0.00012	d__Bacteria;p__Elusimicrobiota;c__Elusimicrobia;o__Elusimicrobiales
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes_F;c__Halanaerobiia;o__Halanaerobiales
-GCA_020696385.1_genomic.report	0.00036	d__Bacteria;p__Deinococcota;c__Deinococci;o__Deinococcales
-GCA_020696385.1_genomic.report	0.00487	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5
-GCA_020696385.1_genomic.report	0.00512	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes_F;c__Halanaerobiia;o__Halanaerobiales
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Deinococcota;c__Deinococci;o__Deinococcales
+GCA_020696385.1_genomic.report	0.00476	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5
+GCA_020696385.1_genomic.report	0.00486	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales
+GCA_020696385.1_genomic.report	0.00052	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__UBA10834
+GCA_020696385.1_genomic.report	0.00063	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__RBG-16-68-12
 GCA_020696385.1_genomic.report	0.00044	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__PWKY01
-GCA_020696385.1_genomic.report	0.00055	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__RBG-16-68-12
-GCA_020696385.1_genomic.report	0.00038	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__UBA10834
-GCA_020696385.1_genomic.report	0.00033	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__WALJ01
-GCA_020696385.1_genomic.report	0.00063	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Thermoplasmatales
-GCA_020696385.1_genomic.report	0.00017	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Aciduliprofundales
-GCA_020696385.1_genomic.report	0.00301	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales
-GCA_020696385.1_genomic.report	0.00039	d__Archaea;p__Thermoplasmatota;c__E2;o__DHVEG-1
-GCA_020696385.1_genomic.report	0.00018	d__Archaea;p__Thermoplasmatota;c__E2;o__UBA202
-GCA_020696385.1_genomic.report	0.00156	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales
-GCA_020696385.1_genomic.report	0.00048	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanotrichales
-GCA_020696385.1_genomic.report	0.00089	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales
-GCA_020696385.1_genomic.report	0.00038	d__Archaea;p__Halobacteriota;c__Archaeoglobi;o__Archaeoglobales
-GCA_020696385.1_genomic.report	0.0003	d__Archaea;p__Halobacteriota;c__Syntropharchaeia;o__ANME-1
-GCA_020696385.1_genomic.report	0.00017	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales
-GCA_020696385.1_genomic.report	0.00075	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__TCS64
-GCA_020696385.1_genomic.report	0.00038	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__B26-1
-GCA_020696385.1_genomic.report	0.0003	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__40CM-2-53-6
-GCA_020696385.1_genomic.report	0.00023	d__Archaea;p__Thermoproteota;c__Nitrososphaeria;o__Nitrososphaerales
-GCA_020696385.1_genomic.report	0.00096	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__Woesearchaeales
-GCA_020696385.1_genomic.report	0.00049	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__SCGC-AAA011-G17
-GCA_020696385.1_genomic.report	0.00048	d__Archaea;p__Asgardarchaeota;c__Lokiarchaeia;o__CR-4
-GCA_020696385.1_genomic.report	0.00027	d__Archaea;p__Asgardarchaeota;c__Thorarchaeia;o__Thorarchaeales
-GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Asgardarchaeota;c__Heimdallarchaeia;o__Hodarchaeales
-GCA_020696385.1_genomic.report	0.00052	d__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales
-GCA_020696385.1_genomic.report	0.00025	d__Archaea;p__Methanobacteriota_B;c__Thermococci;o__Thermococcales
-GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Altiarchaeota;c__Altiarchaeia;o__IMC4
-GCA_020696385.1_genomic.report	0.93424	d__Bacteria;p__Actinobacteriota;c__Thermoleophilia;o__Solirubrobacterales;f__70-9
-GCA_020696385.1_genomic.report	0.0006	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Mycobacteriales;f__Mycobacteriaceae
-GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Mycobacteriales;f__Pseudonocardiaceae
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Mycobacteriales;f__Micromonosporaceae
-GCA_020696385.1_genomic.report	0.00025	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Actinomycetales;f__Microbacteriaceae
-GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Actinomycetales;f__Micrococcaceae
-GCA_020696385.1_genomic.report	0.00054	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptomycetales;f__Streptomycetaceae
-GCA_020696385.1_genomic.report	0.0004	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptosporangiales;f__Streptosporangiaceae
-GCA_020696385.1_genomic.report	0.00206	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales;f__Burkholderiaceae
+GCA_020696385.1_genomic.report	0.00031	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__WALJ01
+GCA_020696385.1_genomic.report	0.00054	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Thermoplasmatales
+GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Aciduliprofundales
+GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__DTKX01
+GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__B31-G17
+GCA_020696385.1_genomic.report	0.00286	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales
+GCA_020696385.1_genomic.report	0.00054	d__Archaea;p__Thermoplasmatota;c__E2;o__DHVEG-1
+GCA_020696385.1_genomic.report	0.00012	d__Archaea;p__Thermoplasmatota;c__E2;o__UBA202
+GCA_020696385.1_genomic.report	0.00153	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales
+GCA_020696385.1_genomic.report	0.00032	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanotrichales
+GCA_020696385.1_genomic.report	0.00052	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales
+GCA_020696385.1_genomic.report	0.00031	d__Archaea;p__Halobacteriota;c__Archaeoglobi;o__Archaeoglobales
+GCA_020696385.1_genomic.report	0.00032	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales
+GCA_020696385.1_genomic.report	0.00023	d__Archaea;p__Halobacteriota;c__Syntropharchaeia;o__ANME-1
+GCA_020696385.1_genomic.report	0.00084	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__TCS64
+GCA_020696385.1_genomic.report	0.00046	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__B26-1
+GCA_020696385.1_genomic.report	0.00032	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__40CM-2-53-6
+GCA_020696385.1_genomic.report	0.00052	d__Archaea;p__Thermoproteota;c__Nitrososphaeria;o__Nitrososphaerales
+GCA_020696385.1_genomic.report	0.00106	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__Woesearchaeales
+GCA_020696385.1_genomic.report	0.00019	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__SCGC-AAA011-G17
+GCA_020696385.1_genomic.report	0.00047	d__Archaea;p__Asgardarchaeota;c__Lokiarchaeia;o__CR-4
+GCA_020696385.1_genomic.report	0.00021	d__Archaea;p__Asgardarchaeota;c__Heimdallarchaeia;o__Hodarchaeales
+GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Asgardarchaeota;c__Thorarchaeia;o__Thorarchaeales
+GCA_020696385.1_genomic.report	0.00054	d__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales
+GCA_020696385.1_genomic.report	0.00037	d__Archaea;p__Methanobacteriota_B;c__Thermococci;o__Thermococcales
+GCA_020696385.1_genomic.report	0.93796	d__Bacteria;p__Actinobacteriota;c__Thermoleophilia;o__Solirubrobacterales;f__70-9
+GCA_020696385.1_genomic.report	0.0005	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Mycobacteriales;f__Mycobacteriaceae
+GCA_020696385.1_genomic.report	0.00029	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Mycobacteriales;f__Micromonosporaceae
+GCA_020696385.1_genomic.report	0.00064	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptomycetales;f__Streptomycetaceae
+GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Actinomycetales;f__Microbacteriaceae
+GCA_020696385.1_genomic.report	0.0003	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Actinomycetales;f__Micrococcaceae
+GCA_020696385.1_genomic.report	0.00026	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptosporangiales;f__Streptosporangiaceae
+GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Nanopelagicales;f__Nanopelagicaceae
+GCA_020696385.1_genomic.report	0.00204	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales;f__Burkholderiaceae
+GCA_020696385.1_genomic.report	0.00026	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales;f__Rhodocyclaceae
 GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales;f__SG8-39
-GCA_020696385.1_genomic.report	0.00035	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Pseudomonadaceae
-GCA_020696385.1_genomic.report	0.0003	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Halomonadaceae
-GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__HTCC2089
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Oleiphilaceae
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Halieaceae
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Nitrincolaceae
-GCA_020696385.1_genomic.report	0.00059	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae
-GCA_020696385.1_genomic.report	0.00036	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Alteromonadaceae
-GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Shewanellaceae
-GCA_020696385.1_genomic.report	0.0005	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Vibrionaceae
-GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Xanthomonadales;f__Wenzhouxiangellaceae
-GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Methylococcales;f__Methylococcaceae
-GCA_020696385.1_genomic.report	0.00044	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales;f__Rhizobiaceae
-GCA_020696385.1_genomic.report	0.00031	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales;f__Xanthobacteraceae
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales;f__Beijerinckiaceae
-GCA_020696385.1_genomic.report	0.00048	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhodobacterales;f__Rhodobacteraceae
-GCA_020696385.1_genomic.report	0.0004	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Pelagibacterales;f__Pelagibacteraceae
-GCA_020696385.1_genomic.report	0.00066	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Sphingomonadales;f__Sphingomonadaceae
-GCA_020696385.1_genomic.report	0.00029	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Caulobacterales;f__Caulobacteraceae
-GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Parvibaculales;f__Parvibaculaceae
-GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Acetobacterales;f__Acetobacteraceae
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales_A;f__Rhizobiaceae_A
-GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__UBA1280;f__UBA6156
-GCA_020696385.1_genomic.report	0.00666	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae
-GCA_020696385.1_genomic.report	0.00109	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Acutalibacteraceae
-GCA_020696385.1_genomic.report	0.00095	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Oscillospiraceae
-GCA_020696385.1_genomic.report	0.00059	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Ruminococcaceae
-GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__CAG-272
-GCA_020696385.1_genomic.report	0.00246	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Peptostreptococcales;f__Anaerovoracaceae
-GCA_020696385.1_genomic.report	0.00075	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Peptostreptococcales;f__Peptostreptococcaceae
-GCA_020696385.1_genomic.report	0.00034	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Christensenellales;f__Borkfalkiaceae
-GCA_020696385.1_genomic.report	0.00149	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Acetivibrionales;f__DSM-27016
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Acetivibrionales;f__DSM-8532
-GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Clostridiales;f__Clostridiaceae
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Tissierellales;f__Sedimentibacteraceae
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__TANB77;f__CAG-508
-GCA_020696385.1_genomic.report	0.0003	d__Bacteria;p__Firmicutes_A;c__Thermoanaerobacteria;o__Caldicellulosiruptorales;f__Caldicellulosiruptoraceae
-GCA_020696385.1_genomic.report	0.00141	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae
-GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prolixibacteraceae
-GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__UBA7960
-GCA_020696385.1_genomic.report	0.00025	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__GWA2-32-17
-GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__FEN-979
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__UBA3663
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Paludibacteraceae
-GCA_020696385.1_genomic.report	0.00034	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Muribaculaceae
+GCA_020696385.1_genomic.report	0.00039	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Halomonadaceae
+GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Pseudomonadaceae
+GCA_020696385.1_genomic.report	0.00029	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Oleiphilaceae
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__HTCC2089
+GCA_020696385.1_genomic.report	0.00092	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Vibrionaceae
+GCA_020696385.1_genomic.report	0.00071	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae
+GCA_020696385.1_genomic.report	0.00037	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Alteromonadaceae
+GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Shewanellaceae
+GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Methylococcales;f__Methylococcaceae
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Methylococcales;f__Methylomonadaceae
+GCA_020696385.1_genomic.report	0.0003	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Xanthomonadales;f__Wenzhouxiangellaceae
+GCA_020696385.1_genomic.report	0.00047	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales;f__Rhizobiaceae
+GCA_020696385.1_genomic.report	0.00026	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales;f__Xanthobacteraceae
+GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales;f__Beijerinckiaceae
+GCA_020696385.1_genomic.report	0.00049	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhodobacterales;f__Rhodobacteraceae
+GCA_020696385.1_genomic.report	0.00039	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Sphingomonadales;f__Sphingomonadaceae
+GCA_020696385.1_genomic.report	0.00034	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Pelagibacterales;f__Pelagibacteraceae
+GCA_020696385.1_genomic.report	0.00025	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales_A;f__Rhizobiaceae_A
+GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Caulobacterales;f__Caulobacteraceae
+GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Acetobacterales;f__Acetobacteraceae
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Micropepsales;f__Micropepsaceae
+GCA_020696385.1_genomic.report	0.00171	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae
+GCA_020696385.1_genomic.report	0.00037	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__UBA7960
+GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__GWA2-32-17
+GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prolixibacteraceae
+GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Lentimicrobiaceae
 GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__UBA932
-GCA_020696385.1_genomic.report	0.00144	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae
-GCA_020696385.1_genomic.report	0.00073	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Weeksellaceae
-GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Crocinitomicaceae
-GCA_020696385.1_genomic.report	0.00078	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Chitinophagaceae
-GCA_020696385.1_genomic.report	0.00045	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Saprospiraceae
-GCA_020696385.1_genomic.report	0.00034	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Cytophagales;f__Cyclobacteriaceae
-GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Cytophagales;f__Spirosomaceae
-GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Sphingobacteriales;f__Sphingobacteriaceae
-GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Bacteroidota;c__Ignavibacteria;o__SJA-28;f__B-1AR
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Bacteroidota;c__Ignavibacteria;o__Ignavibacteriales;f__Ignavibacteriaceae
-GCA_020696385.1_genomic.report	0.00034	d__Bacteria;p__Bacteroidota;c__Chlorobia;o__Chlorobiales;f__Chlorobiaceae
-GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Bacteroidota;c__Kapabacteria;o__Kapabacteriales;f__UBA2268
-GCA_020696385.1_genomic.report	0.00075	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Enterococcaceae
-GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Lactobacillaceae
-GCA_020696385.1_genomic.report	0.00025	d__Bacteria;p__Firmicutes;c__Bacilli;o__Paenibacillales;f__Paenibacillaceae
-GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Firmicutes;c__Bacilli;o__Paenibacillales;f__NBRC-103111
-GCA_020696385.1_genomic.report	0.00063	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_B;f__DSM-18226
-GCA_020696385.1_genomic.report	0.00045	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_D;f__Amphibacillaceae
-GCA_020696385.1_genomic.report	0.00098	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales;f__Bacillaceae
-GCA_020696385.1_genomic.report	0.00153	d__Bacteria;p__Firmicutes;c__Bacilli;o__Erysipelotrichales;f__Erysipelotrichaceae
-GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_A;f__Planococcaceae
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_H;f__Marinococcaceae
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes;c__Bacilli;o__Acholeplasmatales;f__Acholeplasmataceae
-GCA_020696385.1_genomic.report	0.00046	d__Bacteria;p__Desulfobacterota;c__Desulfuromonadia;o__Geobacterales;f__Pseudopelobacteraceae
-GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Desulfobacterota;c__Desulfuromonadia;o__Geobacterales;f__Geobacteraceae
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Desulfobacterota;c__Desulfobacteria;o__Desulfobacterales;f__SKZT01
-GCA_020696385.1_genomic.report	0.00025	d__Bacteria;p__Desulfobacterota;c__DSM-4660;o__Desulfatiglandales;f__HGW-15
-GCA_020696385.1_genomic.report	0.00038	d__Bacteria;p__Chloroflexota;c__Anaerolineae;o__Anaerolineales;f__EnvOPS12
-GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Chloroflexota;c__Anaerolineae;o__Anaerolineales;f__Anaerolineaceae
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Chloroflexota;c__Anaerolineae;o__4572-78;f__J111
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Chloroflexota;c__Dehalococcoidia;o__Dehalococcoidales;f__UBA1222
-GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Chloroflexota;c__Dehalococcoidia;o__GIF9;f__UBA5629
-GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Chloroflexota;c__Chloroflexia;o__Chloroflexales;f__Chloroflexaceae
-GCA_020696385.1_genomic.report	0.00103	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia;o__PCC-6307;f__Cyanobiaceae
-GCA_020696385.1_genomic.report	0.00036	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia;o__Cyanobacteriales;f__Nostocaceae
-GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Acidobacteriota;c__Acidobacteriae;o__Acidobacteriales;f__Acidobacteriaceae
-GCA_020696385.1_genomic.report	0.00046	d__Bacteria;p__Spirochaetota;c__Spirochaetia;o__Treponematales;f__Treponemataceae
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Spirochaetota;c__Spirochaetia;o__Sphaerochaetales;f__Sphaerochaetaceae
-GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Opitutales;f__JABJCN01
-GCA_020696385.1_genomic.report	0.00136	d__Bacteria;p__Firmicutes_B;c__Syntrophomonadia;o__Syntrophomonadales;f__Syntrophomonadaceae
-GCA_020696385.1_genomic.report	0.00031	d__Bacteria;p__Nitrospirota;c__Thermodesulfovibrionia;o__Thermodesulfovibrionales;f__Dissulfurispiraceae
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Nitrospirota;c__Thermodesulfovibrionia;o__Thermodesulfovibrionales;f__Magnetobacteriaceae
-GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Marinisomatota;c__Marinisomatia;o__Marinisomatales;f__TCS55
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Krumholzibacteriota;c__Krumholzibacteria;o__Krumholzibacteriales;f__WJIX01
-GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Desulfobacterota_I;c__Desulfovibrionia;o__Desulfovibrionales;f__Desulfovibrionaceae
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bipolaricaulota;c__Bipolaricaulia;o__UBA7950;f__UBA9294
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Chlamydiota;c__Chlamydiia;o__Chlamydiales;f__Rhabdochlamydiaceae
-GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__UBA10199;c__UBA10199;o__GCA-002796325;f__1-14-0-20-47-16
-GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Firmicutes_G;c__Limnochordia;o__DTU010;f__DTU012
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Elusimicrobiota;c__Elusimicrobia;o__Elusimicrobiales;f__UBA9959
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bdellovibrionota_C;c__UBA2361;o__UBA2361;f__OMII01
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Deinococcota;c__Deinococci;o__Deinococcales;f__Deinococcaceae
-GCA_020696385.1_genomic.report	0.00036	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__JACRNV01
-GCA_020696385.1_genomic.report	0.00294	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae
-GCA_020696385.1_genomic.report	0.00088	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomassiliicoccaceae
-GCA_020696385.1_genomic.report	0.00068	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__UBA472
-GCA_020696385.1_genomic.report	0.00088	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__JACIVX01
-GCA_020696385.1_genomic.report	0.0003	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__RBG-16-68-12;f__SOIM01
-GCA_020696385.1_genomic.report	0.00065	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Thermoplasmatales;f__Thermoplasmataceae
-GCA_020696385.1_genomic.report	0.00018	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Aciduliprofundales;f__Aciduliprofundaceae
-GCA_020696385.1_genomic.report	0.00151	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Thalassarchaeaceae
-GCA_020696385.1_genomic.report	0.00127	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Poseidoniaceae
-GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Thermoplasmatota;c__E2;o__UBA202;f__DSCA01
-GCA_020696385.1_genomic.report	0.00158	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanosarcinaceae
-GCA_020696385.1_genomic.report	0.00051	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanotrichales;f__Methanotrichaceae
-GCA_020696385.1_genomic.report	0.0003	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanoculleaceae
-GCA_020696385.1_genomic.report	0.00039	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanomicrobiaceae
-GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanocorpusculaceae
-GCA_020696385.1_genomic.report	0.00033	d__Archaea;p__Halobacteriota;c__Archaeoglobi;o__Archaeoglobales;f__Archaeoglobaceae
-GCA_020696385.1_genomic.report	0.00028	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__B26-1;f__BA1
-GCA_020696385.1_genomic.report	0.00019	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__40CM-2-53-6;f__RBG-13-38-9
-GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Thermoproteota;c__EX4484-205;o__EX4484-205;f__JAAOZP01
-GCA_020696385.1_genomic.report	0.00039	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__SCGC-AAA011-G17;f__JAGVZF01
-GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__SCGC-AAA011-G17;f__ARS1403
+GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Paludibacteraceae
+GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Muribaculaceae
+GCA_020696385.1_genomic.report	0.00169	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae
+GCA_020696385.1_genomic.report	0.00054	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Weeksellaceae
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Crocinitomicaceae
+GCA_020696385.1_genomic.report	0.00082	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Chitinophagaceae
+GCA_020696385.1_genomic.report	0.00047	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Saprospiraceae
+GCA_020696385.1_genomic.report	0.00029	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Cytophagales;f__Cyclobacteriaceae
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Cytophagales;f__Spirosomaceae
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Cytophagales;f__Hymenobacteraceae
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Cytophagales;f__UBA9547
+GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Sphingobacteriales;f__Sphingobacteriaceae
+GCA_020696385.1_genomic.report	0.00742	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Cellulosilyticaceae
+GCA_020696385.1_genomic.report	0.00239	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Acutalibacteraceae
+GCA_020696385.1_genomic.report	0.00151	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Oscillospiraceae
+GCA_020696385.1_genomic.report	0.00055	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Ruminococcaceae
+GCA_020696385.1_genomic.report	0.00157	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Peptostreptococcales;f__Anaerovoracaceae
+GCA_020696385.1_genomic.report	0.00089	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Peptostreptococcales;f__Peptostreptococcaceae
+GCA_020696385.1_genomic.report	0.00043	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Christensenellales;f__Borkfalkiaceae
+GCA_020696385.1_genomic.report	0.00031	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Clostridiales;f__Clostridiaceae
+GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Acetivibrionales;f__DSM-8532
+GCA_020696385.1_genomic.report	0.00068	d__Bacteria;p__Firmicutes_A;c__Thermoanaerobacteria;o__Caldicellulosiruptorales;f__Caldicellulosiruptoraceae
+GCA_020696385.1_genomic.report	0.00045	d__Bacteria;p__Firmicutes;c__Bacilli;o__Paenibacillales;f__Paenibacillaceae
+GCA_020696385.1_genomic.report	0.0013	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Enterococcaceae
+GCA_020696385.1_genomic.report	0.00025	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Lactobacillaceae
+GCA_020696385.1_genomic.report	0.00093	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales;f__Bacillaceae
+GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_D;f__Amphibacillaceae
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes;c__Bacilli;o__Staphylococcales;f__Salinicoccaceae
+GCA_020696385.1_genomic.report	0.00082	d__Bacteria;p__Firmicutes;c__Bacilli;o__Erysipelotrichales;f__Erysipelotrichaceae
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes;c__Bacilli;o__Acholeplasmatales;f__Acholeplasmataceae
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_A;f__Planococcaceae
+GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Desulfobacterota;c__DSM-4660;o__Desulfatiglandales;f__HGW-15
+GCA_020696385.1_genomic.report	0.00043	d__Bacteria;p__Chloroflexota;c__Anaerolineae;o__Anaerolineales;f__EnvOPS12
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Chloroflexota;c__Anaerolineae;o__Anaerolineales;f__Anaerolineaceae
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Opitutales;f__JABJCN01
+GCA_020696385.1_genomic.report	0.00039	d__Bacteria;p__Verrucomicrobiota;c__Kiritimatiellae;o__Kiritimatiellales;f__Pontiellaceae
+GCA_020696385.1_genomic.report	0.00068	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia;o__PCC-6307;f__Cyanobiaceae
+GCA_020696385.1_genomic.report	0.00048	d__Bacteria;p__Acidobacteriota;c__Aminicenantia;o__Aminicenantales;f__Saccharicenantaceae
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes_B;c__Desulfitobacteriia;o__Desulfitobacteriales;f__Desulfitobacteriaceae
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Planctomycetota;c__Planctomycetia;o__Pirellulales;f__Pirellulaceae
+GCA_020696385.1_genomic.report	0.00043	d__Bacteria;p__Spirochaetota;c__Spirochaetia;o__Sphaerochaetales;f__Sphaerochaetaceae
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Spirochaetota;c__Spirochaetia;o__Treponematales;f__Treponemataceae
+GCA_020696385.1_genomic.report	0.00058	d__Bacteria;p__Nitrospirota;c__Thermodesulfovibrionia;o__Thermodesulfovibrionales;f__Dissulfurispiraceae
+GCA_020696385.1_genomic.report	0.0005	d__Bacteria;p__Firmicutes_C;c__Negativicutes;o__Selenomonadales;f__Selenomonadaceae
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Campylobacterota;c__Campylobacteria;o__Campylobacterales;f__Campylobacteraceae
+GCA_020696385.1_genomic.report	0.00053	d__Bacteria;p__Campylobacterota;c__Campylobacteria;o__Campylobacterales;f__Helicobacteraceae
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Krumholzibacteriota;c__Krumholzibacteria;o__Krumholzibacteriales;f__WJIX01
+GCA_020696385.1_genomic.report	0.00016	d__Bacteria;p__Desulfobacterota_I;c__Desulfovibrionia;o__Desulfovibrionales;f__Desulfovibrionaceae
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Desulfobacterota_I;c__Desulfovibrionia;o__Desulfovibrionales;f__Desulfomicrobiaceae
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Chlamydiota;c__Chlamydiia;o__Chlamydiales;f__Rhabdochlamydiaceae
+GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Firmicutes_D;c__Dethiobacteria;o__Dethiobacterales;f__Dethiobacteraceae
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes_F;c__Halanaerobiia;o__Halanaerobiales;f__Halarsenatibacteraceae
+GCA_020696385.1_genomic.report	0.00033	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__JACRNV01
+GCA_020696385.1_genomic.report	0.00265	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae
+GCA_020696385.1_genomic.report	0.00082	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__UBA472
+GCA_020696385.1_genomic.report	0.00078	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomassiliicoccaceae
+GCA_020696385.1_genomic.report	0.00094	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__JACIVX01
+GCA_020696385.1_genomic.report	0.00045	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__RBG-16-68-12;f__SOIM01
+GCA_020696385.1_genomic.report	0.00059	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Thermoplasmatales;f__Thermoplasmataceae
+GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Aciduliprofundales;f__Aciduliprofundaceae
+GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__DTKX01;f__VGTL01
+GCA_020696385.1_genomic.report	0.00141	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Poseidoniaceae
+GCA_020696385.1_genomic.report	0.00106	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Thalassarchaeaceae
+GCA_020696385.1_genomic.report	0.00152	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanosarcinaceae
+GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanoperedenaceae
+GCA_020696385.1_genomic.report	0.00035	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanotrichales;f__Methanotrichaceae
+GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanoculleaceae
+GCA_020696385.1_genomic.report	0.00016	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanoregulaceae
+GCA_020696385.1_genomic.report	0.00026	d__Archaea;p__Halobacteriota;c__Archaeoglobi;o__Archaeoglobales;f__Archaeoglobaceae
+GCA_020696385.1_genomic.report	0.00029	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__B26-1;f__BA1
+GCA_020696385.1_genomic.report	0.00026	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__40CM-2-53-6;f__RBG-13-38-9
+GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Thermoproteota;c__EX4484-205;o__EX4484-205;f__DTQO01
+GCA_020696385.1_genomic.report	0.00024	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__Woesearchaeales;f__GCA-2686295
+GCA_020696385.1_genomic.report	0.00018	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__Woesearchaeales;f__JAGVZT01
 GCA_020696385.1_genomic.report	0.0005	d__Archaea;p__Asgardarchaeota;c__Lokiarchaeia;o__CR-4;f__SOKP01
-GCA_020696385.1_genomic.report	0.00028	d__Archaea;p__Asgardarchaeota;c__Thorarchaeia;o__Thorarchaeales;f__Thorarchaeaceae
-GCA_020696385.1_genomic.report	0.00045	d__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae
-GCA_020696385.1_genomic.report	0.00025	d__Archaea;p__Methanobacteriota_B;c__Thermococci;o__Thermococcales;f__Thermococcaceae
-GCA_020696385.1_genomic.report	0.95038	d__Bacteria;p__Actinobacteriota;c__Thermoleophilia;o__Solirubrobacterales;f__70-9;g__RSA11
-GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Mycobacteriales;f__Mycobacteriaceae;g__Nocardia
-GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Mycobacteriales;f__Mycobacteriaceae;g__Mycobacterium
-GCA_020696385.1_genomic.report	0.00031	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Actinomycetales;f__Microbacteriaceae;g__Microbacterium_A
-GCA_020696385.1_genomic.report	0.00068	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptomycetales;f__Streptomycetaceae;g__Streptomyces
-GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptosporangiales;f__Streptosporangiaceae;g__Spirillospora
-GCA_020696385.1_genomic.report	0.00051	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales;f__Burkholderiaceae;g__Paraburkholderia
-GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales;f__SG8-39;g__CAIVVS01
-GCA_020696385.1_genomic.report	0.00052	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Pseudomonadaceae;g__Pseudomonas_E
-GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Halomonadaceae;g__Halomonas
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Halieaceae;g__Halioglobus
-GCA_020696385.1_genomic.report	0.00049	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Shewanellaceae;g__Shewanella
-GCA_020696385.1_genomic.report	0.00125	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Vibrionaceae;g__Vibrio
-GCA_020696385.1_genomic.report	0.00041	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Xanthomonadales;f__Wenzhouxiangellaceae;g__Wenzhouxiangella
-GCA_020696385.1_genomic.report	0.00034	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales;f__Xanthobacteraceae;g__Bradyrhizobium
-GCA_020696385.1_genomic.report	0.00022	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Pelagibacterales;f__Pelagibacteraceae;g__Pelagibacter
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Sphingomonadales;f__Sphingomonadaceae;g__Rhizorhapis
-GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Caulobacterales;f__Caulobacteraceae;g__Phenylobacterium
-GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Parvibaculales;f__Parvibaculaceae;g__Parvibaculum
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__UBA1280;f__UBA6156;g__RFNJ01
-GCA_020696385.1_genomic.report	0.00026	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Acetatifactor
-GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Butyrivibrio
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Lacrimispora
-GCA_020696385.1_genomic.report	0.00043	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__RGIG5612
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Blautia
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Weimeria
+GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Asgardarchaeota;c__Heimdallarchaeia;o__Hodarchaeales;f__YT1-039
+GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Asgardarchaeota;c__Thorarchaeia;o__Thorarchaeales;f__Thorarchaeaceae
+GCA_020696385.1_genomic.report	0.00049	d__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae
+GCA_020696385.1_genomic.report	0.00039	d__Archaea;p__Methanobacteriota_B;c__Thermococci;o__Thermococcales;f__Thermococcaceae
+GCA_020696385.1_genomic.report	0.95288	d__Bacteria;p__Actinobacteriota;c__Thermoleophilia;o__Solirubrobacterales;f__70-9;g__RSA11
+GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Mycobacteriales;f__Mycobacteriaceae;g__Nocardia
+GCA_020696385.1_genomic.report	0.00074	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptomycetales;f__Streptomycetaceae;g__Streptomyces
+GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptosporangiales;f__Streptosporangiaceae;g__Spirillospora
+GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales;f__Burkholderiaceae;g__Paraburkholderia
+GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales;f__Burkholderiaceae;g__Caballeronia
+GCA_020696385.1_genomic.report	0.00031	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales;f__SG8-39;g__CAIVVS01
+GCA_020696385.1_genomic.report	0.00029	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Halomonadaceae;g__Halomonas
+GCA_020696385.1_genomic.report	0.0004	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Pseudomonadaceae;g__Pseudomonas_E
+GCA_020696385.1_genomic.report	0.00045	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Oleiphilaceae;g__Oleiphilus
+GCA_020696385.1_genomic.report	0.00264	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Vibrionaceae;g__Vibrio
+GCA_020696385.1_genomic.report	0.0004	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Shewanellaceae;g__Shewanella
+GCA_020696385.1_genomic.report	0.00059	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Xanthomonadales;f__Wenzhouxiangellaceae;g__Wenzhouxiangella
+GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales;f__Xanthobacteraceae;g__Bradyrhizobium
+GCA_020696385.1_genomic.report	0.00047	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Pelagibacterales;f__Pelagibacteraceae;g__Pelagibacter
+GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Caulobacterales;f__Caulobacteraceae;g__Phenylobacterium
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Micropepsales;f__Micropepsaceae;g__Rhizomicrobium
+GCA_020696385.1_genomic.report	0.00172	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Prevotella
+GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__UBA4334
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Phocaeicola
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__GWA2-32-17;g__GCA-002840935
+GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Lentimicrobiaceae;g__Lentimicrobium
+GCA_020696385.1_genomic.report	0.00026	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae;g__Muricauda
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae;g__SHLJ01
+GCA_020696385.1_genomic.report	0.0004	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae;g__Polaribacter
+GCA_020696385.1_genomic.report	0.00029	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae;g__Pseudozobellia
+GCA_020696385.1_genomic.report	0.00035	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Weeksellaceae;g__Chryseobacterium
+GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Crocinitomicaceae;g__UBA952
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Saprospiraceae;g__JAAFJT01
+GCA_020696385.1_genomic.report	0.00045	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Cytophagales;f__UBA9547;g__REAG01
+GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Lacrimispora
+GCA_020696385.1_genomic.report	0.00027	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Butyrivibrio
+GCA_020696385.1_genomic.report	0.00068	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__COE1
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Acetatifactor
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Cellulosilyticaceae;g__FMMP01
+GCA_020696385.1_genomic.report	0.00084	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Acutalibacteraceae;g__UBA737
 GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Acutalibacteraceae;g__RUG762
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Acutalibacteraceae;g__UBA737
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Oscillospiraceae;g__Faecousia
-GCA_020696385.1_genomic.report	0.00026	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Oscillospiraceae;g__F23-B02
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Oscillospiraceae;g__Dysosmobacter
-GCA_020696385.1_genomic.report	0.0002	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__CAG-272;g__CAG-841
-GCA_020696385.1_genomic.report	0.0055	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Acetivibrionales;f__DSM-27016;g__Ruminiclostridium
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Tissierellales;f__Sedimentibacteraceae;g__Sedimentibacter
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__TANB77;f__CAG-508;g__CAG-269
-GCA_020696385.1_genomic.report	0.00075	d__Bacteria;p__Firmicutes_A;c__Thermoanaerobacteria;o__Caldicellulosiruptorales;f__Caldicellulosiruptoraceae;g__Caldicellulosiruptor
-GCA_020696385.1_genomic.report	0.00146	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Prevotella
-GCA_020696385.1_genomic.report	0.00022	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__UBA4334
-GCA_020696385.1_genomic.report	0.00045	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Phocaeicola
-GCA_020696385.1_genomic.report	0.0005	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae;g__Polaribacter
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae;g__CAU-1491
-GCA_020696385.1_genomic.report	0.0006	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Weeksellaceae;g__Chryseobacterium
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Crocinitomicaceae;g__UBA952
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Chitinophagaceae;g__VBAT01
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Chitinophagaceae;g__Flavipsychrobacter
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Saprospiraceae;g__S141-43
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Bacteroidota;c__Ignavibacteria;o__SJA-28;f__B-1AR;g__JAGPCH01
-GCA_020696385.1_genomic.report	0.00066	d__Bacteria;p__Bacteroidota;c__Chlorobia;o__Chlorobiales;f__Chlorobiaceae;g__Chlorobium
-GCA_020696385.1_genomic.report	0.00073	d__Bacteria;p__Bacteroidota;c__Kapabacteria;o__Kapabacteriales;f__UBA2268;g__PGYU01
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Enterococcaceae;g__Enterococcus_A
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Firmicutes;c__Bacilli;o__Paenibacillales;f__NBRC-103111;g__Paenibacillus_E
-GCA_020696385.1_genomic.report	0.0016	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_B;f__DSM-18226;g__Neobacillus
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_D;f__Amphibacillaceae;g__Sediminibacillus
-GCA_020696385.1_genomic.report	0.00331	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales;f__Bacillaceae;g__Bacillus
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_A;f__Planococcaceae;g__Ureibacillus
-GCA_020696385.1_genomic.report	0.00022	d__Bacteria;p__Desulfobacterota;c__Desulfuromonadia;o__Geobacterales;f__Pseudopelobacteraceae;g__CAIPTY01
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Desulfobacterota;c__Desulfuromonadia;o__Geobacterales;f__Pseudopelobacteraceae;g__JACPFJ01
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Desulfobacterota;c__Desulfobacteria;o__Desulfobacterales;f__SKZT01;g__M55B149
-GCA_020696385.1_genomic.report	0.00054	d__Bacteria;p__Chloroflexota;c__Anaerolineae;o__Anaerolineales;f__EnvOPS12;g__OLB14
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Chloroflexota;c__Anaerolineae;o__4572-78;f__J111;g__DSQQ01
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Chloroflexota;c__Dehalococcoidia;o__Dehalococcoidales;f__UBA1222;g__SURF-27
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Chloroflexota;c__Chloroflexia;o__Chloroflexales;f__Chloroflexaceae;g__Viridilinea
-GCA_020696385.1_genomic.report	0.00185	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia;o__PCC-6307;f__Cyanobiaceae;g__Prochlorococcus_A
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia;o__PCC-6307;f__Cyanobiaceae;g__Synechococcus_E
-GCA_020696385.1_genomic.report	0.00032	d__Bacteria;p__Spirochaetota;c__Spirochaetia;o__Treponematales;f__Treponemataceae;g__Treponema_D
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Nitrospirota;c__Thermodesulfovibrionia;o__Thermodesulfovibrionales;f__Magnetobacteriaceae;g__Magnetobacterium
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Oscillospiraceae;g__Faecousia
+GCA_020696385.1_genomic.report	0.00058	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Oscillospiraceae;g__F23-B02
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Ruminococcaceae;g__Ruthenibacterium
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Clostridiales;f__Clostridiaceae;g__Clostridium
+GCA_020696385.1_genomic.report	0.00229	d__Bacteria;p__Firmicutes_A;c__Thermoanaerobacteria;o__Caldicellulosiruptorales;f__Caldicellulosiruptoraceae;g__Caldicellulosiruptor
+GCA_020696385.1_genomic.report	0.00042	d__Bacteria;p__Firmicutes;c__Bacilli;o__Paenibacillales;f__Paenibacillaceae;g__Paenibacillus
+GCA_020696385.1_genomic.report	0.00342	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales;f__Bacillaceae;g__Bacillus
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes;c__Bacilli;o__Staphylococcales;f__Salinicoccaceae;g__Jeotgalicoccus
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Desulfobacterota;c__DSM-4660;o__Desulfatiglandales;f__HGW-15;g__JAFGIC01
+GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Desulfobacterota;c__Desulfomonilia;o__UBA1062;f__UBA1062;g__B14-G9
+GCA_020696385.1_genomic.report	0.00099	d__Bacteria;p__Chloroflexota;c__Anaerolineae;o__Anaerolineales;f__EnvOPS12;g__OLB14
+GCA_020696385.1_genomic.report	0.00125	d__Bacteria;p__Verrucomicrobiota;c__Kiritimatiellae;o__Kiritimatiellales;f__Pontiellaceae;g__Pontiella
+GCA_020696385.1_genomic.report	0.00161	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia;o__PCC-6307;f__Cyanobiaceae;g__Prochlorococcus_A
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Acidobacteriota;c__Aminicenantia;o__Aminicenantales;f__Saccharicenantaceae;g__Saccharicenans
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes_B;c__Desulfitobacteriia;o__Desulfitobacteriales;f__Desulfitobacteriaceae;g__Desulfosporosinus
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Spirochaetota;c__Spirochaetia;o__Treponematales;f__Treponemataceae;g__Treponema_D
+GCA_020696385.1_genomic.report	0.00198	d__Bacteria;p__Nitrospirota;c__Thermodesulfovibrionia;o__Thermodesulfovibrionales;f__Dissulfurispiraceae;g__GCA-2634385
 GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Bipolaricaulota;c__Bipolaricaulia;o__M55B111;f__M55B111;g__JAGXLP01
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes_G;c__Limnochordia;o__DTU010;f__DTU012;g__CSBR16-88
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes_H;c__UBA994;o__UBA994;f__UBA994;g__UBA2296
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Deinococcota;c__Deinococci;o__Deinococcales;f__Deinococcaceae;g__Deinococcus
-GCA_020696385.1_genomic.report	0.0044	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__SG8-5;g__UBA147
-GCA_020696385.1_genomic.report	0.00071	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__UBA71
-GCA_020696385.1_genomic.report	0.00034	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__RumEn-M2
-GCA_020696385.1_genomic.report	0.00041	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__SIG5
-GCA_020696385.1_genomic.report	0.00024	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__Methanoplasma
-GCA_020696385.1_genomic.report	0.00024	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__Methanogranum
-GCA_020696385.1_genomic.report	0.0002	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__JAAYNL01
-GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__PWHV01
-GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__WRKA01
-GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__MX-02
-GCA_020696385.1_genomic.report	0.00075	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomassiliicoccaceae;g__UBA6
-GCA_020696385.1_genomic.report	0.00037	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomassiliicoccaceae;g__Methanomassiliicoccus_A
-GCA_020696385.1_genomic.report	0.00103	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__UBA472;g__FEN-33
-GCA_020696385.1_genomic.report	0.00018	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__PWKY01;f__PWKY01;g__Natronoplasma
-GCA_020696385.1_genomic.report	0.00026	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__UBA10834;f__UBA10834;g__UBA9653
-GCA_020696385.1_genomic.report	0.00049	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__UBA10834;f__UBA10834;g__COMBO-56-21
-GCA_020696385.1_genomic.report	0.00123	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Thalassarchaeaceae;g__MGIIb-O5
-GCA_020696385.1_genomic.report	0.00017	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Thalassarchaeaceae;g__MGIIb-O1
-GCA_020696385.1_genomic.report	0.00056	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Poseidoniaceae;g__MGIIa-K1
-GCA_020696385.1_genomic.report	0.00063	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Poseidoniaceae;g__MGIIa-L3
-GCA_020696385.1_genomic.report	0.00018	d__Archaea;p__Thermoplasmatota;c__E2;o__DHVEG-1;f__DHVEG-1;g__SM1-50
-GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Thermoplasmatota;c__E2;o__UBA202;f__DSCA01;g__VBQP01
-GCA_020696385.1_genomic.report	0.00109	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanosarcinaceae;g__Methanolobus
-GCA_020696385.1_genomic.report	0.00059	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanosarcinaceae;g__Methanococcoides
-GCA_020696385.1_genomic.report	0.00038	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanotrichales;f__Methanotrichaceae;g__Methanothrix
-GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanotrichales;f__Methanotrichaceae;g__UBA204
-GCA_020696385.1_genomic.report	0.00031	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanoculleaceae;g__UBA206
-GCA_020696385.1_genomic.report	0.00041	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanomicrobiaceae;g__Methanomicrobium
-GCA_020696385.1_genomic.report	0.00024	d__Archaea;p__Halobacteriota;c__Archaeoglobi;o__Archaeoglobales;f__Archaeoglobaceae;g__Geoglobus
-GCA_020696385.1_genomic.report	0.00019	d__Archaea;p__Halobacteriota;c__Syntropharchaeia;o__ANME-1;f__ANME-1;g__QEXZ01
-GCA_020696385.1_genomic.report	0.00034	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__TCS64;f__TCS64;g__RBG-16-57-9
-GCA_020696385.1_genomic.report	0.00022	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__TCS64;f__TCS64;g__BS750m-G28
-GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__TCS64;f__TCS64;g__UBA8941
-GCA_020696385.1_genomic.report	0.00019	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__B26-1;f__BA1;g__SOJZ01
-GCA_020696385.1_genomic.report	0.00023	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__40CM-2-53-6;f__RBG-13-38-9;g__DTMT01
-GCA_020696385.1_genomic.report	0.00018	d__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae;g__Methanobrevibacter_A
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Campylobacterota;c__Campylobacteria;o__Campylobacterales;f__Campylobacteraceae;g__Campylobacter_B
+GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Desulfobacterota_I;c__Desulfovibrionia;o__Desulfovibrionales;f__Desulfomicrobiaceae;g__Desulfomicrobium
+GCA_020696385.1_genomic.report	0.00419	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__SG8-5;g__UBA147
+GCA_020696385.1_genomic.report	0.00067	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__UBA71
+GCA_020696385.1_genomic.report	0.00032	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__RumEn-M2
+GCA_020696385.1_genomic.report	0.00024	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__PWHV01
+GCA_020696385.1_genomic.report	0.00031	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__SIG5
+GCA_020696385.1_genomic.report	0.0002	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__Methanoplasma
+GCA_020696385.1_genomic.report	0.00018	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__Methanomethylophilus
+GCA_020696385.1_genomic.report	0.00018	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__Methanogranum
+GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__JAAYNL01
+GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__JAAYZC01
+GCA_020696385.1_genomic.report	0.00092	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__UBA472;g__FEN-33
+GCA_020696385.1_genomic.report	0.00049	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomassiliicoccaceae;g__UBA6
+GCA_020696385.1_genomic.report	0.0004	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomassiliicoccaceae;g__Methanomassiliicoccus_A
+GCA_020696385.1_genomic.report	0.00031	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__UBA10834;f__UBA10834;g__UBA9653
+GCA_020696385.1_genomic.report	0.00095	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__UBA10834;f__UBA10834;g__COMBO-56-21
+GCA_020696385.1_genomic.report	0.00127	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Poseidoniaceae;g__MGIIa-L3
+GCA_020696385.1_genomic.report	0.00033	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Poseidoniaceae;g__MGIIa-K1
+GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Thalassarchaeaceae;g__MGIIb-O1
+GCA_020696385.1_genomic.report	0.00067	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Thalassarchaeaceae;g__MGIIb-O5
+GCA_020696385.1_genomic.report	0.0002	d__Archaea;p__Thermoplasmatota;c__E2;o__DHVEG-1;f__DHVEG-1;g__SM1-50
+GCA_020696385.1_genomic.report	0.00019	d__Archaea;p__Thermoplasmatota;c__E2;o__DHVEG-1;f__DHVEG-1;g__EX4572-165
+GCA_020696385.1_genomic.report	0.0002	d__Archaea;p__Thermoplasmatota;c__EX4484-6;o__EX4484-6;f__EX4484-6;g__JAFGLL01
+GCA_020696385.1_genomic.report	0.00052	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanosarcinaceae;g__Methanococcoides
+GCA_020696385.1_genomic.report	0.00104	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanosarcinaceae;g__Methanolobus
+GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanoperedenaceae;g__Methanoperedens
+GCA_020696385.1_genomic.report	0.00023	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanotrichales;f__Methanotrichaceae;g__Methanothrix
+GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanoculleaceae;g__UBA206
+GCA_020696385.1_genomic.report	0.00017	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanoregulaceae;g__Methanoregula
+GCA_020696385.1_genomic.report	0.00023	d__Archaea;p__Halobacteriota;c__Archaeoglobi;o__Archaeoglobales;f__Archaeoglobaceae;g__Geoglobus
+GCA_020696385.1_genomic.report	0.0002	d__Archaea;p__Halobacteriota;c__Syntropharchaeia;o__ANME-1;f__ANME-1;g__QEXZ01
+GCA_020696385.1_genomic.report	0.00037	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__TCS64;f__TCS64;g__RBG-16-57-9
+GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__TCS64;f__TCS64;g__UBA8941
+GCA_020696385.1_genomic.report	0.00017	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__TCS64;f__TCS64;g__BS750m-G28
+GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__B26-1;f__B26-1;g__DTEX01
+GCA_020696385.1_genomic.report	0.00027	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__Woesearchaeales;f__JAGVZT01;g__JAFCGF01
+GCA_020696385.1_genomic.report	0.0002	d__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae;g__Methanobrevibacter_A
 GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae;g__Methanobacterium_A
-GCA_020696385.1_genomic.report	0.00026	d__Archaea;p__Methanobacteriota_B;c__Thermococci;o__Thermococcales;f__Thermococcaceae;g__Thermococcus
-GCA_020696385.1_genomic.report	0.95774	d__Bacteria;p__Actinobacteriota;c__Thermoleophilia;o__Solirubrobacterales;f__70-9;g__RSA11;s__RSA11 sp002919115
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Mycobacteriales;f__Mycobacteriaceae;g__Nocardia;s__Nocardia mikamii
-GCA_020696385.1_genomic.report	0.00069	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Actinomycetales;f__Microbacteriaceae;g__Microbacterium_A;s__Microbacterium_A chengjingii
-GCA_020696385.1_genomic.report	0.0003	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales;f__Burkholderiaceae;g__Paraburkholderia;s__Paraburkholderia sp004353915
-GCA_020696385.1_genomic.report	0.0003	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales;f__SG8-39;g__CAIVVS01;s__CAIVVS01 sp903909415
-GCA_020696385.1_genomic.report	0.00023	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Shewanellaceae;g__Shewanella;s__Shewanella atlantica
-GCA_020696385.1_genomic.report	0.00037	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__UBA11654;f__UBA11654;g__UBA11654;s__UBA11654 sp001629325
-GCA_020696385.1_genomic.report	0.00035	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhizobiales;f__Xanthobacteraceae;g__Bradyrhizobium;s__Bradyrhizobium sp000515415
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Sphingomonadales;f__Sphingomonadaceae;g__Rhizorhapis;s__Rhizorhapis sp016650315
-GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Parvibaculales;f__Parvibaculaceae;g__Parvibaculum;s__Parvibaculum sedimenti
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__UBA1280;f__UBA6156;g__RFNJ01;s__RFNJ01 sp016125035
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Acetatifactor;s__Acetatifactor sp015057005
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Weimeria;s__Weimeria sp900315505
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Acutalibacteraceae;g__RUG762;s__RUG762 sp017395425
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Acutalibacteraceae;g__UBA737;s__UBA737 sp015065645
-GCA_020696385.1_genomic.report	0.01081	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Acetivibrionales;f__DSM-27016;g__Ruminiclostridium;s__Ruminiclostridium herbifermentans
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__TANB77;f__CAG-508;g__CAG-269;s__CAG-269 sp001916065
-GCA_020696385.1_genomic.report	0.00067	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Prevotella;s__Prevotella sp900316015
-GCA_020696385.1_genomic.report	0.00039	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__UBA4334;s__UBA4334 sp017448965
+GCA_020696385.1_genomic.report	0.00038	d__Archaea;p__Methanobacteriota_B;c__Thermococci;o__Thermococcales;f__Thermococcaceae;g__Thermococcus
+GCA_020696385.1_genomic.report	0.96124	d__Bacteria;p__Actinobacteriota;c__Thermoleophilia;o__Solirubrobacterales;f__70-9;g__RSA11;s__RSA11 sp002919115
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Mycobacteriales;f__Mycobacteriaceae;g__Nocardia;s__Nocardia mikamii
+GCA_020696385.1_genomic.report	0.00025	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptomycetales;f__Streptomycetaceae;g__Streptomyces;s__Streptomyces bicolor
+GCA_020696385.1_genomic.report	0.00071	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales;f__Burkholderiaceae;g__Caballeronia;s__Caballeronia arvi
+GCA_020696385.1_genomic.report	0.00068	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Burkholderiales;f__SG8-39;g__CAIVVS01;s__CAIVVS01 sp903909415
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Halomonadaceae;g__Halomonas;s__Halomonas fontilapidosi
+GCA_020696385.1_genomic.report	0.00108	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Oleiphilaceae;g__Oleiphilus;s__Oleiphilus messinensis
+GCA_020696385.1_genomic.report	0.00177	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Vibrionaceae;g__Vibrio;s__Vibrio sp000287055
+GCA_020696385.1_genomic.report	0.00058	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__UBA11654;f__UBA11654;g__UBA11654;s__UBA11654 sp001629325
+GCA_020696385.1_genomic.report	0.00041	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Micropepsales;f__Micropepsaceae;g__Rhizomicrobium;s__Rhizomicrobium sp018241025
+GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Prevotella;s__Prevotella sp017619275
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Prevotella;s__Prevotella sp002342415
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s__Bacteroides eggerthii
 GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Phocaeicola;s__Phocaeicola faecigallinarum
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__UBA3663;g__UBA3663;s__UBA3663 sp004557315
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae;g__CAU-1491;s__CAU-1491 sp011777505
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Weeksellaceae;g__Chryseobacterium;s__Chryseobacterium sp003384725
-GCA_020696385.1_genomic.report	0.00021	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Chitinophagaceae;g__VBAT01;s__VBAT01 sp016787085
-GCA_020696385.1_genomic.report	0.0003	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Chitinophagaceae;g__Flavipsychrobacter;s__Flavipsychrobacter soli
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Saprospiraceae;g__S141-43;s__S141-43 sp015490715
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Bacteroidota;c__Ignavibacteria;o__SJA-28;f__B-1AR;g__JAGPCH01;s__JAGPCH01 sp016710985
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bacteroidota;c__Chlorobia;o__Chlorobiales;f__Chlorobiaceae;g__Chlorobium;s__Chlorobium sp013334485
-GCA_020696385.1_genomic.report	0.00138	d__Bacteria;p__Bacteroidota;c__Kapabacteria;o__Kapabacteriales;f__UBA2268;g__PGYU01;s__PGYU01 sp002839825
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Enterococcaceae;g__Enterococcus_A;s__Enterococcus_A florum
-GCA_020696385.1_genomic.report	0.00305	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_B;f__DSM-18226;g__Neobacillus;s__Neobacillus sp016765675
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_D;f__Amphibacillaceae;g__Sediminibacillus;s__Sediminibacillus albus
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes;c__Bacilli;o__Bacillales_A;f__Planococcaceae;g__Ureibacillus;s__Ureibacillus massiliensis
-GCA_020696385.1_genomic.report	0.00024	d__Bacteria;p__Desulfobacterota;c__Desulfuromonadia;o__Geobacterales;f__Pseudopelobacteraceae;g__CAIPTY01;s__CAIPTY01 sp016650295
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Desulfobacterota;c__Desulfuromonadia;o__Geobacterales;f__Pseudopelobacteraceae;g__JACPFJ01;s__JACPFJ01 sp003574895
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Desulfobacterota;c__Desulfobacteria;o__Desulfobacterales;f__SKZT01;g__M55B149;s__M55B149 sp018399715
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Chloroflexota;c__Anaerolineae;o__4572-78;f__J111;g__DSQQ01;s__DSQQ01 sp015075405
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Chloroflexota;c__Dehalococcoidia;o__Dehalococcoidales;f__UBA1222;g__SURF-27;s__SURF-27 sp003597995
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Chloroflexota;c__Chloroflexia;o__Chloroflexales;f__Chloroflexaceae;g__Viridilinea;s__Viridilinea mediisalina
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Cyanobacteria;c__Cyanobacteriia;o__PCC-6307;f__Cyanobiaceae;g__Synechococcus_E;s__Synechococcus_E sp003208835
-GCA_020696385.1_genomic.report	0.00125	d__Bacteria;p__Acidobacteriota;c__CAIWXX01;o__CAIWXX01;f__CAIWXX01;g__CAIWXX01;s__CAIWXX01 sp903916735
-GCA_020696385.1_genomic.report	0.00036	d__Bacteria;p__Acidobacteriota;c__B3-B38;o__JAFGBY01;f__JAFGBY01;g__JAFGBY01;s__JAFGBY01 sp016932915
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Spirochaetota;c__Spirochaetia;o__Treponematales;f__Treponemataceae;g__Treponema_D;s__Treponema_D sp002396325
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Spirochaetota;c__UBA6919;o__GWB1-36-13;f__GWB1-36-13;g__GWB1-36-13;s__GWB1-36-13 sp001829155
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Opitutales;f__JABJCN01;g__JABJCN01;s__JABJCN01 sp018668635
-GCA_020696385.1_genomic.report	0.00018	d__Bacteria;p__Nitrospirota;c__Thermodesulfovibrionia;o__Thermodesulfovibrionales;f__Magnetobacteriaceae;g__Magnetobacterium;s__Magnetobacterium sp015233725
-GCA_020696385.1_genomic.report	0.00033	d__Bacteria;p__Marinisomatota;c__Marinisomatia;o__Marinisomatales;f__TCS55;g__TCS55;s__TCS55 sp001577025
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Myxococcota;c__JACRCW01;o__JACRCW01;f__JACRCW01;g__JACRCW01;s__JACRCW01 sp016218805
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Krumholzibacteriota;c__Krumholzibacteria;o__Krumholzibacteriales;f__WJIX01;g__WJIX01;s__WJIX01 sp014730075
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__GWA2-32-17;g__GCA-002840935;s__GCA-002840935 sp002840935
+GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Lentimicrobiaceae;g__Lentimicrobium;s__Lentimicrobium sp016705005
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae;g__SHLJ01;s__SHLJ01 sp013042825
+GCA_020696385.1_genomic.report	0.00083	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae;g__Pseudozobellia;s__Pseudozobellia thermophila
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Saprospiraceae;g__JAAFJT01;s__JAAFJT01 sp013298955
+GCA_020696385.1_genomic.report	0.00054	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Cytophagales;f__UBA9547;g__REAG01;s__REAG01 sp004294265
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Lacrimispora;s__Lacrimispora celerecrescens
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__COE1;s__COE1 sp009774245
+GCA_020696385.1_genomic.report	0.00019	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Lachnospirales;f__Cellulosilyticaceae;g__FMMP01;s__FMMP01 sp900095725
+GCA_020696385.1_genomic.report	0.00094	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Acutalibacteraceae;g__UBA737;s__UBA737 sp015065645
+GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Acutalibacteraceae;g__RUG762;s__RUG762 sp017395425
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Oscillospirales;f__Ruminococcaceae;g__Ruthenibacterium;s__Ruthenibacterium sp013316265
+GCA_020696385.1_genomic.report	0.00114	d__Bacteria;p__Firmicutes_A;c__Thermoanaerobacteria;o__Caldicellulosiruptorales;f__Caldicellulosiruptoraceae;g__Caldicellulosiruptor;s__Caldicellulosiruptor sp017347585
+GCA_020696385.1_genomic.report	0.00028	d__Bacteria;p__Desulfobacterota;c__DSM-4660;o__Desulfatiglandales;f__HGW-15;g__JAFGIC01;s__JAFGIC01 sp016929815
+GCA_020696385.1_genomic.report	0.00034	d__Bacteria;p__Desulfobacterota;c__Desulfomonilia;o__UBA1062;f__UBA1062;g__B14-G9;s__B14-G9 sp015486075
+GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Opitutales;f__JABJCN01;g__JABJCN01;s__JABJCN01 sp018668635
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Patescibacteria;c__Microgenomatia;o__JADHYG01;f__JADHYG01;g__JADHYG01;s__JADHYG01 sp016782545
+GCA_020696385.1_genomic.report	0.00337	d__Bacteria;p__Acidobacteriota;c__CAIWXX01;o__CAIWXX01;f__CAIWXX01;g__CAIWXX01;s__CAIWXX01 sp903916735
+GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Firmicutes_B;c__Desulfitobacteriia;o__Desulfitobacteriales;f__Desulfitobacteriaceae;g__Desulfosporosinus;s__Desulfosporosinus sp001707885
+GCA_020696385.1_genomic.report	0.00807	d__Bacteria;p__Nitrospirota;c__Thermodesulfovibrionia;o__Thermodesulfovibrionales;f__Dissulfurispiraceae;g__GCA-2634385;s__GCA-2634385 sp002634385
 GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Bipolaricaulota;c__Bipolaricaulia;o__M55B111;f__M55B111;g__JAGXLP01;s__JAGXLP01 sp018334915
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bipolaricaulota;c__Bipolaricaulia;o__UBA7950;f__UBA9294;g__UBA9294;s__UBA9294 sp003545155
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Campylobacterota;c__Campylobacteria;o__Campylobacterales;f__Campylobacteraceae;g__Campylobacter_B;s__Campylobacter_B blaseri
+GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Krumholzibacteriota;c__Krumholzibacteria;o__Krumholzibacteriales;f__WJIX01;g__WJIX01;s__WJIX01 sp014730075
 GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__WOR-3;c__UBA3073;o__JACQXS01;f__JACQXS01;g__JACQXS01;s__JACQXS01 sp016208615
-GCA_020696385.1_genomic.report	0.00017	d__Bacteria;p__UBA10199;c__UBA10199;o__GCA-002796325;f__1-14-0-20-47-16;g__1-14-0-20-47-16;s__1-14-0-20-47-16 sp002796325
-GCA_020696385.1_genomic.report	0.00015	d__Bacteria;p__Firmicutes_G;c__Limnochordia;o__DTU010;f__DTU012;g__CSBR16-88;s__CSBR16-88 sp007116145
-GCA_020696385.1_genomic.report	0.00014	d__Bacteria;p__Firmicutes_H;c__UBA994;o__UBA994;f__UBA994;g__UBA2296;s__UBA2296 sp002345475
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Bdellovibrionota_C;c__UBA2361;o__UBA2361;f__OMII01;g__OMII01;s__OMII01 sp017853605
-GCA_020696385.1_genomic.report	0.00013	d__Bacteria;p__Deinococcota;c__Deinococci;o__Deinococcales;f__Deinococcaceae;g__Deinococcus;s__Deinococcus metalli
-GCA_020696385.1_genomic.report	0.00261	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__SG8-5;g__UBA147;s__UBA147 sp013791785
-GCA_020696385.1_genomic.report	0.00077	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__SG8-5;g__UBA147;s__UBA147 sp002496385
-GCA_020696385.1_genomic.report	0.00033	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__SG8-5;g__UBA147;s__UBA147 sp002499085
-GCA_020696385.1_genomic.report	0.00075	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__SG8-5;g__SG8-5;s__SG8-5 sp001595885
-GCA_020696385.1_genomic.report	0.00037	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__JACRNV01;g__JACRNV01;s__JACRNV01 sp016214785
-GCA_020696385.1_genomic.report	0.00022	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__UBA71;s__UBA71 sp015063235
-GCA_020696385.1_genomic.report	0.00017	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__RumEn-M2;s__RumEn-M2 sp002502965
-GCA_020696385.1_genomic.report	0.00069	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__SIG5;s__SIG5 sp015063195
-GCA_020696385.1_genomic.report	0.00024	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__Methanogranum;s__Methanogranum sp002506905
-GCA_020696385.1_genomic.report	0.00021	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__JAAYNL01;s__JAAYNL01 sp012520845
-GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__MX-02;s__MX-02 sp006954405
-GCA_020696385.1_genomic.report	0.00031	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomassiliicoccaceae;g__Methanomassiliicoccus_A;s__Methanomassiliicoccus_A intestinalis
+GCA_020696385.1_genomic.report	0.00257	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__SG8-5;g__UBA147;s__UBA147 sp013791785
+GCA_020696385.1_genomic.report	0.00058	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__SG8-5;g__UBA147;s__UBA147 sp002496385
+GCA_020696385.1_genomic.report	0.00035	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__SG8-5;g__UBA147;s__UBA147 sp002499085
+GCA_020696385.1_genomic.report	0.00072	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__SG8-5;g__SG8-5;s__SG8-5 sp001595885
+GCA_020696385.1_genomic.report	0.00034	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__SG8-5;f__JACRNV01;g__JACRNV01;s__JACRNV01 sp016214785
+GCA_020696385.1_genomic.report	0.00023	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__UBA71;s__UBA71 sp015063235
+GCA_020696385.1_genomic.report	0.00021	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__RumEn-M2;s__RumEn-M2 sp002502965
+GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__Methanogranum;s__Methanogranum sp002506905
+GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__JAAYNL01;s__JAAYNL01 sp012520845
+GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__JAAYZC01;s__JAAYZC01 sp012515075
+GCA_020696385.1_genomic.report	0.00098	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__UBA472;g__FEN-33;s__FEN-33 sp003135935
 GCA_020696385.1_genomic.report	0.00018	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__UBA472;g__UBA472;s__UBA472 sp002067045
-GCA_020696385.1_genomic.report	0.00197	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__JACIVX01;g__JACIVX01;s__JACIVX01 sp014361295
-GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__PWKY01;f__PWKY01;g__Natronoplasma;s__Natronoplasma sp018334755
-GCA_020696385.1_genomic.report	0.00035	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__RBG-16-68-12;f__SOIM01;g__SOIM01;s__SOIM01 sp004377185
-GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__RBG-16-68-12;f__RBG-16-68-12;g__RBG-16-68-12;s__RBG-16-68-12 sp005878385
-GCA_020696385.1_genomic.report	0.00021	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__UBA10834;f__UBA10834;g__UBA9653;s__UBA9653 sp018818785
-GCA_020696385.1_genomic.report	0.00035	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__WALJ01;f__WALJ01;g__WALJ01;s__WALJ01 sp015522885
-GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Thalassarchaeaceae;g__MGIIb-O1;s__MGIIb-O1 sp002502175
-GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Thermoplasmatota;c__E2;o__UBA202;f__DSCA01;g__VBQP01;s__VBQP01 sp008297795
-GCA_020696385.1_genomic.report	0.0003	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanosarcinaceae;g__Methanolobus;s__Methanolobus sp016278385
-GCA_020696385.1_genomic.report	0.00054	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanosarcinaceae;g__Methanococcoides;s__Methanococcoides burtonii
-GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanotrichales;f__Methanotrichaceae;g__UBA204;s__UBA204 sp002501765
-GCA_020696385.1_genomic.report	0.00031	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanoculleaceae;g__UBA206;s__UBA206 sp002503105
-GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Halobacteriota;c__Archaeoglobi;o__Archaeoglobales;f__Archaeoglobaceae;g__Geoglobus;s__Geoglobus acetivorans
-GCA_020696385.1_genomic.report	0.00023	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__TCS64;f__TCS64;g__BS750m-G28;s__BS750m-G28 sp016783455
-GCA_020696385.1_genomic.report	0.00019	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__B26-1;f__BA1;g__SOJZ01;s__SOJZ01 sp004376295
-GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__40CM-2-53-6;f__RBG-13-38-9;g__DTMT01;s__DTMT01 sp018396565
-GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Thermoproteota;c__EX4484-205;o__EX4484-205;f__JAAOZP01;g__JAAOZP01;s__JAAOZP01 sp017601345
-GCA_020696385.1_genomic.report	0.00175	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__SCGC-AAA011-G17;f__JAGVZF01;g__JAGVZF01;s__JAGVZF01 sp018302805
-GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__SCGC-AAA011-G17;f__ARS1403;g__ARS1403;s__ARS1403 sp002687825
-GCA_020696385.1_genomic.report	0.0006	d__Archaea;p__Asgardarchaeota;c__Lokiarchaeia;o__CR-4;f__SOKP01;g__SOKP01;s__SOKP01 sp013375475
+GCA_020696385.1_genomic.report	0.00027	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomassiliicoccaceae;g__Methanomassiliicoccus_A;s__Methanomassiliicoccus_A intestinalis
+GCA_020696385.1_genomic.report	0.00145	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__JACIVX01;g__JACIVX01;s__JACIVX01 sp014361295
+GCA_020696385.1_genomic.report	0.00023	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__UBA10834;f__UBA10834;g__UBA9653;s__UBA9653 sp018818785
+GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__UBA10834;f__UBA10834;g__COMBO-56-21;s__COMBO-56-21 sp001800815
+GCA_020696385.1_genomic.report	0.00046	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__RBG-16-68-12;f__SOIM01;g__SOIM01;s__SOIM01 sp004377185
+GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__PWKY01;f__PWKY01;g__PWKY01;s__PWKY01 sp003553085
+GCA_020696385.1_genomic.report	0.00032	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__WALJ01;f__WALJ01;g__WALJ01;s__WALJ01 sp015522885
+GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__DTKX01;f__VGTL01;g__VGTL01;s__VGTL01 sp016874675
+GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__B31-G17;f__B31-G17;g__B31-G17;s__B31-G17 sp003649915
+GCA_020696385.1_genomic.report	0.00214	d__Archaea;p__Thermoplasmatota;c__Poseidoniia;o__Poseidoniales;f__Poseidoniaceae;g__MGIIa-L3;s__MGIIa-L3 sp002694585
+GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Thermoplasmatota;c__E2;o__DHVEG-1;f__DHVEG-1;g__EX4572-165;s__EX4572-165 sp002254885
+GCA_020696385.1_genomic.report	0.00039	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanosarcinaceae;g__Methanococcoides;s__Methanococcoides burtonii
+GCA_020696385.1_genomic.report	0.00023	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanosarcinaceae;g__Methanolobus;s__Methanolobus sp016278385
+GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanoculleaceae;g__UBA206;s__UBA206 sp002503105
+GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Halobacteriota;c__Archaeoglobi;o__Archaeoglobales;f__Archaeoglobaceae;g__Geoglobus;s__Geoglobus sp002494725
+GCA_020696385.1_genomic.report	0.00018	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__TCS64;f__TCS64;g__BS750m-G28;s__BS750m-G28 sp016783455
+GCA_020696385.1_genomic.report	0.00014	d__Archaea;p__Thermoproteota;c__Bathyarchaeia;o__B26-1;f__B26-1;g__DTEX01;s__DTEX01 sp018396405
+GCA_020696385.1_genomic.report	0.00013	d__Archaea;p__Thermoproteota;c__EX4484-205;o__EX4484-205;f__DTQO01;g__DTQO01;s__DTQO01 sp017601265
+GCA_020696385.1_genomic.report	0.00027	d__Archaea;p__Nanoarchaeota;c__Nanoarchaeia;o__Woesearchaeales;f__JAGVZT01;g__JAFCGF01;s__JAFCGF01 sp017608295
+GCA_020696385.1_genomic.report	0.00041	d__Archaea;p__Asgardarchaeota;c__Lokiarchaeia;o__CR-4;f__SOKP01;g__SOKP01;s__SOKP01 sp013375475
+GCA_020696385.1_genomic.report	0.00015	d__Archaea;p__Asgardarchaeota;c__Heimdallarchaeia;o__Hodarchaeales;f__YT1-039;g__YT1-039;s__YT1-039 sp016840025

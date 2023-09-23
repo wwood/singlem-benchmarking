@@ -4,7 +4,7 @@ import polars as pl
 num_threads = config['benchmarking_threads']
 kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
 
-relabund_tools = ['singlem', 'metaphlan', 'motus', 'sourmash', 'coverm']
+relabund_tools = ['singlem', 'metaphlan', 'motus', 'sourmash', 'coverm', 'map2b']
 reads_wise_tools = ['kraken', 'kaiju']
 tools = relabund_tools + reads_wise_tools
 
@@ -34,7 +34,7 @@ paired_genomes = (
 paired_genomes.columns = ['sample','example_genome','example_taxonomy']
 
 # Debug
-# tools = ['singlem', 'kraken']
+# tools = ['map2b']
 # novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
 print("Profiling {} over {} genomes".format(tools, len(novelties)))
 
@@ -73,6 +73,10 @@ kaiju_db_original_progenomes_names = kaiju_db_original_dir + '/names.dmp'
 kaiju_db = output_dirs_dict['kaiju'] + '/kaiju/data/kaiju_db_progenomes.fmi'
 kaiju_db_progenomes_nodes = output_dirs_dict['kaiju'] + '/kaiju/data/nodes.dmp'
 kaiju_db_progenomes_names = output_dirs_dict['kaiju'] + '/kaiju/data/names.dmp'
+
+map2b_checkout_dir = '/home/woodcrob/bioinfo/MAP2B'
+map2b_db = os.path.join(map2b_checkout_dir, 'database.bak/GTDB')
+map2b_db_local = output_dirs_dict['map2b'] + '/map2b/data/GTDB'
 
 #####################################################################
 
@@ -560,4 +564,54 @@ rule coverm_to_condensed:
         "--sample {wildcards.sample} "
         "--bac-tax {params.bac_tax} "
         "--arc-tax {params.arc_tax} "
+        "> {output} "
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+######### MAP2B
+
+rule map2b_copy_data:
+    output:
+        db=directory(map2b_db_local),
+        done=touch(output_dirs_dict['map2b'] + "/map2b/data/done")
+    shell:
+        "cp -r {map2b_db} {output.db}/"
+
+rule map2b_sample_setup:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+    output:
+        listfile=output_dirs_dict['map2b'] + "/map2b/listfiles/{sample}",
+        done=touch(output_dirs_dict['map2b'] + "/map2b/done/setup/{sample}.done")
+    shell:
+        "echo {wildcards.sample} {input.r1} {input.r2} |sed 's/ /\t/g' > {output.listfile}"
+
+rule map2b_run:
+    input:
+        listfile=output_dirs_dict['map2b'] + "/map2b/listfiles/{sample}",
+        done=output_dirs_dict['map2b'] + "/map2b/data/done"
+    output:
+        tsv=output_dirs_dict['map2b'] + "/map2b/{sample}/Abundance.xls",
+        done=touch(output_dirs_dict['map2b'] + "/map2b/done/run/{sample}.done")
+    threads: num_threads
+    benchmark:
+        benchmark_dir + "/map2b/{sample}-"+str(num_threads)+"threads.benchmark"
+    conda:
+        "envs/MAP2B-20230420-conda.yml"
+    params:
+        output_dir = lambda wildcards, output: os.path.dirname(output.tsv),
+    shell:
+        "python3 {map2b_checkout_dir}/bin/MAP2B.py -i {input.listfile} -d {map2b_db_local} -o {params.output_dir} -p {threads}"
+
+rule map2b_to_biobox:
+    input:
+        tsv=output_dirs_dict['map2b'] + "/map2b/{sample}/Abundance.xls",
+    output:
+        profile = output_dirs_dict['map2b'] + "/map2b/{sample}.profile",
+    shell:
+        "{workflow.basedir}/../bin/map2b_to_condensed.py "
+        "--abundance {input} "
+        "--sample {wildcards.sample} "
         "> {output} "

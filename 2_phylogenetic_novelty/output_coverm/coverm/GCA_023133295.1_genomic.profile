@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_023133295.1_genomic	9.919041	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Haloarculaceae;g__Halorhabdus;s__Halorhabdus utahensis
+GCA_023133295.1_genomic	9.91873	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Haloarculaceae;g__Halorhabdus;s__Halorhabdus utahensis

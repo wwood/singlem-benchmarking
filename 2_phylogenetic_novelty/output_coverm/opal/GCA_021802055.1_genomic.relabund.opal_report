@@ -107,8 +107,8 @@ GCA_021802055.1_genomic.biobox	family	Shannon diversity	SAMPLEID	0.0
 GCA_021802055.1_genomic.biobox	family	Shannon equitability	SAMPLEID	0.0
 GCA_021802055.1_genomic.biobox	genus	Shannon diversity	SAMPLEID	0.0
 GCA_021802055.1_genomic.biobox	genus	Shannon equitability	SAMPLEID	0.0
-GCA_021802055.1_genomic.biobox	species	Shannon diversity	SAMPLEID	0.35482747064503944
-GCA_021802055.1_genomic.biobox	species	Shannon equitability	SAMPLEID	0.22046670325318818
+GCA_021802055.1_genomic.biobox	species	Shannon diversity	SAMPLEID	0.35479305823736856
+GCA_021802055.1_genomic.biobox	species	Shannon equitability	SAMPLEID	0.22044532162211994
 GCA_021802055.1_genomic.biobox	kingdom	True positives	SAMPLEID	1.0
 GCA_021802055.1_genomic.biobox	kingdom	False negatives	SAMPLEID	1.0
 GCA_021802055.1_genomic.biobox	kingdom	False positives	SAMPLEID	0.0
@@ -166,7 +166,7 @@ GCA_021802055.1_genomic.biobox	family	L1 norm error	SAMPLEID	1.0
 GCA_021802055.1_genomic.biobox	genus	L1 norm error	SAMPLEID	1.0
 GCA_021802055.1_genomic.biobox	species	L1 norm error	SAMPLEID	1.0000000000000002
 GCA_021802055.1_genomic.biobox	na	Weighted UniFrac error	SAMPLEID	0.09075
-GCA_021802055.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	2.5
+GCA_021802055.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	2.5000000000000004
 GCA_021802055.1_genomic.biobox	na	Weighted UniFrac (CAMI)	SAMPLEID	7.0
 GCA_021802055.1_genomic.biobox	na	Unweighted UniFrac (CAMI)	SAMPLEID	35.0
 GCA_021802055.1_genomic.biobox	phylum	Sum of abundances	SAMPLEID	1.0

@@ -107,8 +107,8 @@ GCA_023487205.1_genomic.biobox	family	Shannon diversity	SAMPLEID	0.0
 GCA_023487205.1_genomic.biobox	family	Shannon equitability	SAMPLEID	0.0
 GCA_023487205.1_genomic.biobox	genus	Shannon diversity	SAMPLEID	0.0
 GCA_023487205.1_genomic.biobox	genus	Shannon equitability	SAMPLEID	0.0
-GCA_023487205.1_genomic.biobox	species	Shannon diversity	SAMPLEID	0.5854681629001146
-GCA_023487205.1_genomic.biobox	species	Shannon equitability	SAMPLEID	0.8446520152143672
+GCA_023487205.1_genomic.biobox	species	Shannon diversity	SAMPLEID	0.638315207957447
+GCA_023487205.1_genomic.biobox	species	Shannon equitability	SAMPLEID	0.9208941850442163
 GCA_023487205.1_genomic.biobox	kingdom	True positives	SAMPLEID	1.0
 GCA_023487205.1_genomic.biobox	kingdom	False negatives	SAMPLEID	1.0
 GCA_023487205.1_genomic.biobox	kingdom	False positives	SAMPLEID	0.0

@@ -1,4 +1,4 @@
 sample	coverage	taxonomy
 GCF_024296685.1_genomic	7.0	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae;g__Cellulophaga;s__Cellulophaga lytica
-GCF_024296685.1_genomic	7.0	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Natrialbaceae;g__Natrinema;s__Natrinema versiforme_A
-GCF_024296685.1_genomic	7.0	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Natrialbaceae;g__Natrinema;s__Natrinema mahii
+GCF_024296685.1_genomic	8.0	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Natrialbaceae;g__Natrinema;s__Natrinema versiforme_A
+GCF_024296685.1_genomic	6.0	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Natrialbaceae;g__Natrinema;s__Natrinema mahii

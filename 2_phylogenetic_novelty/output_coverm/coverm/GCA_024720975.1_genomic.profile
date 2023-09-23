@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_024720975.1_genomic	9.856529	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Christensenellales;f__CAG-552;g__CAG-552;s__CAG-552 sp000435495
+GCA_024720975.1_genomic	9.846874	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Christensenellales;f__CAG-552;g__CAG-552;s__CAG-552 sp000435495

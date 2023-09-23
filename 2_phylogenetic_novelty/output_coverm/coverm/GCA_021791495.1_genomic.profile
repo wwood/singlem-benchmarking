@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_021791495.1_genomic	9.771917	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Halococcaceae;g__Halococcus;s__Halococcus salifodinae
+GCA_021791495.1_genomic	9.772321	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Halococcaceae;g__Halococcus;s__Halococcus salifodinae

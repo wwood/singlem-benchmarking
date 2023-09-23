@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-sample_name	1.0	d__Bacteria; p__Firmicutes; c__Bacilli; o__Lactobacillales; f__Streptococcaceae; g__Streptococcus; s__Streptococcus suis
+GCA_019794795.1_genomic	100.0	d__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae;g__Methanobacterium_D;s__Methanobacterium_D sp002494885

@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_023132135.1_genomic	9.9118395	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__PXRE01;g__PXRE01;s__PXRE01 sp003021085
+GCA_023132135.1_genomic	9.922017	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__PXRE01;g__PXRE01;s__PXRE01 sp003021085

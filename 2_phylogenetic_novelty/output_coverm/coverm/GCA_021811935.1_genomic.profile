@@ -1,2 +1,2 @@
 sample	coverage	taxonomy
-GCA_021811935.1_genomic	9.999722	d__Bacteria;p__Chloroflexota;c__Dehalococcoidia;o__SM23-28-2;f__SM23-28-2;g__SM23-28-2;s__SM23-28-2 sp001303545
+GCA_021811935.1_genomic	10.000548	d__Bacteria;p__Chloroflexota;c__Dehalococcoidia;o__SM23-28-2;f__SM23-28-2;g__SM23-28-2;s__SM23-28-2 sp001303545
