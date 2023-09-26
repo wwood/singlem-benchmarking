@@ -409,6 +409,77 @@ rule sourmash_to_condensed:
 ###############################################################################################
 ###############################################################################################
 ###############################################################################################
+######### kaiju
+
+rule kaiju_copy_db:
+    # input:
+    #     db = kaiju_db_original_progenomes_fmi,
+    #     nodes = kaiju_db_original_progenomes_nodes,
+    #     names = kaiju_db_original_progenomes_names,
+    output:
+        db=kaiju_db,
+        nodes = kaiju_db_progenomes_nodes,
+        names = kaiju_db_progenomes_names,
+        done=output_dirs_dict['kaiju'] + "/kaiju/data/done"
+    shell:
+        "mkdir -p {output_dirs_dict[kaiju]}/kaiju/data && " \
+        "cp -rvL {kaiju_db_original_progenomes_fmi} {output.db} " \
+        "&& cp -rvL {kaiju_db_original_progenomes_nodes} {output.nodes} " \
+        "&& cp -rvL {kaiju_db_original_progenomes_names} {output.names} "\
+        "&& touch {output.done}"
+        
+rule kaiju_run:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db=kaiju_db,
+        nodes = kaiju_db_progenomes_nodes,
+        names = kaiju_db_progenomes_names,
+        done=output_dirs_dict['kaiju'] + "/kaiju/data/done"
+    benchmark:
+        benchmark_dir + "/kaiju/{sample}-"+str(num_threads)+"threads.benchmark"
+    threads: num_threads
+    output:
+        report=output_dirs_dict['kaiju'] + "/kaiju-run/{sample}.report",
+        done=output_dirs_dict['kaiju'] + "/kaiju/{sample}.profile.done"
+    conda:
+        "envs/kaiju.yml"
+    params:
+        output_dir = output_dirs_dict['kaiju'],
+        kaiju_prefix = lambda wildcards: output_dirs_dict['kaiju'] + "/kaiju/"+wildcards.sample
+    shell:
+        # kaiju -z 25 -t nodes.dmp -f kaiju_db_progenomes.fmi -i <(zcat ~/m/msingle/mess/124_singlem-benchmarking/2_phylogenetic_novelty/local_reads/GCA_020697715.1_genomic.1.fq.gz ~/m/msingle/mess/124_singlem-benchmarking/2_phylogenetic_novelty/local_reads/GCA_020697715.1_genomic.2.fq.gz) -o kaiju.out
+        "kaiju -z {threads} -t {input.nodes} -f {input.db} -i <(zcat {input.r1} {input.r2}) -o {output.report} && " \
+        "touch {output.done}"
+
+rule kaiju_to_summarised_table:
+    input:
+        output_dirs_dict['kaiju'] + "/kaiju-run/{sample}.report",
+    output:
+        profile = output_dirs_dict['kaiju'] + "/kaiju/{sample}.summary.report",
+        done=output_dirs_dict['kaiju'] + "/kaiju/{sample}.summary.report.done"
+    conda:
+        "envs/kaiju.yml"
+    shell:
+        # kaiju2table -t nodes.dmp -n names.dmp -r genus -o kaiju_summary.tsv kaiju.out
+        "kaiju2table -t {kaiju_db_progenomes_nodes} -n {kaiju_db_progenomes_names} -r phylum -o {output.profile} {input} && touch {output.done}"
+
+rule kaiju_to_condensed:
+    input:
+        output_dirs_dict['kaiju'] + "/kaiju/{sample}.summary.report",
+    output:
+        profile = output_dirs_dict['kaiju'] + "/kaiju/{sample}.profile",
+    conda:
+        "envs/kaiju_to_kingdom.yml"
+    shell:
+        "{workflow.basedir}/../bin/kaiju_to_kingdom_condensed.py --input {input} " \
+        "--sample {wildcards.sample} " \
+        "--data-dir {kaiju_db_original_dir} " \
+        " > {output} "
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
 ######### CoverM
 
 # rule coverm_run:
