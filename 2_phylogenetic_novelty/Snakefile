@@ -38,10 +38,6 @@ paired_genomes.columns = ['sample','example_genome','example_taxonomy']
 # novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
 print("Profiling {} over {} genomes".format(tools, len(novelties)))
 
-##################################################################### things that should be in config
-
-singlem_git_base_directory = os.path.join(workflow.basedir, '../singlem')
-
 ##################################################################### reference databases
 
 metapackage = '/work/microbiome/db/singlem/S3.1.0.metapackage_20221209.smpkg.zb'
@@ -129,7 +125,7 @@ rule truth_condensed_to_biobox:
     output:
         biobox = truth_dir + "/{sample}.{method}_condensed.biobox",
     conda:
-        "singlem-dev"
+        "envs/singlem.yml"
     shell:
         "{singlem_git_base_directory}/extras/condensed_profile_to_biobox.py --input-condensed-table {input.condensed} " \
         "--output-biobox {output.biobox}"
@@ -197,11 +193,11 @@ rule singlem_run_to_profile:
         report=output_dirs_dict['singlem'] + "/singlem/{sample}.profile",
         done=output_dirs_dict['singlem'] + "/singlem/{sample}.profile.done"
     conda:
-        "singlem-dev"
+        "singlem-v0.14.0"
     threads:
         num_threads
     shell:
-        "{singlem_git_base_directory}/bin/singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} && touch {output.done}"
+        "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} && touch {output.done}"
 
 
 ###############################################################################################
