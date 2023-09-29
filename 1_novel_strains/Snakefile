@@ -26,7 +26,6 @@ coverage_definitions_folder = 'coverage_definitions'
 
 ##################################################################### things that should be in config
 
-singlem_git_base_directory = os.path.join(workflow.basedir, '../singlem')
 gtdb_bac_metadata = '/work/microbiome/db/gtdb/gtdb_release207/bac120_metadata_r207.tsv'
 
 
@@ -93,9 +92,9 @@ rule truth_condensed_to_biobox:
     output:
         biobox = truth_dir + "/{sample}.condensed.biobox",
     conda:
-        "singlem-dev"
+        "envs/singlem.yml"
     shell:
-        "{singlem_git_base_directory}/extras/condensed_profile_to_biobox.py --input-condensed-table {input.condensed} " \
+        "{workflow.basedir}/../bin/condensed_profile_to_biobox.py --input-condensed-table {input.condensed} " \
         "--output-biobox {output.biobox}"
 
 def get_condensed_to_biobox_extra_args(tool):
@@ -113,9 +112,9 @@ rule tool_condensed_to_biobox:
     output:
         biobox = output_prefix + "{tool}/biobox/{sample}.biobox",
     conda:
-        "singlem-dev"
+        "envs/singlem.yml"
     shell:
-        "{singlem_git_base_directory}/extras/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
+        "{workflow.basedir}/../bin/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
         "--output-biobox {output.biobox} --template-biobox {input.truth} "
 
 rule opal:
@@ -161,11 +160,11 @@ rule singlem_run_to_profile:
         report=output_dirs_dict['singlem'] + "/singlem/{sample}.profile",
         done=output_dirs_dict['singlem'] + "/singlem/{sample}.profile.done"
     conda:
-        "singlem-dev"
+        "envs/singlem.yml"
     threads:
         num_threads
     shell:
-        "{singlem_git_base_directory}/bin/singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} && touch {output.done}"
+        "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} && touch {output.done}"
 
 
 ###############################################################################################
@@ -225,7 +224,7 @@ rule metaphlan_profile_to_condensed:
     output:
         profile = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile",
     conda:
-        "singlem-dev"
+        "envs/singlem.yml"
     shell:
         "{workflow.basedir}/../bin/metaphlan_to_condensed.py --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
 
@@ -266,7 +265,7 @@ rule motus_profile_to_condensed:
     output:
         profile = output_dirs_dict['motus'] + "/motus/{sample}.profile",
     conda:
-        "singlem-dev"
+        "envs/singlem.yml"
     shell:
         "{workflow.basedir}/../bin/motus_to_condensed.py --motus {input.report} " \
         "--gtdb {motus_gtdb_tsv} " \
