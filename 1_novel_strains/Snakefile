@@ -16,7 +16,7 @@ output_dirs_dict = dict(zip(tools, output_dirs))
 benchmark_dir = 'benchmarks'
 
 datasets = list(['marine'+str(i) for i in range(10)])
-# datasets = [datasets[0]]
+datasets = [datasets[6]] # debug
 
 fastq_dir = 'local_reads'
 truth_dir = os.path.join(workflow.basedir, 'truths')
@@ -158,13 +158,15 @@ rule singlem_run_to_profile:
         benchmark_dir + "/singlem/{sample}-"+str(num_threads)+"threads.benchmark"
     output:
         report=output_dirs_dict['singlem'] + "/singlem/{sample}.profile",
-        done=output_dirs_dict['singlem'] + "/singlem/{sample}.profile.done"
+        done=touch(output_dirs_dict['singlem'] + "/singlem/{sample}.profile.done")
     conda:
         "envs/singlem.yml"
     threads:
         num_threads
+    log:
+        output_dirs_dict['singlem'] + "/logs/singlem/{sample}.log"
     shell:
-        "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} && touch {output.done}"
+        "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} &> {log}"
 
 
 ###############################################################################################
@@ -175,12 +177,11 @@ rule singlem_run_to_profile:
 
 
 rule metaphlan_copy_db:
-    input:
-        # Cannot use the directory as input/output because humann complains when
-        # there's a snakemake hidden file in the dir
-
-        # db1=directory(metaphlan_db_original1),
-        # db2=directory(metaphlan_db_original2),
+    # input:
+    # Cannot use the directory as input/output because humann complains when
+    # there's a snakemake hidden file in the dir
+    # db1=directory(metaphlan_db_original1),
+    # db2=directory(metaphlan_db_original2),
     output:
         # db1=directory(metaphlan_db_local1),
         # db2=directory(metaphlan_db_local2),
@@ -197,26 +198,30 @@ rule metaphlan_profile:
         benchmark_dir + "/metaphlan/{sample}-"+str(num_threads)+"threads.benchmark"
     output:
         sgb_report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.sgb_report",
-        done=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile.done"
+        done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile.done")
     conda:
         "envs/metaphlan.yml"
     threads: num_threads
     params:
         cat_reads = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.cat.fq.gz",
+    log:
+        output_dirs_dict['metaphlan'] + "/logs/metaphlan/{sample}.log"
     shell:
         # Concatenate input files because metaphlan can't handle multiple input files
-        "rm -f {output.sgb_report} {params.cat_reads}.bowtie2out.txt; cat {input.r1} {input.r2} > {params.cat_reads} && metaphlan {params.cat_reads} --nproc {threads} --input_type fastq --bowtie2db {metaphlan_db_local1} -o {output.sgb_report} && touch {output.done}"
+        "rm -f {output.sgb_report} {params.cat_reads}.bowtie2out.txt; cat {input.r1} {input.r2} > {params.cat_reads} && metaphlan {params.cat_reads} --nproc {threads} --input_type fastq --bowtie2db {metaphlan_db_local1} -o {output.sgb_report} &> {log}"
 
 rule metaphlan_convert_profile_to_GTDB:
     input:
         report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.sgb_report"
     output:
         gtdb_report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_profile",
-        done=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_report.done"
+        done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_report.done")
     conda:
         "envs/metaphlan.yml"
+    log:
+        output_dirs_dict['metaphlan'] + "/logs/metaphlan/{sample}-convert.log"
     shell:
-        "sgb_to_gtdb_profile.py -i {input.report} -o {output.gtdb_report} -d {metaphlan_db_local1}/mpa_vOct22_CHOCOPhlAnSGB_202212.pkl && touch {output.done}"
+        "sgb_to_gtdb_profile.py -i {input.report} -o {output.gtdb_report} -d {metaphlan_db_local1}/mpa_vOct22_CHOCOPhlAnSGB_202212.pkl &> {log}"
 
 rule metaphlan_profile_to_condensed:
     input:
@@ -239,9 +244,9 @@ rule motus_copy_db:
         db=motus_db_path_original,
     output:
         db=directory(motus_db_path_local),
-        done=output_dirs_dict['motus'] + "/motus/data/done"
+        done=touch(output_dirs_dict['motus'] + "/motus/data/done")
     shell:
-        "mkdir -p {output.db} && rmdir {output.db} && cp -rvL {input.db} {output.db} && touch {output.done}"
+        "mkdir -p {output.db} && rmdir {output.db} && cp -rvL {input.db} {output.db}"
 
 rule motus_run:
     input:
@@ -252,12 +257,14 @@ rule motus_run:
         benchmark_dir + "/motus/{sample}-"+str(num_threads)+"threads.benchmark"
     output:
         report=output_dirs_dict['motus'] + "/motus/{sample}.motus",
-        done=output_dirs_dict['motus'] + "/motus/{sample}.profile.done"
+        done=touch(output_dirs_dict['motus'] + "/motus/{sample}.profile.done")
     threads: num_threads
     conda:
         "envs/motus.yml"
+    log:
+        output_dirs_dict['motus'] + "/logs/motus/{sample}.log"
     shell:
-        "motus profile -t {threads} -db {motus_db_path_local} -f {input.r1} -r {input.r2} -o {output.report} && touch {output.done}"
+        "motus profile -t {threads} -db {motus_db_path_local} -f {input.r1} -r {input.r2} -o {output.report} &> {log}"
 
 rule motus_profile_to_condensed:
     input:
@@ -296,11 +303,13 @@ rule kraken_run:
     threads: kraken_num_threads
     output:
         report=output_dirs_dict['kraken'] + "/kraken/{sample}.kraken",
-        done=output_dirs_dict['kraken'] + "/kraken/{sample}.kraken.done"
+        done=(output_dirs_dict['kraken'] + "/kraken/{sample}.kraken.done")
     conda:
         "envs/kraken.yml"
+    log:
+        output_dirs_dict['kraken'] + "/logs/kraken/{sample}.log"
     shell:
-        "kraken2 --db {input.db} --threads {num_threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} && touch {output.done}"
+        "kraken2 --db {input.db} --threads {num_threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} &> {log}"
 
 rule braken_run:
     input:
@@ -315,18 +324,19 @@ rule braken_run:
         c=output_dirs_dict['kraken'] + "/braken/{sample}.report.C",
         p=output_dirs_dict['kraken'] + "/braken/{sample}.report.P",
         d=output_dirs_dict['kraken'] + "/braken/{sample}.report.D",
-        done=output_dirs_dict['kraken'] + "/braken/{sample}.done"
+        done=touch(output_dirs_dict['kraken'] + "/braken/{sample}.done")
     conda:
         "envs/bracken.yml"
+    log:
+        output_dirs_dict['kraken'] + "/logs/bracken/{sample}.log"
     shell:
-        "bracken -d {input.db} -r 150 -l S -t 10 -o {output.s} -i {input.kraken_report} && " \
+        "bash -c 'bracken -d {input.db} -r 150 -l S -t 10 -o {output.s} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l G -t 10 -o {output.g} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l F -t 10 -o {output.f} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l O -t 10 -o {output.o} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l C -t 10 -o {output.c} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l P -t 10 -o {output.p} -i {input.kraken_report} && " \
-        "bracken -d {input.db} -r 150 -l D -t 10 -o {output.d} -i {input.kraken_report} && " \
-        "touch {output.done}"
+        "bracken -d {input.db} -r 150 -l D -t 10 -o {output.d} -i {input.kraken_report}' &> {log}"
 
 
 rule bracken_to_profile:
@@ -347,12 +357,14 @@ rule bracken_to_profile:
         profile = output_dirs_dict['kraken'] + "/kraken/{sample}.profile",
     conda:
         "singlem-dev"
+    log:
+        output_dirs_dict['kraken'] + "/logs/bracken_to_profile/{sample}.log"
     shell:
         # Convert reports to singlem condense format
         "mkdir -p {params.biobox_dir} && " \
         "{workflow.basedir}/../bin/kraken_to_condensed.py --report-prefix {params.report_prefix} " \
         "--bacterial-taxonomy /work/microbiome/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv " \
-        "--archaeal-taxonomy /work/microbiome/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv > {output.profile}"
+        "--archaeal-taxonomy /work/microbiome/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv > {output.profile} 2> {log}"
 
 ###############################################################################################
 ###############################################################################################
@@ -384,16 +396,18 @@ rule sourmash_run:
     threads: num_threads
     output:
         report=output_dirs_dict['sourmash'] + "/sourmash/{sample}.gather_gtdbrs207_reps.with-lineages.csv",
-        done=output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile.done"
+        done=touch(output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile.done")
     conda:
         "envs/sourmash.yml"
     params:
         output_dir = output_dirs_dict['sourmash'],
         sourmash_prefix = lambda wildcards: output_dirs_dict['sourmash'] + "/sourmash/"+wildcards.sample
+    log:
+        output_dirs_dict['sourmash'] + "/logs/sourmash/{sample}.log"
     shell:
         # Sourmash does not seem to have a --threads option
         # sourmash tax annotate creates a file with-lineages in the CWD, so we need to cd into the output dir before running it
-        "sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge {params.sourmash_prefix} -o {params.sourmash_prefix}.sig {input.r1} {input.r2} && echo \"running gather..\" && sourmash gather {params.sourmash_prefix}.sig {input.db2} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv && echo \"running tax ..\" && cd {params.output_dir}/sourmash && sourmash tax annotate -g {wildcards.sample}.gather_gtdbrs207_reps.csv -t ../../{input.db1} && cd - && touch {output.done}"
+        "bash -c 'sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge {params.sourmash_prefix} -o {params.sourmash_prefix}.sig {input.r1} {input.r2} && echo \"running gather..\" && sourmash gather {params.sourmash_prefix}.sig {input.db2} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv && echo \"running tax ..\" && cd {params.output_dir}/sourmash && sourmash tax annotate -g {wildcards.sample}.gather_gtdbrs207_reps.csv -t ../../{input.db1} && cd -' &> {log}"
 
 rule sourmash_to_condensed:
     input:
@@ -440,28 +454,31 @@ rule kaiju_run:
     threads: num_threads
     output:
         report=output_dirs_dict['kaiju'] + "/kaiju-run/{sample}.report",
-        done=output_dirs_dict['kaiju'] + "/kaiju/{sample}.profile.done"
+        done=touch(output_dirs_dict['kaiju'] + "/kaiju/{sample}.profile.done")
     conda:
         "envs/kaiju.yml"
+    log:
+        output_dirs_dict['kaiju'] + "/logs/kaiju/{sample}.log"
     params:
         output_dir = output_dirs_dict['kaiju'],
         kaiju_prefix = lambda wildcards: output_dirs_dict['kaiju'] + "/kaiju/"+wildcards.sample
     shell:
         # kaiju -z 25 -t nodes.dmp -f kaiju_db_progenomes.fmi -i <(zcat ~/m/msingle/mess/124_singlem-benchmarking/2_phylogenetic_novelty/local_reads/GCA_020697715.1_genomic.1.fq.gz ~/m/msingle/mess/124_singlem-benchmarking/2_phylogenetic_novelty/local_reads/GCA_020697715.1_genomic.2.fq.gz) -o kaiju.out
-        "kaiju -z {threads} -t {input.nodes} -f {input.db} -i <(zcat {input.r1} {input.r2}) -o {output.report} && " \
-        "touch {output.done}"
+        "kaiju -z {threads} -t {input.nodes} -f {input.db} -i <(zcat {input.r1} {input.r2}) -o {output.report} &> {log}"
 
 rule kaiju_to_summarised_table:
     input:
         output_dirs_dict['kaiju'] + "/kaiju-run/{sample}.report",
     output:
         profile = output_dirs_dict['kaiju'] + "/kaiju/{sample}.summary.report",
-        done=output_dirs_dict['kaiju'] + "/kaiju/{sample}.summary.report.done"
+        done=touch(output_dirs_dict['kaiju'] + "/kaiju/{sample}.summary.report.done")
     conda:
         "envs/kaiju.yml"
+    log:
+        output_dirs_dict['kaiju'] + "/logs/kaiju_to_summarised_table/{sample}.log"
     shell:
         # kaiju2table -t nodes.dmp -n names.dmp -r genus -o kaiju_summary.tsv kaiju.out
-        "kaiju2table -t {kaiju_db_progenomes_nodes} -n {kaiju_db_progenomes_names} -r phylum -o {output.profile} {input} && touch {output.done}"
+        "kaiju2table -t {kaiju_db_progenomes_nodes} -n {kaiju_db_progenomes_names} -r phylum -o {output.profile} {input} &> {log}"
 
 rule kaiju_to_condensed:
     input:
@@ -554,10 +571,12 @@ rule map2b_run:
         benchmark_dir + "/map2b/{sample}-"+str(num_threads)+"threads.benchmark"
     conda:
         "envs/MAP2B-20230420-conda.yml"
+    log:
+        output_dirs_dict['map2b'] + "/logs/map2b/{sample}.log"
     params:
         output_dir = lambda wildcards, output: os.path.dirname(output.tsv),
     shell:
-        "python3 {map2b_checkout_dir}/bin/MAP2B.py -i {input.listfile} -d {map2b_db_local} -o {params.output_dir} -p {threads}"
+        "python3 {map2b_checkout_dir}/bin/MAP2B.py -i {input.listfile} -d {map2b_db_local} -o {params.output_dir} -p {threads} &> {log}"
 
 rule map2b_to_biobox:
     input:
