@@ -303,7 +303,7 @@ rule kraken_run:
     threads: kraken_num_threads
     output:
         report=output_dirs_dict['kraken'] + "/kraken/{sample}.kraken",
-        done=(output_dirs_dict['kraken'] + "/kraken/{sample}.kraken.done")
+        done=touch(output_dirs_dict['kraken'] + "/kraken/{sample}.kraken.done")
     conda:
         "envs/kraken.yml"
     log:
