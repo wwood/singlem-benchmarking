@@ -16,7 +16,7 @@ output_dirs_dict = dict(zip(tools, output_dirs))
 benchmark_dir = 'benchmarks'
 
 datasets = list(['marine'+str(i) for i in range(10)])
-datasets = [datasets[6]] # debug
+# datasets = [datasets[6]] # debug
 
 fastq_dir = 'local_reads'
 truth_dir = os.path.join(workflow.basedir, 'truths')
