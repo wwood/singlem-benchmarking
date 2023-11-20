@@ -90,24 +90,24 @@ Gold standard	order	Taxon counts	SAMPLEID	2.0
 Gold standard	family	Taxon counts	SAMPLEID	2.0
 Gold standard	genus	Taxon counts	SAMPLEID	2.0
 Gold standard	species	Taxon counts	SAMPLEID	2.0
-GCA_019795105.1_genomic.biobox	kingdom	Bray-Curtis distance	SAMPLEID	0.013216957605985014
-GCA_019795105.1_genomic.biobox	phylum	Bray-Curtis distance	SAMPLEID	0.014419428282317223
-GCA_019795105.1_genomic.biobox	class	Bray-Curtis distance	SAMPLEID	0.017250126839167917
-GCA_019795105.1_genomic.biobox	order	Bray-Curtis distance	SAMPLEID	0.017250126839167917
-GCA_019795105.1_genomic.biobox	family	Bray-Curtis distance	SAMPLEID	0.02191641182466868
-GCA_019795105.1_genomic.biobox	genus	Bray-Curtis distance	SAMPLEID	0.04946349123266155
-GCA_019795105.1_genomic.biobox	species	Bray-Curtis distance	SAMPLEID	0.3574813811780636
-GCA_019795105.1_genomic.biobox	phylum	Shannon diversity	SAMPLEID	0.701362321873578
-GCA_019795105.1_genomic.biobox	phylum	Shannon equitability	SAMPLEID	1.01185194363338
-GCA_019795105.1_genomic.biobox	class	Shannon diversity	SAMPLEID	0.7029352164331528
-GCA_019795105.1_genomic.biobox	class	Shannon equitability	SAMPLEID	1.0141211508143197
-GCA_019795105.1_genomic.biobox	order	Shannon diversity	SAMPLEID	0.7029352164331528
-GCA_019795105.1_genomic.biobox	order	Shannon equitability	SAMPLEID	1.0141211508143197
-GCA_019795105.1_genomic.biobox	family	Shannon diversity	SAMPLEID	0.7053754808307835
-GCA_019795105.1_genomic.biobox	family	Shannon equitability	SAMPLEID	1.0176417081592395
-GCA_019795105.1_genomic.biobox	genus	Shannon diversity	SAMPLEID	0.7165593307827953
-GCA_019795105.1_genomic.biobox	genus	Shannon equitability	SAMPLEID	1.0337765930230531
-GCA_019795105.1_genomic.biobox	species	Shannon diversity	SAMPLEID	0.35403642071475006
+GCA_019795105.1_genomic.biobox	kingdom	Bray-Curtis distance	SAMPLEID	0.015873015873015886
+GCA_019795105.1_genomic.biobox	phylum	Bray-Curtis distance	SAMPLEID	0.014339622641509382
+GCA_019795105.1_genomic.biobox	class	Bray-Curtis distance	SAMPLEID	0.01715438950554988
+GCA_019795105.1_genomic.biobox	order	Bray-Curtis distance	SAMPLEID	0.01715438950554988
+GCA_019795105.1_genomic.biobox	family	Bray-Curtis distance	SAMPLEID	0.02335025380710656
+GCA_019795105.1_genomic.biobox	genus	Bray-Curtis distance	SAMPLEID	0.04024767801857575
+GCA_019795105.1_genomic.biobox	species	Bray-Curtis distance	SAMPLEID	0.3598650927487351
+GCA_019795105.1_genomic.biobox	phylum	Shannon diversity	SAMPLEID	0.7012269770001811
+GCA_019795105.1_genomic.biobox	phylum	Shannon equitability	SAMPLEID	1.0116566822557205
+GCA_019795105.1_genomic.biobox	class	Shannon diversity	SAMPLEID	0.7028221861142226
+GCA_019795105.1_genomic.biobox	class	Shannon equitability	SAMPLEID	1.013958082533729
+GCA_019795105.1_genomic.biobox	order	Shannon diversity	SAMPLEID	0.7028221861142226
+GCA_019795105.1_genomic.biobox	order	Shannon equitability	SAMPLEID	1.013958082533729
+GCA_019795105.1_genomic.biobox	family	Shannon diversity	SAMPLEID	0.7060908380337352
+GCA_019795105.1_genomic.biobox	family	Shannon equitability	SAMPLEID	1.018673750448402
+GCA_019795105.1_genomic.biobox	genus	Shannon diversity	SAMPLEID	0.7136249211364576
+GCA_019795105.1_genomic.biobox	genus	Shannon equitability	SAMPLEID	1.029543134778345
+GCA_019795105.1_genomic.biobox	species	Shannon diversity	SAMPLEID	0.3546801970345652
 GCA_019795105.1_genomic.biobox	species	Shannon equitability	SAMPLEID	0.0
 GCA_019795105.1_genomic.biobox	kingdom	True positives	SAMPLEID	2.0
 GCA_019795105.1_genomic.biobox	kingdom	False negatives	SAMPLEID	0.0
@@ -158,23 +158,23 @@ GCA_019795105.1_genomic.biobox	species	Completeness	SAMPLEID	0.5
 GCA_019795105.1_genomic.biobox	species	Purity	SAMPLEID	1.0
 GCA_019795105.1_genomic.biobox	species	F1 score	SAMPLEID	0.6666666666666666
 GCA_019795105.1_genomic.biobox	species	Jaccard index	SAMPLEID	0.5
-GCA_019795105.1_genomic.biobox	kingdom	L1 norm error	SAMPLEID	0.02643391521197003
-GCA_019795105.1_genomic.biobox	phylum	L1 norm error	SAMPLEID	0.028428927680797998
-GCA_019795105.1_genomic.biobox	class	L1 norm error	SAMPLEID	0.03391521197007478
-GCA_019795105.1_genomic.biobox	order	L1 norm error	SAMPLEID	0.03391521197007478
-GCA_019795105.1_genomic.biobox	family	L1 norm error	SAMPLEID	0.04289276807980045
-GCA_019795105.1_genomic.biobox	genus	L1 norm error	SAMPLEID	0.09426433915211958
-GCA_019795105.1_genomic.biobox	species	L1 norm error	SAMPLEID	0.5266832917705735
-GCA_019795105.1_genomic.biobox	na	Weighted UniFrac error	SAMPLEID	0.005598669991687441
+GCA_019795105.1_genomic.biobox	kingdom	L1 norm error	SAMPLEID	0.03174603174603177
+GCA_019795105.1_genomic.biobox	phylum	L1 norm error	SAMPLEID	0.02827380952380942
+GCA_019795105.1_genomic.biobox	class	L1 norm error	SAMPLEID	0.03373015873015859
+GCA_019795105.1_genomic.biobox	order	L1 norm error	SAMPLEID	0.03373015873015859
+GCA_019795105.1_genomic.biobox	family	L1 norm error	SAMPLEID	0.04563492063492056
+GCA_019795105.1_genomic.biobox	genus	L1 norm error	SAMPLEID	0.07738095238095219
+GCA_019795105.1_genomic.biobox	species	L1 norm error	SAMPLEID	0.5292658730158729
+GCA_019795105.1_genomic.biobox	na	Weighted UniFrac error	SAMPLEID	0.0057117228835978796
 GCA_019795105.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	1.984848484848485
-GCA_019795105.1_genomic.biobox	na	Weighted UniFrac (CAMI)	SAMPLEID	0.7865336658354122
+GCA_019795105.1_genomic.biobox	na	Weighted UniFrac (CAMI)	SAMPLEID	0.779761904761905
 GCA_019795105.1_genomic.biobox	na	Unweighted UniFrac (CAMI)	SAMPLEID	19.0
-GCA_019795105.1_genomic.biobox	phylum	Sum of abundances	SAMPLEID	0.971571072319202
-GCA_019795105.1_genomic.biobox	class	Sum of abundances	SAMPLEID	0.9660847880299253
-GCA_019795105.1_genomic.biobox	order	Sum of abundances	SAMPLEID	0.9660847880299253
-GCA_019795105.1_genomic.biobox	family	Sum of abundances	SAMPLEID	0.9571072319201995
-GCA_019795105.1_genomic.biobox	genus	Sum of abundances	SAMPLEID	0.9057356608478804
-GCA_019795105.1_genomic.biobox	species	Sum of abundances	SAMPLEID	0.4733167082294265
+GCA_019795105.1_genomic.biobox	phylum	Sum of abundances	SAMPLEID	0.9717261904761907
+GCA_019795105.1_genomic.biobox	class	Sum of abundances	SAMPLEID	0.9662698412698414
+GCA_019795105.1_genomic.biobox	order	Sum of abundances	SAMPLEID	0.9662698412698414
+GCA_019795105.1_genomic.biobox	family	Sum of abundances	SAMPLEID	0.9543650793650795
+GCA_019795105.1_genomic.biobox	genus	Sum of abundances	SAMPLEID	0.9226190476190479
+GCA_019795105.1_genomic.biobox	species	Sum of abundances	SAMPLEID	0.4707341269841271
 GCA_019795105.1_genomic.biobox	phylum	Taxon counts	SAMPLEID	2.0
 GCA_019795105.1_genomic.biobox	class	Taxon counts	SAMPLEID	2.0
 GCA_019795105.1_genomic.biobox	order	Taxon counts	SAMPLEID	2.0
