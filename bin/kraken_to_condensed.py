@@ -47,6 +47,7 @@ if __name__ == '__main__':
     parent_parser.add_argument('--report-prefix', required=True)
     parent_parser.add_argument('--bacterial-taxonomy', required=True)
     parent_parser.add_argument('--archaeal-taxonomy', required=True)
+    parent_parser.add_argument('--max-levels', type=int, default=7)
 
     args = parent_parser.parse_args()
 
@@ -61,7 +62,7 @@ if __name__ == '__main__':
 
     # Read tax, creating hash of name to fully qualified name
     name_to_taxonomy = []
-    for i in range(7):
+    for i in range(arg.max_levels):
         name_to_taxonomy.append({}) # 7 ranks
 
     tax_files = [args.bacterial_taxonomy, args.archaeal_taxonomy]
