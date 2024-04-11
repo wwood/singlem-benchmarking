@@ -1,5 +1,5 @@
 sample	coverage	taxonomy
-GCA_023150535.1_genomic.1	0.37	Root; d__Archaea
+GCA_023150535.1_genomic.1	0.21	Root; d__Archaea
 GCA_023150535.1_genomic.1	3.76	Root; d__Bacteria
 GCA_023150535.1_genomic.1	4.75	Root; d__Bacteria; p__Planctomycetota
 GCA_023150535.1_genomic.1	0.63	Root; d__Bacteria; p__Planctomycetota; c__Phycisphaerae

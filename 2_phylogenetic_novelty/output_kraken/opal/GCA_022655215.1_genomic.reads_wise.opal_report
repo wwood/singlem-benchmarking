@@ -91,9 +91,9 @@ Gold standard	family	Taxon counts	SAMPLEID	2.0
 Gold standard	genus	Taxon counts	SAMPLEID	2.0
 Gold standard	species	Taxon counts	SAMPLEID	2.0
 GCA_022655215.1_genomic.biobox	kingdom	Bray-Curtis distance	SAMPLEID	0.100285504784344
-GCA_022655215.1_genomic.biobox	phylum	Bray-Curtis distance	SAMPLEID	0.17788106419846905
-GCA_022655215.1_genomic.biobox	class	Bray-Curtis distance	SAMPLEID	0.24503278004340032
-GCA_022655215.1_genomic.biobox	order	Bray-Curtis distance	SAMPLEID	0.24422200966137342
+GCA_022655215.1_genomic.biobox	phylum	Bray-Curtis distance	SAMPLEID	0.17788106419846902
+GCA_022655215.1_genomic.biobox	class	Bray-Curtis distance	SAMPLEID	0.24503278004340026
+GCA_022655215.1_genomic.biobox	order	Bray-Curtis distance	SAMPLEID	0.24422200966137336
 GCA_022655215.1_genomic.biobox	family	Bray-Curtis distance	SAMPLEID	0.2901031369958748
 GCA_022655215.1_genomic.biobox	genus	Bray-Curtis distance	SAMPLEID	0.49972685033123004
 GCA_022655215.1_genomic.biobox	species	Bray-Curtis distance	SAMPLEID	0.4998044236987756
@@ -160,15 +160,15 @@ GCA_022655215.1_genomic.biobox	species	F1 score	SAMPLEID	0.006711409395973154
 GCA_022655215.1_genomic.biobox	species	Jaccard index	SAMPLEID	0.003367003367003367
 GCA_022655215.1_genomic.biobox	kingdom	L1 norm error	SAMPLEID	0.200571009568688
 GCA_022655215.1_genomic.biobox	phylum	L1 norm error	SAMPLEID	0.35574256128420506
-GCA_022655215.1_genomic.biobox	class	L1 norm error	SAMPLEID	0.49002390409763336
+GCA_022655215.1_genomic.biobox	class	L1 norm error	SAMPLEID	0.4900239040976333
 GCA_022655215.1_genomic.biobox	order	L1 norm error	SAMPLEID	0.4883438872974656
-GCA_022655215.1_genomic.biobox	family	L1 norm error	SAMPLEID	0.5800148040066326
-GCA_022655215.1_genomic.biobox	genus	L1 norm error	SAMPLEID	0.9989089929485218
-GCA_022655215.1_genomic.biobox	species	L1 norm error	SAMPLEID	0.9992189960485527
-GCA_022655215.1_genomic.biobox	na	Weighted UniFrac error	SAMPLEID	0.038118602452858454
-GCA_022655215.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	354.0443512378191
-GCA_022655215.1_genomic.biobox	na	Weighted UniFrac (CAMI)	SAMPLEID	4.1145841728518775
-GCA_022655215.1_genomic.biobox	na	Unweighted UniFrac (CAMI)	SAMPLEID	4464.383663836642
+GCA_022655215.1_genomic.biobox	family	L1 norm error	SAMPLEID	0.5800148040066323
+GCA_022655215.1_genomic.biobox	genus	L1 norm error	SAMPLEID	0.9989089929485221
+GCA_022655215.1_genomic.biobox	species	L1 norm error	SAMPLEID	0.9992189960485534
+GCA_022655215.1_genomic.biobox	na	Weighted UniFrac error	SAMPLEID	0.03811860245285846
+GCA_022655215.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	354.0443512378192
+GCA_022655215.1_genomic.biobox	na	Weighted UniFrac (CAMI)	SAMPLEID	4.114584172851875
+GCA_022655215.1_genomic.biobox	na	Unweighted UniFrac (CAMI)	SAMPLEID	4464.383663836644
 GCA_022655215.1_genomic.biobox	phylum	Sum of abundances	SAMPLEID	0.9998899988999892
 GCA_022655215.1_genomic.biobox	class	Sum of abundances	SAMPLEID	0.9998299982999835
 GCA_022655215.1_genomic.biobox	order	Sum of abundances	SAMPLEID	0.9995899958999587

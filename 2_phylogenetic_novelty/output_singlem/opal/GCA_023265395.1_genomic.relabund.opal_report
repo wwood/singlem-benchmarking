@@ -93,7 +93,7 @@ Gold standard	species	Taxon counts	SAMPLEID	2.0
 GCA_023265395.1_genomic.biobox	kingdom	Bray-Curtis distance	SAMPLEID	0.0163073521282476
 GCA_023265395.1_genomic.biobox	phylum	Bray-Curtis distance	SAMPLEID	0.039058012636415805
 GCA_023265395.1_genomic.biobox	class	Bray-Curtis distance	SAMPLEID	0.0917320458660229
-GCA_023265395.1_genomic.biobox	order	Bray-Curtis distance	SAMPLEID	0.40166944908180297
+GCA_023265395.1_genomic.biobox	order	Bray-Curtis distance	SAMPLEID	0.401669449081803
 GCA_023265395.1_genomic.biobox	family	Bray-Curtis distance	SAMPLEID	0.3870402802101576
 GCA_023265395.1_genomic.biobox	genus	Bray-Curtis distance	SAMPLEID	0.35709037472446725
 GCA_023265395.1_genomic.biobox	species	Bray-Curtis distance	SAMPLEID	0.3479880774962742
@@ -161,7 +161,7 @@ GCA_023265395.1_genomic.biobox	species	Jaccard index	SAMPLEID	0.5
 GCA_023265395.1_genomic.biobox	kingdom	L1 norm error	SAMPLEID	0.0326147042564952
 GCA_023265395.1_genomic.biobox	phylum	L1 norm error	SAMPLEID	0.07517965726920942
 GCA_023265395.1_genomic.biobox	class	L1 norm error	SAMPLEID	0.16804864566058592
-GCA_023265395.1_genomic.biobox	order	L1 norm error	SAMPLEID	0.6650082918739635
+GCA_023265395.1_genomic.biobox	order	L1 norm error	SAMPLEID	0.6650082918739636
 GCA_023265395.1_genomic.biobox	family	L1 norm error	SAMPLEID	0.6108347153123271
 GCA_023265395.1_genomic.biobox	genus	L1 norm error	SAMPLEID	0.5373134328358209
 GCA_023265395.1_genomic.biobox	species	L1 norm error	SAMPLEID	0.5163073521282476

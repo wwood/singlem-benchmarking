@@ -1,5 +1,5 @@
 sample	coverage	taxonomy
-GCA_021324815.1_genomic.1	0.06	Root; d__Bacteria
+GCA_021324815.1_genomic.1	0.01	Root; d__Bacteria
 GCA_021324815.1_genomic.1	0.14	Root; d__Bacteria; p__Proteobacteria
 GCA_021324815.1_genomic.1	8.33	Root; d__Bacteria; p__Proteobacteria; c__Gammaproteobacteria
 GCA_021324815.1_genomic.1	0.8	Root; d__Bacteria; p__Proteobacteria; c__Gammaproteobacteria; o__Ga0077536; f__Ga0077536

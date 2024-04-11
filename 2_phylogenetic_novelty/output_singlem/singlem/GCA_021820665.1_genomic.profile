@@ -1,5 +1,4 @@
 sample	coverage	taxonomy
-GCA_021820665.1_genomic.1	0.06	Root; d__Bacteria
 GCA_021820665.1_genomic.1	0.75	Root; d__Bacteria; p__Actinobacteriota; c__Acidimicrobiia; o__Acidimicrobiales
 GCA_021820665.1_genomic.1	0.86	Root; d__Bacteria; p__Actinobacteriota; c__Acidimicrobiia; o__Acidimicrobiales; f__RAAP-2
 GCA_021820665.1_genomic.1	7.94	Root; d__Bacteria; p__Actinobacteriota; c__Acidimicrobiia; o__Acidimicrobiales; f__RAAP-2; g__Bog-756

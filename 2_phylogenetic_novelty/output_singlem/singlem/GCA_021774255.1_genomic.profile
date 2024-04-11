@@ -1,6 +1,6 @@
 sample	coverage	taxonomy
 GCA_021774255.1_genomic.1	0.11	Root; d__Archaea
-GCA_021774255.1_genomic.1	1.19	Root; d__Bacteria
+GCA_021774255.1_genomic.1	1.13	Root; d__Bacteria
 GCA_021774255.1_genomic.1	0.1	Root; d__Archaea; p__Halobacteriota
 GCA_021774255.1_genomic.1	7.75	Root; d__Bacteria; p__Proteobacteria; c__Gammaproteobacteria
 GCA_021774255.1_genomic.1	0.67	Root; d__Bacteria; p__Proteobacteria; c__Gammaproteobacteria; o__Pseudomonadales

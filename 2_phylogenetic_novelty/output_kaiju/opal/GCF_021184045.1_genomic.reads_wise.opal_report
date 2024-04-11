@@ -154,7 +154,7 @@ GCF_021184045.1_genomic.biobox	species	Purity	SAMPLEID	0.0
 GCF_021184045.1_genomic.biobox	species	Jaccard index	SAMPLEID	0.0
 GCF_021184045.1_genomic.biobox	kingdom	L1 norm error	SAMPLEID	0.2791936780598527
 GCF_021184045.1_genomic.biobox	phylum	L1 norm error	SAMPLEID	2.0
-GCF_021184045.1_genomic.biobox	class	L1 norm error	SAMPLEID	2.0
+GCF_021184045.1_genomic.biobox	class	L1 norm error	SAMPLEID	1.9999999999999998
 GCF_021184045.1_genomic.biobox	order	L1 norm error	SAMPLEID	2.0
 GCF_021184045.1_genomic.biobox	family	L1 norm error	SAMPLEID	2.0
 GCF_021184045.1_genomic.biobox	genus	L1 norm error	SAMPLEID	2.0

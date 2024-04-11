@@ -165,7 +165,7 @@ GCA_023251915.1_genomic.biobox	order	L1 norm error	SAMPLEID	0.5289421157684631
 GCA_023251915.1_genomic.biobox	family	L1 norm error	SAMPLEID	0.5289421157684631
 GCA_023251915.1_genomic.biobox	genus	L1 norm error	SAMPLEID	0.5289421157684631
 GCA_023251915.1_genomic.biobox	species	L1 norm error	SAMPLEID	0.5289421157684631
-GCA_023251915.1_genomic.biobox	na	Weighted UniFrac error	SAMPLEID	0.02892090818363274
+GCA_023251915.1_genomic.biobox	na	Weighted UniFrac error	SAMPLEID	0.028920908183632736
 GCA_023251915.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	0.5964187327823691
 GCA_023251915.1_genomic.biobox	na	Weighted UniFrac (CAMI)	SAMPLEID	3.1092814371257482
 GCA_023251915.1_genomic.biobox	na	Unweighted UniFrac (CAMI)	SAMPLEID	7.0

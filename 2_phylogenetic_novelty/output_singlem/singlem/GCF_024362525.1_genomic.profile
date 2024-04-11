@@ -1,6 +1,6 @@
 sample	coverage	taxonomy
 GCF_024362525.1_genomic.1	0.32	Root; d__Archaea
-GCF_024362525.1_genomic.1	0.39	Root; d__Bacteria
+GCF_024362525.1_genomic.1	0.28	Root; d__Bacteria
 GCF_024362525.1_genomic.1	0.82	Root; d__Archaea; p__Halobacteriota; c__Halobacteria; o__Halobacteriales
 GCF_024362525.1_genomic.1	6.27	Root; d__Archaea; p__Halobacteriota; c__Halobacteria; o__Halobacteriales; f__Natrialbaceae
 GCF_024362525.1_genomic.1	0.4	Root; d__Archaea; p__Halobacteriota; c__Halobacteria; o__Halobacteriales; f__Natrialbaceae; g__Natrinema

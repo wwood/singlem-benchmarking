@@ -1,6 +1,6 @@
 sample	coverage	taxonomy
 GCA_021299465.1_genomic.1	0.25	Root; d__Archaea
-GCA_021299465.1_genomic.1	0.17	Root; d__Bacteria
+GCA_021299465.1_genomic.1	0.23	Root; d__Bacteria
 GCA_021299465.1_genomic.1	0.06	Root; d__Bacteria; p__Proteobacteria
 GCA_021299465.1_genomic.1	1.4	Root; d__Bacteria; p__Proteobacteria; c__Alphaproteobacteria
 GCA_021299465.1_genomic.1	1.07	Root; d__Bacteria; p__Proteobacteria; c__Alphaproteobacteria; o__Rickettsiales

@@ -1,4 +1,5 @@
 sample	coverage	taxonomy
+GCA_944390005.1_genomic.1	0.21	Root; d__Archaea
 GCA_944390005.1_genomic.1	1.64	Root; d__Bacteria
 GCA_944390005.1_genomic.1	6.05	Root; d__Bacteria; p__Spirochaetota; c__Spirochaetia
 GCA_944390005.1_genomic.1	0.39	Root; d__Bacteria; p__Spirochaetota; c__Spirochaetia; o__JC444

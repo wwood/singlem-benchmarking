@@ -1,6 +1,6 @@
 sample	coverage	taxonomy
 GCA_021791495.1_genomic.1	0.3	Root; d__Archaea
-GCA_021791495.1_genomic.1	7.01	Root; d__Bacteria
+GCA_021791495.1_genomic.1	6.9	Root; d__Bacteria
 GCA_021791495.1_genomic.1	0.65	Root; d__Bacteria; p__Firmicutes_B
 GCA_021791495.1_genomic.1	0.51	Root; d__Bacteria; p__Firmicutes_E
 GCA_021791495.1_genomic.1	0.46	Root; d__Bacteria; p__Firmicutes_B; c__Moorellia

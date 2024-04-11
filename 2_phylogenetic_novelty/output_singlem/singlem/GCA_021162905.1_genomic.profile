@@ -1,5 +1,5 @@
 sample	coverage	taxonomy
-GCA_021162905.1_genomic.1	3.47	Root; d__Archaea
+GCA_021162905.1_genomic.1	3.41	Root; d__Archaea
 GCA_021162905.1_genomic.1	0.21	Root; d__Bacteria
 GCA_021162905.1_genomic.1	2.35	Root; d__Archaea; p__Thermoproteota
 GCA_021162905.1_genomic.1	0.49	Root; d__Archaea; p__Asgardarchaeota

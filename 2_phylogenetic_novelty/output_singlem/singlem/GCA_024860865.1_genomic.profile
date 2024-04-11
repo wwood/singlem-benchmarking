@@ -1,8 +1,8 @@
 sample	coverage	taxonomy
-GCA_024860865.1_genomic.1	5.94	Root; d__Archaea
+GCA_024860865.1_genomic.1	5.95	Root; d__Archaea
 GCA_024860865.1_genomic.1	0.12	Root; d__Bacteria
-GCA_024860865.1_genomic.1	0.71	Root; d__Archaea; p__Methanobacteriota_A
 GCA_024860865.1_genomic.1	1.4	Root; d__Archaea; p__Thermoproteota
+GCA_024860865.1_genomic.1	0.71	Root; d__Archaea; p__Methanobacteriota_A
 GCA_024860865.1_genomic.1	0.16	Root; d__Archaea; p__Thermoproteota; c__Bathyarchaeia
 GCA_024860865.1_genomic.1	0.48	Root; d__Archaea; p__Thermoproteota; c__Bathyarchaeia; o__B26-1
 GCA_024860865.1_genomic.1	1.43	Root; d__Archaea; p__Methanobacteriota; c__Methanobacteria; o__Methanobacteriales

@@ -1,6 +1,6 @@
 sample	coverage	taxonomy
 GCA_022655215.1_genomic.1	0.36	Root; d__Archaea
-GCA_022655215.1_genomic.1	0.53	Root; d__Bacteria
+GCA_022655215.1_genomic.1	0.59	Root; d__Bacteria
 GCA_022655215.1_genomic.1	0.47	Root; d__Bacteria; p__Actinobacteriota; c__Coriobacteriia; o__Coriobacteriales
 GCA_022655215.1_genomic.1	4.95	Root; d__Bacteria; p__Actinobacteriota; c__Coriobacteriia; o__Coriobacteriales; f__Atopobiaceae
 GCA_022655215.1_genomic.1	1.0	Root; d__Bacteria; p__Actinobacteriota; c__Coriobacteriia; o__Coriobacteriales; f__Atopobiaceae; g__NM07-P-09

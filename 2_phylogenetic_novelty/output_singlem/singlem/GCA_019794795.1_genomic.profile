@@ -1,6 +1,6 @@
 sample	coverage	taxonomy
 GCA_019794795.1_genomic.1	0.37	Root; d__Archaea
-GCA_019794795.1_genomic.1	0.11	Root; d__Bacteria
+GCA_019794795.1_genomic.1	0.05	Root; d__Bacteria
 GCA_019794795.1_genomic.1	0.4	Root; d__Bacteria; p__Firmicutes; c__Bacilli
 GCA_019794795.1_genomic.1	0.17	Root; d__Bacteria; p__Firmicutes; c__Bacilli; o__Lactobacillales
 GCA_019794795.1_genomic.1	9.55	Root; d__Bacteria; p__Firmicutes; c__Bacilli; o__Lactobacillales; f__Streptococcaceae; g__Streptococcus

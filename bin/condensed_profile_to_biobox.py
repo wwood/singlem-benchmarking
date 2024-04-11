@@ -87,7 +87,13 @@ def write_biobox(input_condensed_table_path, output_biobox_path, template_biobox
                     else:
                         total_coverages[level] += wordnode.get_full_coverage()
 
-                total_coverage = total_coverages[0]
+                # Filter out low abundance lineages if specified
+                # total_coverage = total_coverages[0]
+                # if args.low_abundance_filter:
+                #     for wordnode in condensed_table.breadth_first_iter():
+                #         if wordnode.get_full_coverage() < total_coverage * args.low_abundance_filter:
+                #             wordnode.coverage = 0.0
+                
                 # Pass 2 - calculate percents
                 for wordnode in condensed_table.breadth_first_iter():
                     # Percent includes unassigned

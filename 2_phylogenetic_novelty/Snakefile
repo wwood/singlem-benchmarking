@@ -5,7 +5,7 @@ num_threads = config['benchmarking_threads']
 kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
 
 relabund_tools = ['singlem', 'metaphlan', 'motus', 'sourmash', 'map2b']
-reads_wise_tools = ['kraken', 'kaiju']
+reads_wise_tools = ['kraken', 'kaiju', 'metabuli']
 tools = relabund_tools + reads_wise_tools
 
 output_prefix = 'output_'
@@ -44,7 +44,7 @@ singlem_git_base_directory = os.path.join(workflow.basedir, '../singlem')
 
 ##################################################################### reference databases
 
-metapackage = '/work/microbiome/db/singlem/S3.1.0.metapackage_20221209.smpkg.zb'
+metapackage = '/work/microbiome/msingle/mess/163_S3.1.1_metapackage/output_dir/metapackage/S3.1.1.GTDB_r207.metapackage_20240302.smpkg'
 singlem_metapackage = output_dirs_dict['singlem'] + '/singlem/data/S3.1.0.metapackage_20221209.smpkg'
 
 metaphlan_db_original1 = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/metaphlan_bowtiedb'
@@ -73,6 +73,9 @@ kaiju_db_progenomes_names = output_dirs_dict['kaiju'] + '/kaiju/data/names.dmp'
 map2b_checkout_dir = '/home/woodcrob/bioinfo/MAP2B'
 map2b_db = os.path.join(map2b_checkout_dir, 'database.bak/GTDB')
 map2b_db_local = output_dirs_dict['map2b'] + '/map2b/data/GTDB'
+
+metabuli_db = '/work/microbiome/db/metabuli/gtdb207'
+metabuli_db_local = output_dirs_dict['metabuli'] + '/metabuli/data/gtdb207'
 
 #####################################################################
 
@@ -131,7 +134,7 @@ rule truth_condensed_to_biobox:
         "--output-biobox {output.biobox}"
 
 def get_condensed_to_biobox_extra_args(tool):
-    if tool == 'kraken':
+    if tool in ('kraken','metabuli'):
         return ' --no-fill'
     else:
         return ''
@@ -569,3 +572,47 @@ rule map2b_to_biobox:
         "--abundance {input} "
         "--sample {wildcards.sample} "
         "> {output} "
+
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+######### metabuli
+
+rule metabuli_copy_db:
+    input:
+        db=metabuli_db,
+    output:
+        db=directory(metabuli_db_local),
+        done=touch(output_dirs_dict['metabuli'] + "/metabuli/data/done")
+    shell:
+        "cp -r {input.db} {output.db}"
+
+rule metabuli_run:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db=metabuli_db_local,
+        done=output_dirs_dict['metabuli'] + "/metabuli/data/done"
+    output:
+        report=output_dirs_dict['metabuli'] + "/output/{sample}_report.tsv",
+        done=touch(output_dirs_dict['metabuli'] + "/output/{sample}.done")
+    threads: num_threads
+    benchmark:
+        benchmark_dir + "/metabuli/{sample}-"+str(num_threads)+"threads.benchmark"
+    conda:
+        "envs/metabuli.yml"
+    params:
+        output_dir = output_dirs_dict['metabuli'],
+    shell:
+        "metabuli classify --threads {threads} {input.r1} {input.r2} {input.db} {params.output_dir}/output {wildcards.sample}"
+
+rule metabuli_report_to_condensed:
+    input:
+        report=output_dirs_dict['metabuli'] + "/output/{sample}_report.tsv",
+    output:
+        profile = output_dirs_dict['metabuli'] + "/metabuli/{sample}.profile",
+    shell:
+        "{workflow.basedir}/../bin/metabuli_to_condensed.py --input {input} " \
+        "--bacterial-taxonomy ~/m/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv " \
+        "--archaeal-taxonomy ~/m/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv > {output.profile}"

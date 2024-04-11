@@ -1,5 +1,5 @@
 sample	coverage	taxonomy
-GCA_022562795.1_genomic.1	0.58	Root; d__Archaea
+GCA_022562795.1_genomic.1	0.48	Root; d__Archaea
 GCA_022562795.1_genomic.1	9.03	Root; d__Bacteria
 GCA_022562795.1_genomic.1	0.48	Root; d__Archaea; p__Halobacteriota
 GCA_022562795.1_genomic.1	1.37	Root; d__Bacteria; p__Desulfobacterota

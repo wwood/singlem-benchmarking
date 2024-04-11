@@ -49,6 +49,7 @@ if __name__ == '__main__':
     # (env)cl5n007:20221031:~/m/msingle/mess/115_camisim_ish_benchmarking$ \ls -f ~/m/msingle/sam/1_gtdb_r207_smpkg/20220513/shadow_GTDB/genomes |grep GC |sed 's=\(.*\).fna=\1\t/work/microbiome/msingle/sam/1_gtdb_r207_smpkg/20220513/shadow_GTDB/genomes\1.fna=' >shadow_genome_paths.csv
     parent_parser.add_argument('--gtdb-metadata', required=True, help='Path to GTDB metadata file, for genome length')
     parent_parser.add_argument('--output-condensed', required=True, help='Path to output file in singlem condensed format')
+    parent_parser.add_argument('--output-genomewise-coverage', required=True, help='Path to output file specifying coverage for each strain')
     parent_parser.add_argument('-1', '--read1', required=True, help='Path to output fq.gz file')
     parent_parser.add_argument('-2', '--read2', required=True, help='Path to output fq.gz file')
     parent_parser.add_argument('--threads', type=int, default=1, help='Number of threads to use')
@@ -74,6 +75,10 @@ if __name__ == '__main__':
     coverages = coverages[coverages['coverage'] > 0]
     logging.info(f"Read {len(coverages)} coverages > 0.")
 
+    # Remove RNODE ones which are plasmids etc.
+    coverages = coverages[~coverages.otu.str.contains('RNODE')]
+    logging.info(f"After removing plasmids etc, {len(coverages)} coverages > 0 remain.")
+
     genomes = pd.read_csv(args.genome_list, sep='\t', header=None, names=['genome','fasta'])
     logging.info(f"Read {len(genomes)} genome fasta paths.")
 
@@ -87,29 +92,31 @@ if __name__ == '__main__':
 
     g2 = pd.merge(genomes, metadata, on='genome', how='inner')
 
-    # wgsim each genome and the correct coverage
-
     read_length = 150
 
     with tempfile.TemporaryDirectory() as tmpdir:
         os.chdir(tmpdir)
         os.makedirs('simulated_reads')
         sim_commands = []
-        with open(output_condensed, 'w') as f:
-            f.write("sample\tcoverage\ttaxonomy\n")
-            tax_to_coverage = {}
-            for i, (fasta, genome_size, gtdb_taxonomy, coverage) in enumerate(zip(g2['fasta'], g2['genome_size'],g2['gtdb_taxonomy'], coverages['coverage'])):
-                if gtdb_taxonomy not in tax_to_coverage:
-                    tax_to_coverage[gtdb_taxonomy] = 0
-                tax_to_coverage[gtdb_taxonomy] += coverage
+        with open(args.output_genomewise_coverage, 'w') as genome_wise_f:
+            genome_wise_f.write("accession\tcoverage\tfasta\ttaxonomy\n")
+            with open(output_condensed, 'w') as f:
+                f.write("sample\tcoverage\ttaxonomy\n")
+                tax_to_coverage = {}
+                for i, (fasta, genome_size, gtdb_taxonomy, coverage) in enumerate(zip(g2['fasta'], g2['genome_size'],g2['gtdb_taxonomy'], coverages['coverage'])):
+                    if gtdb_taxonomy not in tax_to_coverage:
+                        tax_to_coverage[gtdb_taxonomy] = 0
+                    tax_to_coverage[gtdb_taxonomy] += coverage
 
-                # num_reads = int(coverage*float(genome_size)/(float(read_length)*2.0))
-                sim_commands.append(
-                    f"{args.art} -ss HSXt -i {fasta} -p -l {read_length} -f {coverage} -m 400 -s 10 -o simulated_reads/{i}. &>/dev/null"
-                )
+                    # num_reads = int(coverage*float(genome_size)/(float(read_length)*2.0))
+                    sim_commands.append(
+                        f"{args.art} -ss HSXt -i {fasta} -p -l {read_length} -f {coverage} -m 400 -s 10 -o simulated_reads/{i}. &>/dev/null"
+                    )
 
-            for tax, cov in tax_to_coverage.items():
-                f.write(f"{os.path.basename(args.coverage_file)}\t{cov}\t{tax}\n")
+                    genome_wise_f.write(f"{g2['accession'][i]}\t{coverage}\t{fasta}\t{gtdb_taxonomy}\n")
+
+                for tax, cov in tax_to_coverage.items():
+                    f.write(f"{os.path.basename(args.coverage_file)}\t{cov}\t{tax}\n")
                 
         logging.info(f"Simulating {len(sim_commands)} genomes ..")
         extern.run_many(sim_commands, num_threads=args.threads, progress_stream=sys.stderr)

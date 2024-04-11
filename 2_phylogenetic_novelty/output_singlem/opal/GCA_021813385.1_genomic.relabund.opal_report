@@ -95,7 +95,7 @@ GCA_021813385.1_genomic.biobox	phylum	Bray-Curtis distance	SAMPLEID	0.2039116262
 GCA_021813385.1_genomic.biobox	class	Bray-Curtis distance	SAMPLEID	0.20391162622238315
 GCA_021813385.1_genomic.biobox	order	Bray-Curtis distance	SAMPLEID	0.6127167630057804
 GCA_021813385.1_genomic.biobox	family	Bray-Curtis distance	SAMPLEID	0.5876923076923078
-GCA_021813385.1_genomic.biobox	genus	Bray-Curtis distance	SAMPLEID	0.6113281250000001
+GCA_021813385.1_genomic.biobox	genus	Bray-Curtis distance	SAMPLEID	0.611328125
 GCA_021813385.1_genomic.biobox	species	Bray-Curtis distance	SAMPLEID	0.5577777777777779
 GCA_021813385.1_genomic.biobox	phylum	Shannon diversity	SAMPLEID	0.6163437458896694
 GCA_021813385.1_genomic.biobox	phylum	Shannon equitability	SAMPLEID	0.8891960656779536

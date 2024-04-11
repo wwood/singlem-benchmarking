@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
     # Read tax, creating hash of name to fully qualified name
     name_to_taxonomy = []
-    for i in range(arg.max_levels):
+    for i in range(args.max_levels):
         name_to_taxonomy.append({}) # 7 ranks
 
     tax_files = [args.bacterial_taxonomy, args.archaeal_taxonomy]

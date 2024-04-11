@@ -1,5 +1,4 @@
 sample	coverage	taxonomy
-GCA_021848885.1_genomic.1	0.11	Root; d__Archaea
 GCA_021848885.1_genomic.1	6.71	Root; d__Bacteria; p__Actinobacteriota; c__Actinomycetia
 GCA_021848885.1_genomic.1	0.93	Root; d__Bacteria; p__Actinobacteriota; c__Actinomycetia; o__Actinomycetales
 GCA_021848885.1_genomic.1	0.3	Root; d__Bacteria; p__Actinobacteriota; c__Actinomycetia; o__Propionibacteriales

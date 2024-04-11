@@ -1,6 +1,6 @@
 sample	coverage	taxonomy
 GCA_025057955.1_genomic.1	0.16	Root; d__Archaea
-GCA_025057955.1_genomic.1	0.12	Root; d__Bacteria
+GCA_025057955.1_genomic.1	0.06	Root; d__Bacteria
 GCA_025057955.1_genomic.1	0.96	Root; d__Archaea; p__Thermoproteota; c__Methanomethylicia; o__Methanomethylicales; f__Methanomethylicaceae
 GCA_025057955.1_genomic.1	6.41	Root; d__Archaea; p__Thermoproteota; c__Methanomethylicia; o__Methanomethylicales; f__Methanomethylicaceae; g__WYZ-LMO11
 GCA_025057955.1_genomic.1	1.5	Root; d__Archaea; p__Thermoproteota; c__Methanomethylicia; o__Methanomethylicales; f__Methanomethylicaceae; g__WYZ-LMO10

@@ -1,7 +1,8 @@
 sample	coverage	taxonomy
 GCA_020696385.1_genomic.1	0.31	Root; d__Archaea
-GCA_020696385.1_genomic.1	0.11	Root; d__Bacteria
+GCA_020696385.1_genomic.1	0.06	Root; d__Bacteria
 GCA_020696385.1_genomic.1	0.06	Root; d__Archaea; p__Thermoplasmatota
+GCA_020696385.1_genomic.1	0.05	Root; d__Bacteria; p__Actinobacteriota
 GCA_020696385.1_genomic.1	2.01	Root; d__Archaea; p__Thermoplasmatota; c__Thermoplasmata
 GCA_020696385.1_genomic.1	0.65	Root; d__Archaea; p__Thermoplasmatota; c__Thermoplasmata; o__SG8-5
 GCA_020696385.1_genomic.1	0.99	Root; d__Archaea; p__Thermoplasmatota; c__Thermoplasmata; o__SG8-5; f__SG8-5

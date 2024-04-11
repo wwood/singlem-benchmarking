@@ -1,6 +1,6 @@
 sample	coverage	taxonomy
-GCA_020635855.1_genomic.1	0.15	Root; d__Archaea
-GCA_020635855.1_genomic.1	0.21	Root; d__Bacteria
+GCA_020635855.1_genomic.1	0.1	Root; d__Archaea
+GCA_020635855.1_genomic.1	0.16	Root; d__Bacteria
 GCA_020635855.1_genomic.1	3.8	Root; d__Bacteria; p__Bacteroidota; c__Bacteroidia
 GCA_020635855.1_genomic.1	3.47	Root; d__Bacteria; p__Bacteroidota; c__Bacteroidia; o__Flavobacteriales
 GCA_020635855.1_genomic.1	2.39	Root; d__Bacteria; p__Bacteroidota; c__Bacteroidia; o__Bacteroidales

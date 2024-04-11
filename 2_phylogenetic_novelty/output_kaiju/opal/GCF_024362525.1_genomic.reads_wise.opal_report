@@ -157,13 +157,13 @@ GCF_024362525.1_genomic.biobox	species	Jaccard index	SAMPLEID	0.0
 GCF_024362525.1_genomic.biobox	kingdom	L1 norm error	SAMPLEID	0.3091712254112087
 GCF_024362525.1_genomic.biobox	phylum	L1 norm error	SAMPLEID	1.0000130455027136
 GCF_024362525.1_genomic.biobox	class	L1 norm error	SAMPLEID	1.0000130455027136
-GCF_024362525.1_genomic.biobox	order	L1 norm error	SAMPLEID	2.0
+GCF_024362525.1_genomic.biobox	order	L1 norm error	SAMPLEID	2.0000000000000004
 GCF_024362525.1_genomic.biobox	family	L1 norm error	SAMPLEID	2.0
 GCF_024362525.1_genomic.biobox	genus	L1 norm error	SAMPLEID	2.0
-GCF_024362525.1_genomic.biobox	species	L1 norm error	SAMPLEID	2.0
+GCF_024362525.1_genomic.biobox	species	L1 norm error	SAMPLEID	2.0000000000000004
 GCF_024362525.1_genomic.biobox	na	Weighted UniFrac error	SAMPLEID	0.09315470671655479
 GCF_024362525.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	0.9072543617998164
-GCF_024362525.1_genomic.biobox	na	Weighted UniFrac (CAMI)	SAMPLEID	10.309197316416633
+GCF_024362525.1_genomic.biobox	na	Weighted UniFrac (CAMI)	SAMPLEID	10.309197316416634
 GCF_024362525.1_genomic.biobox	na	Unweighted UniFrac (CAMI)	SAMPLEID	20.0
 GCF_024362525.1_genomic.biobox	phylum	Sum of abundances	SAMPLEID	1.0000000000000002
 GCF_024362525.1_genomic.biobox	class	Sum of abundances	SAMPLEID	1.0000000000000002

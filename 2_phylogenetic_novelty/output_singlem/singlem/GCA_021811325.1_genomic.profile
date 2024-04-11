@@ -1,4 +1,5 @@
 sample	coverage	taxonomy
+GCA_021811325.1_genomic.1	0.05	Root; d__Archaea
 GCA_021811325.1_genomic.1	6.47	Root; d__Bacteria
 GCA_021811325.1_genomic.1	0.25	Root; d__Archaea; p__Halobacteriota
 GCA_021811325.1_genomic.1	0.45	Root; d__Bacteria; p__Firmicutes_A

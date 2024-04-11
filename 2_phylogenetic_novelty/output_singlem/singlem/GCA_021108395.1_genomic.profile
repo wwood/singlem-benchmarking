@@ -1,6 +1,6 @@
 sample	coverage	taxonomy
-GCA_021108395.1_genomic.1	0.21	Root; d__Archaea
-GCA_021108395.1_genomic.1	0.88	Root; d__Bacteria
+GCA_021108395.1_genomic.1	0.27	Root; d__Archaea
+GCA_021108395.1_genomic.1	0.89	Root; d__Bacteria
 GCA_021108395.1_genomic.1	2.79	Root; d__Bacteria; p__Cloacimonadota; c__Cloacimonadia; o__Cloacimonadales
 GCA_021108395.1_genomic.1	5.8	Root; d__Bacteria; p__Cloacimonadota; c__Cloacimonadia; o__Cloacimonadales; f__TCS61
 GCA_021108395.1_genomic.1	0.57	Root; d__Bacteria; p__Cloacimonadota; c__Cloacimonadia; o__Cloacimonadales; f__TCS61; g__JABIME01

@@ -92,7 +92,7 @@ Gold standard	genus	Taxon counts	SAMPLEID	2.0
 Gold standard	species	Taxon counts	SAMPLEID	2.0
 GCA_020696345.1_genomic.biobox	kingdom	Bray-Curtis distance	SAMPLEID	0.011369645690111022
 GCA_020696345.1_genomic.biobox	phylum	Bray-Curtis distance	SAMPLEID	0.049834801762114495
-GCA_020696345.1_genomic.biobox	class	Bray-Curtis distance	SAMPLEID	0.2036766851473592
+GCA_020696345.1_genomic.biobox	class	Bray-Curtis distance	SAMPLEID	0.20367668514735918
 GCA_020696345.1_genomic.biobox	order	Bray-Curtis distance	SAMPLEID	0.385040650406504
 GCA_020696345.1_genomic.biobox	family	Bray-Curtis distance	SAMPLEID	0.34703038674033154
 GCA_020696345.1_genomic.biobox	genus	Bray-Curtis distance	SAMPLEID	0.33695652173913043
@@ -165,7 +165,7 @@ GCA_020696345.1_genomic.biobox	order	L1 norm error	SAMPLEID	0.6261237440507668
 GCA_020696345.1_genomic.biobox	family	L1 norm error	SAMPLEID	0.5314648334214701
 GCA_020696345.1_genomic.biobox	genus	L1 norm error	SAMPLEID	0.5081967213114754
 GCA_020696345.1_genomic.biobox	species	L1 norm error	SAMPLEID	0.5081967213114754
-GCA_020696345.1_genomic.biobox	na	Weighted UniFrac error	SAMPLEID	0.02148157941124625
+GCA_020696345.1_genomic.biobox	na	Weighted UniFrac error	SAMPLEID	0.021481579411246253
 GCA_020696345.1_genomic.biobox	na	Unweighted UniFrac error	SAMPLEID	2.8204775022956845
 GCA_020696345.1_genomic.biobox	na	Weighted UniFrac (CAMI)	SAMPLEID	2.6615547329455302
 GCA_020696345.1_genomic.biobox	na	Unweighted UniFrac (CAMI)	SAMPLEID	28.0
