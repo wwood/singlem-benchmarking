@@ -1,2 +1,0 @@
-sample	coverage	taxonomy
-GCA_025059945.1_genomic	9.940401	d__Archaea;p__Halobacteriota;c__Methanonatronarchaeia;o__Methanonatronarchaeales;f__Methanohalarchaeaceae;g__Methanohalarchaeum;s__Methanohalarchaeum thermophilum

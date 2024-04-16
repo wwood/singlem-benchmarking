@@ -35,7 +35,10 @@ paired_genomes.columns = ['sample','example_genome','example_taxonomy']
 
 # Debug
 # tools = ['singlem']
-# novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
+# relabund_tools = ['sourmash']
+# reads_wise_tools = []
+tools = relabund_tools + reads_wise_tools
+novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
 print("Profiling {} over {} genomes".format(tools, len(novelties)))
 
 ##################################################################### things that should be in config
@@ -44,37 +47,39 @@ singlem_git_base_directory = os.path.join(workflow.basedir, '../singlem')
 
 ##################################################################### reference databases
 
-metapackage = '/work/microbiome/msingle/mess/163_S3.1.1_metapackage/output_dir/metapackage/S3.1.1.GTDB_r207.metapackage_20240302.smpkg'
-singlem_metapackage = output_dirs_dict['singlem'] + '/singlem/data/S3.1.0.metapackage_20221209.smpkg'
+from tool_reference_data import *
 
-metaphlan_db_original1 = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/metaphlan_bowtiedb'
+# metapackage = '/work/microbiome/msingle/mess/163_S3.1.1_metapackage/output_dir/metapackage/S3.1.1.GTDB_r207.metapackage_20240302.smpkg'
+singlem_metapackage_local = join(output_dirs_dict['singlem'], 'data', os.path.basename(singlem_metapackage))
+
+# metaphlan_db_original1 = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/metaphlan_bowtiedb'
 metaphlan_db_local1 = output_dirs_dict['metaphlan'] + '/metaphlan/data/metaphlan_bowtiedb'
 
-motus_db_path_original = '/work/microbiome/msingle/mess/124_singlem-benchmarking/db_mOTU'
-motus_db_path_local = output_dirs_dict['motus'] + '/motus/data/db_mOTU'
-motus_gtdb_tsv = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus/mOTUs_3.0.0_GTDB_tax.tsv'
+# motus_db_path_original = '/work/microbiome/msingle/mess/124_singlem-benchmarking/db_mOTU'
+# motus_db_path_local = output_dirs_dict['motus'] + '/motus/data/db_mOTU'
+# motus_gtdb_tsv = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus/mOTUs_3.0.0_GTDB_tax.tsv'
 
-kraken_db = "/work/microbiome/db/struo2/GTDB_release207"
+# kraken_db = "/work/microbiome/db/struo2/GTDB_release207"
 kraken_db_local = output_dirs_dict['kraken'] + "/kraken/data/GTDB_release207"
 
-sourmash_db1_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-rs207.taxonomy.sqldb'
-sourmash_db2_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-rs207.genomic-reps.dna.k31.zip'
+# sourmash_db1_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-rs207.taxonomy.sqldb'
+# sourmash_db2_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-rs207.genomic-reps.dna.k31.zip'
 sourmash_db1 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.taxonomy.sqldb'
 sourmash_db2 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.genomic-reps.dna.k31.zip'
 
-kaiju_db_original_dir = '/work/microbiome/msingle/mess/128_kaiju/progenomes'
-kaiju_db_original_progenomes_fmi = kaiju_db_original_dir + '/kaiju_db_progenomes.fmi'
-kaiju_db_original_progenomes_nodes = kaiju_db_original_dir + '/nodes.dmp'
-kaiju_db_original_progenomes_names = kaiju_db_original_dir + '/names.dmp'
+# kaiju_db_original_dir = '/work/microbiome/msingle/mess/128_kaiju/progenomes'
+# kaiju_db_original_progenomes_fmi = kaiju_db_original_dir + '/kaiju_db_progenomes.fmi'
+# kaiju_db_original_progenomes_nodes = kaiju_db_original_dir + '/nodes.dmp'
+# kaiju_db_original_progenomes_names = kaiju_db_original_dir + '/names.dmp'
 kaiju_db = output_dirs_dict['kaiju'] + '/kaiju/data/kaiju_db_progenomes.fmi'
 kaiju_db_progenomes_nodes = output_dirs_dict['kaiju'] + '/kaiju/data/nodes.dmp'
 kaiju_db_progenomes_names = output_dirs_dict['kaiju'] + '/kaiju/data/names.dmp'
 
-map2b_checkout_dir = '/home/woodcrob/bioinfo/MAP2B'
-map2b_db = os.path.join(map2b_checkout_dir, 'database.bak/GTDB')
-map2b_db_local = output_dirs_dict['map2b'] + '/map2b/data/GTDB'
+# map2b_checkout_dir = '/home/woodcrob/bioinfo/MAP2B'
+# map2b_db = os.path.join(map2b_checkout_dir, 'database.bak/GTDB')
+# map2b_db_local = output_dirs_dict['map2b'] + '/map2b/data/GTDB'
 
-metabuli_db = '/work/microbiome/db/metabuli/gtdb207'
+# metabuli_db = '/work/microbiome/db/metabuli/gtdb207'
 metabuli_db_local = output_dirs_dict['metabuli'] + '/metabuli/data/gtdb207'
 
 #####################################################################
@@ -134,7 +139,7 @@ rule truth_condensed_to_biobox:
         "--output-biobox {output.biobox}"
 
 def get_condensed_to_biobox_extra_args(tool):
-    if tool in ('kraken','metabuli'):
+    if tool in tools_with_filled_output_profiles:
         return ' --no-fill'
     else:
         return ''
@@ -177,9 +182,9 @@ rule opal:
 
 rule singlem_copy_metapackage:
     input:
-        metapackage
+        singlem_metapackage
     output:
-        db=directory(singlem_metapackage),
+        db=directory(singlem_metapackage_local),
         done=output_dirs_dict['singlem'] + "/singlem/data/done",
     shell:
         "cp -rL {input} {output.db} && touch {output.done}"
@@ -188,7 +193,7 @@ rule singlem_run_to_profile:
     input:
         r1=fastq_dir + "/{sample}.1.fq.gz",
         r2=fastq_dir + "/{sample}.2.fq.gz",
-        db=singlem_metapackage,
+        db=singlem_metapackage_local,
         data_done=output_dirs_dict['singlem'] + "/singlem/data/done"
     benchmark:
         benchmark_dir + "/singlem/{sample}-"+str(num_threads)+"threads.benchmark"
@@ -220,9 +225,9 @@ rule metaphlan_copy_db:
     output:
         # db1=directory(metaphlan_db_local1),
         # db2=directory(metaphlan_db_local2),
-        done=output_dirs_dict['metaphlan'] + "/metaphlan/data/done"
+        done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/data/done")
     shell:
-        "cp -rvL {metaphlan_db_original1} {metaphlan_db_local1} && touch {output.done}"
+        "cp -rvL {metaphlan_db} {metaphlan_db_local1}"
 
 rule metaphlan_profile:
     input:
@@ -276,14 +281,14 @@ rule metaphlan_profile_to_condensed:
 #########
 ######### motus
 
-rule motus_copy_db:
-    input:
-        db=motus_db_path_original,
-    output:
-        db=directory(motus_db_path_local),
-        done=output_dirs_dict['motus'] + "/motus/data/done"
-    shell:
-        "mkdir -p {output.db} && rmdir {output.db} && cp -rvL {input.db} {output.db} && touch {output.done}"
+# rule motus_copy_db:
+#     input:
+#         db=motus_db,
+#     output:
+#         db=directory(motus_db_path_local),
+#         done=output_dirs_dict['motus'] + "/motus/data/done"
+#     shell:
+#         "mkdir -p {output.db} && rmdir {output.db} && cp -rvL {input.db} {output.db} && touch {output.done}"
 
 rule motus_run:
     input:
@@ -299,7 +304,7 @@ rule motus_run:
     conda:
         "envs/motus.yml"
     shell:
-        "motus profile -t {threads} -db {motus_db_path_local} -f {input.r1} -r {input.r2} -o {output.report} && touch {output.done}"
+        "motus profile -t {threads} -db {motus_db} -f {input.r1} -r {input.r2} -o {output.report} && touch {output.done}"
 
 rule motus_profile_to_condensed:
     input:
@@ -405,32 +410,17 @@ rule bracken_to_profile:
 ###############################################################################################
 ######### sourmash
 
-rule sourmash_copy_db:
-    input:
-        db1 = sourmash_db1_original,
-        db2 = sourmash_db2_original,
-    output:
-        db1=sourmash_db1,
-        db2=sourmash_db2,
-        done=output_dirs_dict['sourmash'] + "/sourmash/data/done"
-    params:
-        output_dir = output_dirs_dict['sourmash'],
-    shell:
-        "mkdir -p {params.output_dir}/sourmash/data && cp -rvL {input.db1} {output.db1} && cp -rvL {input.db2} {output.db2} && touch {output.done}"
-
 rule sourmash_run:
     input:
         r1=fastq_dir + "/{sample}.1.fq.gz",
         r2=fastq_dir + "/{sample}.2.fq.gz",
-        db1=sourmash_db1,
-        db2=sourmash_db2,
         done=output_dirs_dict['sourmash'] + "/sourmash/data/done"
     benchmark:
         benchmark_dir + "/sourmash/{sample}-"+str(num_threads)+"threads.benchmark"
     threads: num_threads
     output:
-        report=output_dirs_dict['sourmash'] + "/sourmash/{sample}.gather_gtdbrs207_reps.with-lineages.csv",
-        done=output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile.done"
+        report=output_dirs_dict['sourmash'] + "/sourmash/{sample}.csv",
+        done=touch(output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile.done")
     conda:
         "envs/sourmash.yml"
     params:
@@ -439,15 +429,19 @@ rule sourmash_run:
     shell:
         # Sourmash does not seem to have a --threads option
         # sourmash tax annotate creates a file with-lineages in the CWD, so we need to cd into the output dir before running it
-        "sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge {params.sourmash_prefix} -o {params.sourmash_prefix}.sig {input.r1} {input.r2} && echo \"running gather..\" && sourmash gather {params.sourmash_prefix}.sig {input.db2} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv && echo \"running tax ..\" && cd {params.output_dir}/sourmash && sourmash tax annotate -g {wildcards.sample}.gather_gtdbrs207_reps.csv -t ../../{input.db1} && cd - && touch {output.done}"
+        "sourmash sketch dna -p k=31,abund --merge blah -o {params.sourmash_prefix}.sig {input.r1} {input.r2} "\
+        "&& echo \"running gather..\" "\
+        "&& sourmash gather -k 31 --dna {params.sourmash_prefix}.sig {sourmash_db_dna} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv "\
+        "&& echo \"running tax ..\" "\
+        "&& sourmash tax metagenome -g {params.sourmash_prefix}.gather_gtdbrs207_reps.csv -t {sourmash_db_taxonomy} >{output.report}"
 
 rule sourmash_to_condensed:
     input:
-        output_dirs_dict['sourmash'] + "/sourmash/{sample}.gather_gtdbrs207_reps.with-lineages.csv",
+        output_dirs_dict['sourmash'] + "/sourmash/{sample}.csv",
     output:
         profile = output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile",
     shell:
-        "{workflow.basedir}/../bin/sourmash_to_condensed.py --with-lineages {input} " \
+        "{workflow.basedir}/../bin/sourmash_to_condensed.py --summary-csv {input} " \
         "--sample {wildcards.sample} " \
         " > {output} "
 
@@ -528,12 +522,12 @@ rule kaiju_to_condensed:
 ###############################################################################################
 ######### MAP2B
 
-rule map2b_copy_data:
-    output:
-        db=directory(map2b_db_local),
-        done=touch(output_dirs_dict['map2b'] + "/map2b/data/done")
-    shell:
-        "cp -r {map2b_db} {output.db}/"
+# rule map2b_copy_data:
+#     output:
+#         db=directory(map2b_db_local),
+#         done=touch(output_dirs_dict['map2b'] + "/map2b/data/done")
+#     shell:
+#         "cp -r {map2b_db} {output.db}/"
 
 rule map2b_sample_setup:
     input:
@@ -560,7 +554,7 @@ rule map2b_run:
     params:
         output_dir = lambda wildcards, output: os.path.dirname(output.tsv),
     shell:
-        "python3 {map2b_checkout_dir}/bin/MAP2B.py -i {input.listfile} -d {map2b_db_local} -o {params.output_dir} -p {threads}"
+        "python3 {map2b_checkout_dir}/bin/MAP2B.py -i {input.listfile} -d {map2b_db}/.. -o {params.output_dir} -p {threads}"
 
 rule map2b_to_biobox:
     input:
@@ -581,7 +575,7 @@ rule map2b_to_biobox:
 
 rule metabuli_copy_db:
     input:
-        db=metabuli_db,
+        db=metabuli_db_dir,
     output:
         db=directory(metabuli_db_local),
         done=touch(output_dirs_dict['metabuli'] + "/metabuli/data/done")

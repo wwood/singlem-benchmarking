@@ -2,5 +2,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - sourmash==4.8.2
+  - sourmash==4.8.8
     

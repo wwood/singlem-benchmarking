@@ -21,7 +21,7 @@ genome_fasta_paths = os.path.join(workflow.basedir, 'shadow_genome_paths.csv')
 coverage_definitions_folder = 'coverage_definitions'
 
 # Restrict to r207-consistent tools
-tools = ['singlem', 'metaphlan', 'kraken', 'sourmash', 'metabuli']
+tools = r207_tools
 
 # debug
 # tools = ['metaphlan']

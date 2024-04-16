@@ -1,2 +1,0 @@
-sample	coverage	taxonomy
-GCA_024277065.1_genomic	9.887836	d__Archaea;p__Halobacteriota;c__Halobacteria;o__Halobacteriales;f__Natrialbaceae;g__Natrialba;s__Natrialba magadii

@@ -1,2 +1,0 @@
-sample	coverage	taxonomy
-GCA_023379385.1_genomic	100.0	d__Bacteria;p__Nitrospirota;c__Nitrospiria;o__Nitrospirales;f__Nitrospiraceae;g__SYGV01;s__SYGV01 sp005799365

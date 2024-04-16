@@ -1,2 +1,0 @@
-sample	coverage	taxonomy
-GCA_944390005.1_genomic	9.990908	d__Archaea;p__Halobacteriota;c__Methanosarcinia;o__Methanosarcinales;f__Methanosarcinaceae;g__Methanosalsum;s__Methanosalsum natronophilum

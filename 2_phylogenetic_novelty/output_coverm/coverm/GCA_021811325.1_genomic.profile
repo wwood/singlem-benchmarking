@@ -1,2 +1,0 @@
-sample	coverage	taxonomy
-GCA_021811325.1_genomic	9.881012	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanoculleaceae;g__Methanoculleus;s__Methanoculleus bourgensis

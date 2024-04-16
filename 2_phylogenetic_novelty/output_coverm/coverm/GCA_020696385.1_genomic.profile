@@ -1,2 +1,0 @@
-sample	coverage	taxonomy
-GCA_020696385.1_genomic	10.035196	d__Bacteria;p__Actinobacteriota;c__Thermoleophilia;o__Solirubrobacterales;f__70-9;g__RSA11;s__RSA11 sp002919115

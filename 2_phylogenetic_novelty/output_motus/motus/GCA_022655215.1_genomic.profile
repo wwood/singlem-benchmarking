@@ -1,3 +1,0 @@
-sample	coverage	taxonomy
-sample_name	0.1988483464	d__Bacteria; p__Actinobacteriota; c__Coriobacteriia; o__Coriobacteriales; f__Atopobiaceae; g__Tractidigestivibacter; s__Tractidigestivibacter sp000752675
-sample_name	0.4248084518	d__Bacteria; p__Actinobacteriota; c__Coriobacteriia; o__Coriobacteriales; f__Atopobiaceae; g__Thermophilibacter; s__Thermophilibacter avistercoris

@@ -1,3 +1,0 @@
-sample	coverage	taxonomy
-GCA_022651005.1_genomic	0.5810182677683621	d__Bacteria;p__Firmicutes;c__Bacilli;o__Staphylococcales;f__Staphylococcaceae;g__Staphylococcus;s__Staphylococcus aureus
-GCA_022651005.1_genomic	0.41898173223163787	d__Archaea;p__Methanobacteriota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae;g__Methanobrevibacter;s__Methanobrevibacter ruminantium

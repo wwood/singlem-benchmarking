@@ -1,2 +1,0 @@
-sample	coverage	taxonomy
-GCA_024655965.1_genomic	100.0	d__Archaea;p__Halobacteriota;c__Methanomicrobia;o__Methanomicrobiales;f__Methanoregulaceae;g__UBA9949;s__UBA9949 sp10516u

@@ -31,11 +31,7 @@ import argparse
 import logging
 import sys
 import os
-import pandas as pd
-import re
-
-import extern
-import pandas as pd
+import polars as pl
 
 sys.path = [os.path.join(os.path.dirname(os.path.realpath(__file__)),'..')] + sys.path
 
@@ -45,7 +41,7 @@ if __name__ == '__main__':
     #parent_parser.add_argument('--version', help='output version information and quit',  action='version', version=repeatm.__version__)
     parent_parser.add_argument('--quiet', help='only output errors', action="store_true")
 
-    parent_parser.add_argument('--with-lineages', required=True)
+    parent_parser.add_argument('--summary-csv', required=True)
     parent_parser.add_argument('--sample', required=True)
 
     args = parent_parser.parse_args()
@@ -60,12 +56,16 @@ if __name__ == '__main__':
     logging.basicConfig(level=loglevel, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
     print('sample\tcoverage\ttaxonomy')
-    d = pd.read_csv(args.with_lineages, sep=',')
-    # Just go with median abund as that seems the sanest, but see https://twitter.com/ctitusbrown/status/1562491197708333056 thread
-    # d['relabund'] = d['unique_intersect_bp'] / d['scaled'] * d['median_abund']
-    for i, row in d.iterrows():
-        print('{sample}\t{coverage}\t{taxon}'.format(
-            sample=args.sample, coverage=row['median_abund'], taxon=row['lineage']))
+    df = pl.read_csv(args.summary_csv, has_header=True)
+    # query_name,rank,fraction,lineage,query_md5,query_filename,f_weighted_at_rank,bp_match_at_rank,query_ani_at_rank,total_weighted_hashes                                                                            G
+    # GCA_020052375.1_genomic,superkingdom,0.281,d__Archaea,3189a479,../../local_reads/GCA_020052375.1_genomic.2.fq.gz,0.456,1619000,0.960,25843                                                                       
+    # GCA_020052375.1_genomic,superkingdom,0.719,unclassified,3189a479,../../local_reads/GCA_020052375.1_genomic.2.fq.gz,0.544,4148000,,25843                                                                          G
+    # GCA_020052375.1_genomic,phylum,0.281,d__Archaea;p__Thermoproteota,3189a479,../../local_reads/GCA_020052375.1_genomic.2.fq.gz,0.456,1619000,0.960,25843                                                           G
+    # ..
+    for row in df.rows(named=True):
+        if row['lineage'] != 'unclassified' and row['rank'] in ['superkingdom','phylum', 'class', 'order', 'family', 'genus', 'species']:
+            print('{sample}\t{coverage}\t{taxon}'.format(
+                sample=args.sample, coverage=row['f_weighted_at_rank'], taxon=row['lineage']))
             
     logging.info("Done")
 

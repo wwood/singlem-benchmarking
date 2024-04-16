@@ -12,12 +12,13 @@ singlem_metapackage_tgz = singlem_metapackage + '.zb.tar.gz'
 metaphlan_db = join(output_directory, 'metaphlan_bowtiedb')
 metaphlan_index = 'mpa_vOct22_CHOCOPhlAnSGB_202212'
 
-motus_db = join(output_directory, 'db_mOTU')
-motus_gtdb_tsv = join(output_directory, 'mOTUs_3.0.0_GTDB_tax.tsv')
+motus_db = join(output_directory, 'motus', 'db_mOTU')
+motus_gtdb_tsv = join(output_directory, 'motus', 'mOTUs_3.0.0_GTDB_tax.tsv')
 
 kraken_db = join(output_directory, "struo2-kraken-GTDB_release207")
 
-sourmash_db_taxonomy = join(output_directory, 'sourmash', 'gtdb-rs207.species-taxonomy.csv.gz')
+# Must be at genome level otherwise sourmash tax annotate fails
+sourmash_db_taxonomy = join(output_directory, 'sourmash', 'gtdb-rs207.taxonomy.with-strain.csv.gz')
 sourmash_db_dna = join(output_directory, 'sourmash', 'gtdb-rs207.genomic-reps.dna.k31.zip')
 
 kaiju_db_original_dir = join(output_directory, 'kaiju')
@@ -95,7 +96,7 @@ rule sourmash_tax:
     log:
         join(output_directory, 'sourmash.log')
     shell:
-        'wget -O {output.sourmash_taxonomy} https://farm.cse.ucdavis.edu/~ctbrown/sourmash-db/gtdb-rs207/gtdb-rs207.species-taxonomy.csv.gz &> {log}'
+        'wget -O {output.sourmash_taxonomy} https://farm.cse.ucdavis.edu/~ctbrown/sourmash-db/gtdb-rs207/gtdb-rs207.taxonomy.with-strain.csv.gz &> {log}'
 
 rule kaiju_download:
     output:
@@ -115,8 +116,10 @@ rule kaiju_extract:
         names=kaiju_db_original_progenomes_names
     log:
         abspath(join(output_directory, 'kaiju-extract.log'))
+    params:
+        outdir = join(output_directory, 'kaiju')
     shell:
-        'cd {output_directory} && tar -xzf {input.done} &> {log}'
+        'cd {params.outdir} && tar -xzf ../kaiju_db_progenomes_2023-05-25.tgz &> {log}'
 
 rule map2b_checkout:
     output:
@@ -160,14 +163,27 @@ rule map2b:
 
 rule motus_db:
     output:
-        done=touch(join(output_directory, 'motus-db.done')),
-        motus_db=directory(motus_db),
+        done=touch(join(output_directory, 'motus-download.done')),
     conda:
         "1_novel_strains/envs/motus.yml"
     log:
-        abspath(join(output_directory, 'motus-db.log'))
+        abspath(join(output_directory, 'motus-download.log'))
     shell:
-        'mkdir -p {output.motus_db} && cd {output.motus_db} && motus downloadDB &> {log}'
+        'motus downloadDB &> {log}'
+
+rule motus_db_move:
+    input:
+        done=join(output_directory, 'motus-download.done'),
+    output:
+        motus_db=directory(motus_db),
+        done=touch(join(output_directory, 'motus-db.done')),
+    conda:
+        "1_novel_strains/envs/motus.yml"
+    log:
+        abspath(join(output_directory, 'motus-db-move.log'))
+    shell:
+        # ls /mnt/hpccs01/work/microbiome/msingle/mess/124_singlem-benchmarking/.snakemake/conda/b06521a4ea0bdbb4dd2eabbe19701683_/lib/python3.9/site-packages/motus/db_mOTU/
+        'bin/migrate_motus_db.py {output.motus_db}'
 
 rule motus_gtdb:
     output:
