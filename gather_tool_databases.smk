@@ -18,7 +18,7 @@ motus_gtdb_tsv = join(output_directory, 'motus', 'mOTUs_3.0.0_GTDB_tax.tsv')
 kraken_db = join(output_directory, "struo2-kraken-GTDB_release207")
 
 # Must be at genome level otherwise sourmash tax annotate fails
-sourmash_db_taxonomy = join(output_directory, 'sourmash', 'gtdb-rs207.taxonomy.with-strain.csv.gz')
+sourmash_db_taxonomy = join(output_directory, 'sourmash', 'gtdb-rs207.taxonomy.sqldb')
 sourmash_db_dna = join(output_directory, 'sourmash', 'gtdb-rs207.genomic-reps.dna.k31.zip')
 
 kaiju_db_original_dir = join(output_directory, 'kaiju')
@@ -38,7 +38,8 @@ tools = ['metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b']
 
 rule all:
     input:
-        [join(output_directory, f'{tool}.done') for tool in tools]
+        [join(output_directory, f'{tool}.done') for tool in tools],
+        join(output_directory, 'gtdb.done'),
 
 rule metaphlan:
     output:
@@ -83,20 +84,34 @@ rule sourmash_sigs:
     conda:
         '1_novel_strains/envs/sourmash.yml'
     log:
-        join(output_directory, 'sourmash.log')
+        join(output_directory, 'sourmash-sigs-download.log')
     params:
         db = os.path.basename(sourmash_db_dna)
     shell:
         'wget -O {output.sourmash_dna} https://farm.cse.ucdavis.edu/~ctbrown/sourmash-db/gtdb-rs207/gtdb-rs207.genomic-reps.dna.k31.zip &> {log}'
 
-rule sourmash_tax:
+rule sourmash_tax_download:
+    output:
+        done=touch(join(output_directory, 'sourmash-tax-download.done')),
+        sourmash_taxonomy=join(output_directory, 'sourmash', 'gtdb-rs207.taxonomy.reps.csv.gz'),
+    log:
+        join(output_directory, 'sourmash-tax-download.log')
+    shell:
+        'wget -O {output.sourmash_taxonomy} https://farm.cse.ucdavis.edu/~ctbrown/sourmash-db/gtdb-rs207/gtdb-rs207.taxonomy.reps.csv.gz &> {log}'
+
+rule sourmash_tax_convert:
+    input:
+        done=join(output_directory, 'sourmash-tax-download.done'),
+        sourmash_taxonomy=join(output_directory, 'sourmash', 'gtdb-rs207.taxonomy.reps.csv.gz'),
     output:
         done=touch(join(output_directory, 'sourmash-tax.done')),
         sourmash_taxonomy=sourmash_db_taxonomy,
+    conda:
+        '1_novel_strains/envs/sourmash.yml'
     log:
-        join(output_directory, 'sourmash.log')
+        join(output_directory, 'sourmash-tax-convert.log')
     shell:
-        'wget -O {output.sourmash_taxonomy} https://farm.cse.ucdavis.edu/~ctbrown/sourmash-db/gtdb-rs207/gtdb-rs207.taxonomy.with-strain.csv.gz &> {log}'
+        'sourmash tax prepare -t {input.sourmash_taxonomy} -o {output.sourmash_taxonomy} -F sql &> {log}'
 
 rule kaiju_download:
     output:
@@ -223,3 +238,23 @@ rule singlem_extract:
         abspath(join(output_directory, 'singlem-extract.log'))
     shell:
         'cd {output_directory} && tar -xzf {input.done} &> {log} && mv it {output.singlem_metapackage}'
+
+rule gtdb_download:
+    output:
+        done=touch(join(output_directory, 'gtdb_download.done')),
+        tar = 'bac120_metadata_r207.tar.gz'
+    log:
+        join(output_directory, 'gtdb.log')
+    shell:
+        'wget https://data.gtdb.ecogenomic.org/releases/release207/207.0/bac120_metadata_r207.tar.gz -O {output.tar} &> {log}'
+
+rule gtdb_extract:
+    input:
+        done=join(output_directory, 'gtdb_download.done'),
+        tar = 'bac120_metadata_r207.tar.gz'
+    output:
+        done=touch(join(output_directory, 'gtdb.done')),
+    log:
+        join(output_directory, 'gtdb-extract.log')
+    shell:
+        'tar -xzf {input.tar} &> {log}'

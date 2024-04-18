@@ -2,6 +2,8 @@
 import extern
 import os
 
+from tool_reference_data import *
+
 num_threads = config['benchmarking_threads']
 kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
 
@@ -28,7 +30,7 @@ novel_genomes_gtdbtk_output_directory = 'gtdbtk_batchfile.random1000.gtdbtk_r207
 novel_genome_list = 'gtdbtk_batchfile.random1000.csv'
 
 # Only GTDB R207 tools
-tools = ['singlem', 'metaphlan', 'kraken', 'sourmash', 'metabuli']
+tools = r207_tools
 
 # debug
 # datasets = datasets = datasets[:1]
@@ -38,44 +40,39 @@ tools = ['singlem', 'metaphlan', 'kraken', 'sourmash', 'metabuli']
 
 ##################################################################### things that should be in config
 
-gtdb_bac_metadata = '/work/microbiome/db/gtdb/gtdb_release207/bac120_metadata_r207.tsv'
-gtdb_bac_taxonomy = '~/m/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv'
-gtdb_ar_taxonomy = '~/m/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv'
+gtdb_bac_metadata = '../bac120_metadata_r207.tsv'
+gtdb_bac_taxonomy = '../bac120_taxonomy_r207.tsv'
+gtdb_ar_taxonomy = '../ar53_taxonomy_r207.tsv'
 
 ##################################################################### reference databases
 
-metapackage = '/work/microbiome/msingle/mess/163_S3.1.1_metapackage/output_dir/metapackage/S3.1.1.GTDB_r207.metapackage_20240302.smpkg'
-singlem_metapackage = output_dirs_dict['singlem'] + '/singlem/data/S3.1.0.metapackage_20221209.smpkg'
+# metapackage = '/work/microbiome/msingle/mess/163_S3.1.1_metapackage/output_dir/metapackage/S3.1.1.GTDB_r207.metapackage_20240302.smpkg'
+singlem_metapackage_local = join(output_dirs_dict['singlem'], 'data', os.path.basename(singlem_metapackage))
 
-metaphlan_db_original1 = '../tool_reference_data/metaphlan_bowtiedb'
+# metaphlan_db_original1 = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/metaphlan_bowtiedb'
 metaphlan_db_local1 = output_dirs_dict['metaphlan'] + '/metaphlan/data/metaphlan_bowtiedb'
-metaphlan_index_name = 'mpa_vOct22_CHOCOPhlAnSGB_202212'
 
-motus_db_path_original = '/work/microbiome/msingle/mess/124_singlem-benchmarking/db_mOTU'
-motus_db_path_local = output_dirs_dict['motus'] + '/motus/data/db_mOTU'
-motus_gtdb_tsv = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus/mOTUs_3.0.0_GTDB_tax.tsv'
+# motus_db_path_original = '/work/microbiome/msingle/mess/124_singlem-benchmarking/db_mOTU'
+# motus_db_path_local = output_dirs_dict['motus'] + '/motus/data/db_mOTU'
+# motus_gtdb_tsv = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus/mOTUs_3.0.0_GTDB_tax.tsv'
 
-kraken_db = "/work/microbiome/db/struo2/GTDB_release207"
+# kraken_db = "/work/microbiome/db/struo2/GTDB_release207"
 kraken_db_local = output_dirs_dict['kraken'] + "/kraken/data/GTDB_release207"
 
-sourmash_db1_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-rs207.taxonomy.sqldb'
-sourmash_db2_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-rs207.genomic-reps.dna.k31.zip'
-sourmash_db1 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.taxonomy.sqldb'
-sourmash_db2 = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.genomic-reps.dna.k31.zip'
+# sourmash_db1_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-rs207.taxonomy.sqldb'
+# sourmash_db2_original = '/work/microbiome/msingle/mess/105_novelty_testing/gtdb-rs207.genomic-reps.dna.k31.zip'
+sourmash_db_taxonomy_local = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.taxonomy.sqldb'
+sourmash_db_dna_local = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs207.genomic-reps.dna.k31.zip'
 
-kaiju_db_original_dir = '/work/microbiome/msingle/mess/128_kaiju/progenomes'
-kaiju_db_original_progenomes_fmi = kaiju_db_original_dir + '/kaiju_db_progenomes.fmi'
-kaiju_db_original_progenomes_nodes = kaiju_db_original_dir + '/nodes.dmp'
-kaiju_db_original_progenomes_names = kaiju_db_original_dir + '/names.dmp'
-kaiju_db = output_dirs_dict['kaiju'] + '/kaiju/data/kaiju_db_progenomes.fmi'
-kaiju_db_progenomes_nodes = output_dirs_dict['kaiju'] + '/kaiju/data/nodes.dmp'
-kaiju_db_progenomes_names = output_dirs_dict['kaiju'] + '/kaiju/data/names.dmp'
+# kaiju_db = output_dirs_dict['kaiju'] + '/kaiju/data/kaiju_db_progenomes.fmi'
+# kaiju_db_progenomes_nodes = output_dirs_dict['kaiju'] + '/kaiju/data/nodes.dmp'
+# kaiju_db_progenomes_names = output_dirs_dict['kaiju'] + '/kaiju/data/names.dmp'
 
-map2b_checkout_dir = '/home/woodcrob/bioinfo/MAP2B'
-map2b_db = os.path.join(map2b_checkout_dir, 'database.bak/GTDB')
-map2b_db_local = output_dirs_dict['map2b'] + '/map2b/data/GTDB'
+# map2b_checkout_dir = '/home/woodcrob/bioinfo/MAP2B'
+# map2b_db = os.path.join(map2b_checkout_dir, 'database.bak/GTDB')
+# map2b_db_local = output_dirs_dict['map2b'] + '/map2b/data/GTDB'
 
-metabuli_db = '/work/microbiome/db/metabuli/gtdb207'
+# metabuli_db = '/work/microbiome/db/metabuli/gtdb207'
 metabuli_db_local = output_dirs_dict['metabuli'] + '/metabuli/data/gtdb207'
 
 #####################################################################
@@ -187,9 +184,9 @@ rule opal:
 
 rule singlem_copy_metapackage:
     input:
-        metapackage
+        singlem_metapackage
     output:
-        db=directory(singlem_metapackage),
+        db=directory(singlem_metapackage_local),
         done=output_dirs_dict['singlem'] + "/singlem/data/done",
     resources:
         mem_mb=4000,
@@ -218,7 +215,7 @@ rule singlem_run_to_profile:
     log:
         output_dirs_dict['singlem'] + "/logs/singlem/known{known_percent}/{sample}.log"
     shell:
-        "python3 ~/git/singlem/bin/singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} &> {log}"
+        "~/git/singlem/bin/singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} &> {log}"
 
 
 ###############################################################################################
@@ -237,12 +234,12 @@ rule metaphlan_copy_db:
     output:
         # db1=directory(metaphlan_db_local1),
         # db2=directory(metaphlan_db_local2),
-        done=output_dirs_dict['metaphlan'] + "/metaphlan/data/done"
+        done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/data/done")
     resources:
         mem_mb=4000,
         runtime='1h'
     shell:
-        "cp -rvL {metaphlan_db_original1}/* {metaphlan_db_local1} && touch {output.done}"
+        "cp -rvL {metaphlan_db} {metaphlan_db_local1}"
 
 rule metaphlan_profile:
     input:
@@ -266,7 +263,7 @@ rule metaphlan_profile:
         output_dirs_dict['metaphlan'] + "/logs/metaphlan/known{known_percent}/{sample}.log"
     shell:
         # Concatenate input files because metaphlan can't handle multiple input files
-        "rm -f {output.sgb_report} {params.cat_reads}.bowtie2out.txt; cat {input.r1} {input.r2} > {params.cat_reads} && metaphlan {params.cat_reads} --index {metaphlan_index_name} --nproc {threads} --input_type fastq --bowtie2db {metaphlan_db_local1} -o {output.sgb_report} &> {log}"
+        "rm -f {output.sgb_report} {params.cat_reads}.bowtie2out.txt; cat {input.r1} {input.r2} > {params.cat_reads} && metaphlan {params.cat_reads} --index {metaphlan_index} --nproc {threads} --input_type fastq --bowtie2db {metaphlan_db_local1} -o {output.sgb_report} &> {log}"
 
 rule metaphlan_convert_profile_to_GTDB:
     input:
@@ -303,53 +300,53 @@ rule metaphlan_profile_to_condensed:
 #########
 ######### motus
 
-rule motus_copy_db:
-    input:
-        db=motus_db_path_original,
-    output:
-        db=directory(motus_db_path_local),
-        done=touch(output_dirs_dict['motus'] + "/motus/data/done")
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    shell:
-        "mkdir -p {output.db} && rmdir {output.db} && cp -rvL {input.db} {output.db}"
+# rule motus_copy_db:
+#     input:
+#         db=motus_db_path_original,
+#     output:
+#         db=directory(motus_db_path_local),
+#         done=touch(output_dirs_dict['motus'] + "/motus/data/done")
+#     resources:
+#         mem_mb=4000,
+#         runtime='1h'
+#     shell:
+#         "mkdir -p {output.db} && rmdir {output.db} && cp -rvL {input.db} {output.db}"
 
-rule motus_run:
-    input:
-        r1=fastq_dir + "/known{known_percent}/{sample}.1.fq.gz",
-        r2=fastq_dir + "/known{known_percent}/{sample}.2.fq.gz",
-        done=output_dirs_dict['motus'] + "/motus/data/done"
-    benchmark:
-        benchmark_dir + "/motus/known{known_percent}/{sample}-"+str(num_threads)+"threads.benchmark"
-    output:
-        report=output_dirs_dict['motus'] + "/motus/known{known_percent}/{sample}.motus",
-        done=touch(output_dirs_dict['motus'] + "/motus/known{known_percent}/{sample}.profile.done")
-    threads: num_threads
-    resources:
-        mem_mb=30000,
-        runtime='6h'
-    conda:
-        "envs/motus.yml"
-    log:
-        output_dirs_dict['motus'] + "/logs/motus/known{known_percent}/{sample}.log"
-    shell:
-        "motus profile -t {threads} -db {motus_db_path_local} -f {input.r1} -r {input.r2} -o {output.report} &> {log}"
+# rule motus_run:
+#     input:
+#         r1=fastq_dir + "/known{known_percent}/{sample}.1.fq.gz",
+#         r2=fastq_dir + "/known{known_percent}/{sample}.2.fq.gz",
+#         done=output_dirs_dict['motus'] + "/motus/data/done"
+#     benchmark:
+#         benchmark_dir + "/motus/known{known_percent}/{sample}-"+str(num_threads)+"threads.benchmark"
+#     output:
+#         report=output_dirs_dict['motus'] + "/motus/known{known_percent}/{sample}.motus",
+#         done=touch(output_dirs_dict['motus'] + "/motus/known{known_percent}/{sample}.profile.done")
+#     threads: num_threads
+#     resources:
+#         mem_mb=30000,
+#         runtime='6h'
+#     conda:
+#         "envs/motus.yml"
+#     log:
+#         output_dirs_dict['motus'] + "/logs/motus/known{known_percent}/{sample}.log"
+#     shell:
+#         "motus profile -t {threads} -db {motus_db_path_local} -f {input.r1} -r {input.r2} -o {output.report} &> {log}"
 
-rule motus_profile_to_condensed:
-    input:
-        report=output_dirs_dict['motus'] + "/motus/known{known_percent}/{sample}.motus"
-    output:
-        profile = output_dirs_dict['motus'] + "/motus/known{known_percent}/{sample}.profile",
-    conda:
-        "envs/singlem.yml"
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    shell:
-        "{workflow.basedir}/../bin/motus_to_condensed.py --motus {input.report} " \
-        "--gtdb {motus_gtdb_tsv} " \
-        " > {output.profile} "
+# rule motus_profile_to_condensed:
+#     input:
+#         report=output_dirs_dict['motus'] + "/motus/known{known_percent}/{sample}.motus"
+#     output:
+#         profile = output_dirs_dict['motus'] + "/motus/known{known_percent}/{sample}.profile",
+#     conda:
+#         "envs/singlem.yml"
+#     resources:
+#         mem_mb=4000,
+#         runtime='1h'
+#     shell:
+#         "{workflow.basedir}/../bin/motus_to_condensed.py --motus {input.report} " \
+#         "--gtdb {motus_gtdb_tsv} " \
+#         " > {output.profile} "
 
 
 ###############################################################################################
@@ -387,10 +384,8 @@ rule kraken_run:
         "envs/kraken.yml"
     log:
         output_dirs_dict['kraken'] + "/logs/kraken/known{known_percent}/{sample}.log"
-    params:
-        threads = min(kraken_num_threads, num_threads)
     shell:
-        "kraken2 --db {input.db} --threads {params.threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} &> {log}"
+        "kraken2 --db {input.db} --threads {num_threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} &> {log}"
 
 rule braken_run:
     input:
@@ -450,21 +445,22 @@ rule bracken_to_profile:
         # Convert reports to singlem condense format
         "mkdir -p {params.biobox_dir} && " \
         "{workflow.basedir}/../bin/kraken_to_condensed.py --report-prefix {params.report_prefix} " \
-        "--bacterial-taxonomy /work/microbiome/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv " \
-        "--archaeal-taxonomy /work/microbiome/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv > {output.profile} 2> {log}"
+        "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \
+        "--archaeal-taxonomy ../ar53_taxonomy_r207.tsv > {output.profile} 2> {log}"
 
 ###############################################################################################
 ###############################################################################################
 ###############################################################################################
 ######### sourmash
 
+
 rule copy_db:
     input:
-        db1 = sourmash_db1_original,
-        db2 = sourmash_db2_original,
+        db1 = sourmash_db_taxonomy,
+        db2 = sourmash_db_dna,
     output:
-        db1=sourmash_db1,
-        db2=sourmash_db2,
+        db1=sourmash_db_taxonomy_local,
+        db2=sourmash_db_dna_local,
         done=output_dirs_dict['sourmash'] + "/sourmash/data/done"
     resources:
         mem_mb=4000,
@@ -478,8 +474,8 @@ rule sourmash_run:
     input:
         r1=fastq_dir + "/known{known_percent}/{sample}.1.fq.gz",
         r2=fastq_dir + "/known{known_percent}/{sample}.2.fq.gz",
-        db1=sourmash_db1,
-        db2=sourmash_db2,
+        db1=sourmash_db_taxonomy_local,
+        db2=sourmash_db_dna_local,
         done=output_dirs_dict['sourmash'] + "/sourmash/data/done"
     benchmark:
         benchmark_dir + "/sourmash/known{known_percent}/{sample}-"+str(num_threads)+"threads.benchmark"
@@ -488,7 +484,7 @@ rule sourmash_run:
         mem_mb=60000,
         runtime='2h'
     output:
-        report=output_dirs_dict['sourmash'] + "/sourmash/known{known_percent}/{sample}.gather_gtdbrs207_reps.with-lineages.csv",
+        report=output_dirs_dict['sourmash'] + "/sourmash/known{known_percent}/{sample}.csv",
         done=touch(output_dirs_dict['sourmash'] + "/sourmash/known{known_percent}/{sample}.profile.done")
     conda:
         "envs/sourmash.yml"
@@ -500,11 +496,15 @@ rule sourmash_run:
     shell:
         # Sourmash does not seem to have a --threads option
         # sourmash tax annotate creates a file with-lineages in the CWD, so we need to cd into the output dir before running it
-        "bash -c 'sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge {params.sourmash_prefix} -o {params.sourmash_prefix}.sig {input.r1} {input.r2} && echo \"running gather..\" && sourmash gather {params.sourmash_prefix}.sig {input.db2} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv && echo \"running tax ..\" && cd {params.output_dir}/sourmash/known{wildcards.known_percent}/ && sourmash tax annotate -g {wildcards.sample}.gather_gtdbrs207_reps.csv -t ../../../{input.db1} && cd -' &> {log}"
+        "bash -c sourmash sketch dna -p k=31,abund --merge blah -o {params.sourmash_prefix}.sig {input.r1} {input.r2} "\
+        "&& echo \"running gather..\" "\
+        "&& sourmash gather -k 31 --dna {params.sourmash_prefix}.sig {sourmash_db_dna} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv "\
+        "&& echo \"running tax ..\" "\
+        "&& sourmash tax metagenome -g {params.sourmash_prefix}.gather_gtdbrs207_reps.csv -t {sourmash_db_taxonomy} >{output.report}' &> {log}"
 
 rule sourmash_to_condensed:
     input:
-        output_dirs_dict['sourmash'] + "/sourmash/known{known_percent}/{sample}.gather_gtdbrs207_reps.with-lineages.csv",
+        output_dirs_dict['sourmash'] + "/sourmash/known{known_percent}/{sample}.csv",
     output:
         profile = output_dirs_dict['sourmash'] + "/sourmash/known{known_percent}/{sample}.profile",
     resources:
@@ -520,83 +520,83 @@ rule sourmash_to_condensed:
 ###############################################################################################
 ######### kaiju
 
-rule kaiju_copy_db:
-    # input:
-    #     db = kaiju_db_original_progenomes_fmi,
-    #     nodes = kaiju_db_original_progenomes_nodes,
-    #     names = kaiju_db_original_progenomes_names,
-    output:
-        db=kaiju_db,
-        nodes = kaiju_db_progenomes_nodes,
-        names = kaiju_db_progenomes_names,
-        done=output_dirs_dict['kaiju'] + "/kaiju/data/done"
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    shell:
-        "mkdir -p {output_dirs_dict[kaiju]}/kaiju/data && " \
-        "cp -rvL {kaiju_db_original_progenomes_fmi} {output.db} " \
-        "&& cp -rvL {kaiju_db_original_progenomes_nodes} {output.nodes} " \
-        "&& cp -rvL {kaiju_db_original_progenomes_names} {output.names} "\
-        "&& touch {output.done}"
+# rule kaiju_copy_db:
+#     # input:
+#     #     db = kaiju_db_original_progenomes_fmi,
+#     #     nodes = kaiju_db_original_progenomes_nodes,
+#     #     names = kaiju_db_original_progenomes_names,
+#     output:
+#         db=kaiju_db,
+#         nodes = kaiju_db_progenomes_nodes,
+#         names = kaiju_db_progenomes_names,
+#         done=output_dirs_dict['kaiju'] + "/kaiju/data/done"
+#     resources:
+#         mem_mb=4000,
+#         runtime='1h'
+#     shell:
+#         "mkdir -p {output_dirs_dict[kaiju]}/kaiju/data && " \
+#         "cp -rvL {kaiju_db_original_progenomes_fmi} {output.db} " \
+#         "&& cp -rvL {kaiju_db_original_progenomes_nodes} {output.nodes} " \
+#         "&& cp -rvL {kaiju_db_original_progenomes_names} {output.names} "\
+#         "&& touch {output.done}"
         
-rule kaiju_run:
-    input:
-        r1=fastq_dir + "/known{known_percent}/{sample}.1.fq.gz",
-        r2=fastq_dir + "/known{known_percent}/{sample}.2.fq.gz",
-        db=kaiju_db,
-        nodes = kaiju_db_progenomes_nodes,
-        names = kaiju_db_progenomes_names,
-        done=output_dirs_dict['kaiju'] + "/kaiju/data/done"
-    benchmark:
-        benchmark_dir + "/kaiju/known{known_percent}/{sample}-"+str(num_threads)+"threads.benchmark"
-    threads: num_threads
-    resources:
-        mem_mb=30000,
-        runtime='1h'
-    output:
-        report=output_dirs_dict['kaiju'] + "/kaiju-run/known{known_percent}/{sample}.report",
-        done=touch(output_dirs_dict['kaiju'] + "/kaiju/known{known_percent}/{sample}.profile.done")
-    conda:
-        "envs/kaiju.yml"
-    log:
-        output_dirs_dict['kaiju'] + "/logs/kaiju/known{known_percent}/{sample}.log"
-    shell:
-        # kaiju -z 25 -t nodes.dmp -f kaiju_db_progenomes.fmi -i <(zcat ~/m/msingle/mess/124_singlem-benchmarking/2_phylogenetic_novelty/local_reads/GCA_020697715.1_genomic.1.fq.gz ~/m/msingle/mess/124_singlem-benchmarking/2_phylogenetic_novelty/local_reads/GCA_020697715.1_genomic.2.fq.gz) -o kaiju.out
-        "kaiju -z {threads} -t {input.nodes} -f {input.db} -i <(zcat {input.r1} {input.r2}) -o {output.report} &> {log}"
+# rule kaiju_run:
+#     input:
+#         r1=fastq_dir + "/known{known_percent}/{sample}.1.fq.gz",
+#         r2=fastq_dir + "/known{known_percent}/{sample}.2.fq.gz",
+#         db=kaiju_db,
+#         nodes = kaiju_db_progenomes_nodes,
+#         names = kaiju_db_progenomes_names,
+#         done=output_dirs_dict['kaiju'] + "/kaiju/data/done"
+#     benchmark:
+#         benchmark_dir + "/kaiju/known{known_percent}/{sample}-"+str(num_threads)+"threads.benchmark"
+#     threads: num_threads
+#     resources:
+#         mem_mb=30000,
+#         runtime='1h'
+#     output:
+#         report=output_dirs_dict['kaiju'] + "/kaiju-run/known{known_percent}/{sample}.report",
+#         done=touch(output_dirs_dict['kaiju'] + "/kaiju/known{known_percent}/{sample}.profile.done")
+#     conda:
+#         "envs/kaiju.yml"
+#     log:
+#         output_dirs_dict['kaiju'] + "/logs/kaiju/known{known_percent}/{sample}.log"
+#     shell:
+#         # kaiju -z 25 -t nodes.dmp -f kaiju_db_progenomes.fmi -i <(zcat ~/m/msingle/mess/124_singlem-benchmarking/2_phylogenetic_novelty/local_reads/GCA_020697715.1_genomic.1.fq.gz ~/m/msingle/mess/124_singlem-benchmarking/2_phylogenetic_novelty/local_reads/GCA_020697715.1_genomic.2.fq.gz) -o kaiju.out
+#         "kaiju -z {threads} -t {input.nodes} -f {input.db} -i <(zcat {input.r1} {input.r2}) -o {output.report} &> {log}"
 
-rule kaiju_to_summarised_table:
-    input:
-        output_dirs_dict['kaiju'] + "/kaiju-run/known{known_percent}/{sample}.report",
-    output:
-        profile = output_dirs_dict['kaiju'] + "/kaiju/known{known_percent}/{sample}.summary.report",
-        done=touch(output_dirs_dict['kaiju'] + "/kaiju/known{known_percent}/{sample}.summary.report.done")
-    conda:
-        "envs/kaiju.yml"
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    log:
-        output_dirs_dict['kaiju'] + "/logs/kaiju_to_summarised_table/known{known_percent}/{sample}.log"
-    shell:
-        # kaiju2table -t nodes.dmp -n names.dmp -r genus -o kaiju_summary.tsv kaiju.out
-        "kaiju2table -t {kaiju_db_progenomes_nodes} -n {kaiju_db_progenomes_names} -r phylum -o {output.profile} {input} &> {log}"
+# rule kaiju_to_summarised_table:
+#     input:
+#         output_dirs_dict['kaiju'] + "/kaiju-run/known{known_percent}/{sample}.report",
+#     output:
+#         profile = output_dirs_dict['kaiju'] + "/kaiju/known{known_percent}/{sample}.summary.report",
+#         done=touch(output_dirs_dict['kaiju'] + "/kaiju/known{known_percent}/{sample}.summary.report.done")
+#     conda:
+#         "envs/kaiju.yml"
+#     resources:
+#         mem_mb=4000,
+#         runtime='1h'
+#     log:
+#         output_dirs_dict['kaiju'] + "/logs/kaiju_to_summarised_table/known{known_percent}/{sample}.log"
+#     shell:
+#         # kaiju2table -t nodes.dmp -n names.dmp -r genus -o kaiju_summary.tsv kaiju.out
+#         "kaiju2table -t {kaiju_db_progenomes_nodes} -n {kaiju_db_progenomes_names} -r phylum -o {output.profile} {input} &> {log}"
 
-rule kaiju_to_condensed:
-    input:
-        output_dirs_dict['kaiju'] + "/kaiju/known{known_percent}/{sample}.summary.report",
-    output:
-        profile = output_dirs_dict['kaiju'] + "/kaiju/known{known_percent}/{sample}.profile",
-    conda:
-        "envs/kaiju_to_kingdom.yml"
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    shell:
-        "{workflow.basedir}/../bin/kaiju_to_kingdom_condensed.py --input {input} " \
-        "--sample {wildcards.sample} " \
-        "--data-dir {kaiju_db_original_dir} " \
-        " > {output} "
+# rule kaiju_to_condensed:
+#     input:
+#         output_dirs_dict['kaiju'] + "/kaiju/known{known_percent}/{sample}.summary.report",
+#     output:
+#         profile = output_dirs_dict['kaiju'] + "/kaiju/known{known_percent}/{sample}.profile",
+#     conda:
+#         "envs/kaiju_to_kingdom.yml"
+#     resources:
+#         mem_mb=4000,
+#         runtime='1h'
+#     shell:
+#         "{workflow.basedir}/../bin/kaiju_to_kingdom_condensed.py --input {input} " \
+#         "--sample {wildcards.sample} " \
+#         "--data-dir {kaiju_db_original_dir} " \
+#         " > {output} "
 
 
 ###############################################################################################
@@ -604,64 +604,64 @@ rule kaiju_to_condensed:
 ###############################################################################################
 ######### MAP2B
 
-rule map2b_copy_data:
-    output:
-        db=directory(map2b_db_local),
-        done=touch(output_dirs_dict['map2b'] + "/map2b/data/done")
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    shell:
-        "cp -r {map2b_db} {output.db}/"
+# rule map2b_copy_data:
+#     output:
+#         db=directory(map2b_db_local),
+#         done=touch(output_dirs_dict['map2b'] + "/map2b/data/done")
+#     resources:
+#         mem_mb=4000,
+#         runtime='1h'
+#     shell:
+#         "cp -r {map2b_db} {output.db}/"
 
-rule map2b_sample_setup:
-    input:
-        r1=fastq_dir + "/known{known_percent}/{sample}.1.fq.gz",
-        r2=fastq_dir + "/known{known_percent}/{sample}.2.fq.gz",
-    output:
-        listfile=output_dirs_dict['map2b'] + "/map2b/listfiles/known{known_percent}/{sample}",
-        done=touch(output_dirs_dict['map2b'] + "/map2b/done/setup/known{known_percent}/{sample}.done")
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    shell:
-        "echo {wildcards.sample} {input.r1} {input.r2} |sed 's/ /\t/g' > {output.listfile}"
+# rule map2b_sample_setup:
+#     input:
+#         r1=fastq_dir + "/known{known_percent}/{sample}.1.fq.gz",
+#         r2=fastq_dir + "/known{known_percent}/{sample}.2.fq.gz",
+#     output:
+#         listfile=output_dirs_dict['map2b'] + "/map2b/listfiles/known{known_percent}/{sample}",
+#         done=touch(output_dirs_dict['map2b'] + "/map2b/done/setup/known{known_percent}/{sample}.done")
+#     resources:
+#         mem_mb=4000,
+#         runtime='1h'
+#     shell:
+#         "echo {wildcards.sample} {input.r1} {input.r2} |sed 's/ /\t/g' > {output.listfile}"
 
-rule map2b_run:
-    input:
-        listfile=output_dirs_dict['map2b'] + "/map2b/listfiles/known{known_percent}/{sample}",
-        done=output_dirs_dict['map2b'] + "/map2b/data/done"
-    output:
-        tsv=output_dirs_dict['map2b'] + "/map2b/known{known_percent}/{sample}/Abundance.xls",
-        done=touch(output_dirs_dict['map2b'] + "/map2b/done/run/known{known_percent}/{sample}.done")
-    threads: num_threads
-    resources:
-        mem_mb=16000,
-        runtime='12h'
-    benchmark:
-        benchmark_dir + "/map2b/known{known_percent}/{sample}-"+str(num_threads)+"threads.benchmark"
-    conda:
-        "envs/MAP2B-20230420-conda.yml"
-    log:
-        output_dirs_dict['map2b'] + "/logs/map2b/known{known_percent}/{sample}.log"
-    params:
-        output_dir = lambda wildcards, output: os.path.dirname(output.tsv),
-    shell:
-        "python3 {map2b_checkout_dir}/bin/MAP2B.py -i {input.listfile} -d {map2b_db_local} -o {params.output_dir} -p {threads} &> {log}"
+# rule map2b_run:
+#     input:
+#         listfile=output_dirs_dict['map2b'] + "/map2b/listfiles/known{known_percent}/{sample}",
+#         done=output_dirs_dict['map2b'] + "/map2b/data/done"
+#     output:
+#         tsv=output_dirs_dict['map2b'] + "/map2b/known{known_percent}/{sample}/Abundance.xls",
+#         done=touch(output_dirs_dict['map2b'] + "/map2b/done/run/known{known_percent}/{sample}.done")
+#     threads: num_threads
+#     resources:
+#         mem_mb=16000,
+#         runtime='12h'
+#     benchmark:
+#         benchmark_dir + "/map2b/known{known_percent}/{sample}-"+str(num_threads)+"threads.benchmark"
+#     conda:
+#         "envs/MAP2B-20230420-conda.yml"
+#     log:
+#         output_dirs_dict['map2b'] + "/logs/map2b/known{known_percent}/{sample}.log"
+#     params:
+#         output_dir = lambda wildcards, output: os.path.dirname(output.tsv),
+#     shell:
+#         "python3 {map2b_checkout_dir}/bin/MAP2B.py -i {input.listfile} -d {map2b_db_local} -o {params.output_dir} -p {threads} &> {log}"
 
-rule map2b_to_biobox:
-    input:
-        tsv=output_dirs_dict['map2b'] + "/map2b/known{known_percent}/{sample}/Abundance.xls",
-    output:
-        profile = output_dirs_dict['map2b'] + "/map2b/known{known_percent}/{sample}.profile",
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    shell:
-        "{workflow.basedir}/../bin/map2b_to_condensed.py "
-        "--abundance {input} "
-        "--sample {wildcards.sample} "
-        "> {output} "
+# rule map2b_to_biobox:
+#     input:
+#         tsv=output_dirs_dict['map2b'] + "/map2b/known{known_percent}/{sample}/Abundance.xls",
+#     output:
+#         profile = output_dirs_dict['map2b'] + "/map2b/known{known_percent}/{sample}.profile",
+#     resources:
+#         mem_mb=4000,
+#         runtime='1h'
+#     shell:
+#         "{workflow.basedir}/../bin/map2b_to_condensed.py "
+#         "--abundance {input} "
+#         "--sample {wildcards.sample} "
+#         "> {output} "
 
 ###############################################################################################
 ###############################################################################################

@@ -34,11 +34,11 @@ paired_genomes = (
 paired_genomes.columns = ['sample','example_genome','example_taxonomy']
 
 # Debug
-# tools = ['singlem']
 # relabund_tools = ['sourmash']
 # reads_wise_tools = []
+# novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
+
 tools = relabund_tools + reads_wise_tools
-novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
 print("Profiling {} over {} genomes".format(tools, len(novelties)))
 
 ##################################################################### things that should be in config
@@ -153,7 +153,7 @@ rule tool_relabund_condensed_to_biobox:
     output:
         biobox = output_prefix + "{tool}/biobox/{sample}.biobox",
     conda:
-        "singlem-dev"
+        "envs/singlem.yml"
     shell:
         "{singlem_git_base_directory}/extras/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
         "--output-biobox {output.biobox} --template-biobox {input.truth} "
@@ -246,7 +246,7 @@ rule metaphlan_profile:
         cat_reads = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.cat.fq.gz",
     shell:
         # Concatenate input files because metaphlan can't handle multiple input files
-        "rm -f {output.sgb_report} {params.cat_reads}.bowtie2out.txt; cat {input.r1} {input.r2} > {params.cat_reads} && metaphlan {params.cat_reads} --nproc {threads} --input_type fastq --bowtie2db {metaphlan_db_local1} -o {output.sgb_report} && touch {output.done}"
+        "rm -f {output.sgb_report} {params.cat_reads}.bowtie2out.txt; cat {input.r1} {input.r2} > {params.cat_reads} && metaphlan {params.cat_reads} --index {metaphlan_index} --nproc {threads} --input_type fastq --bowtie2db {metaphlan_db_local1} -o {output.sgb_report} && touch {output.done}"
 
 rule metaphlan_convert_profile_to_GTDB:
     input:
@@ -267,7 +267,7 @@ rule metaphlan_profile_to_condensed:
     params:
         genome_pairs = os.path.join(workflow.basedir, 'genome_pairs.tsv'),
     conda:
-        "singlem-dev"
+        "envs/singlem.yml"
     shell:
         "{workflow.basedir}/../bin/metaphlan_to_condensed.py "
         "--metaphlan {input} "
@@ -314,7 +314,7 @@ rule motus_profile_to_condensed:
     params:
         genome_pairs = os.path.join(workflow.basedir, 'genome_pairs.tsv'),
     conda:
-        "singlem-dev"
+        "envs/singlem.yml"
     shell:
         "{workflow.basedir}/../bin/motus_to_condensed.py --motus {input.report} "
         "--gtdb {motus_gtdb_tsv} "
@@ -397,13 +397,13 @@ rule bracken_to_profile:
     output:
         profile = output_dirs_dict['kraken'] + "/kraken/{sample}.profile",
     conda:
-        "singlem-dev"
+        "envs/singlem.yml"
     shell:
         # Convert reports to singlem condense format
         "mkdir -p {params.biobox_dir} && " \
         "{workflow.basedir}/../bin/kraken_to_condensed.py --report-prefix {params.report_prefix} " \
-        "--bacterial-taxonomy ~/m/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv " \
-        "--archaeal-taxonomy ~/m/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv > {output.profile}"
+        "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \
+        "--archaeal-taxonomy ../ar53_taxonomy_r207.tsv > {output.profile}"
 
 ###############################################################################################
 ###############################################################################################
@@ -477,7 +477,7 @@ rule kaiju_run:
         done=output_dirs_dict['kaiju'] + "/kaiju/data/done"
     benchmark:
         benchmark_dir + "/kaiju/{sample}-"+str(num_threads)+"threads.benchmark"
-    threads: num_threads
+    threads: kraken_num_threads # kaiju can cause RAM issues when many are run at the same time.
     output:
         report=output_dirs_dict['kaiju'] + "/kaiju-run/{sample}.report",
         done=output_dirs_dict['kaiju'] + "/kaiju/{sample}.profile.done"
@@ -608,5 +608,5 @@ rule metabuli_report_to_condensed:
         profile = output_dirs_dict['metabuli'] + "/metabuli/{sample}.profile",
     shell:
         "{workflow.basedir}/../bin/metabuli_to_condensed.py --input {input} " \
-        "--bacterial-taxonomy ~/m/db/gtdb/gtdb_release207/bac120_taxonomy_r207.tsv " \
-        "--archaeal-taxonomy ~/m/db/gtdb/gtdb_release207/ar53_taxonomy_r207.tsv > {output.profile}"
+        "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \
+        "--archaeal-taxonomy ../ar53_taxonomy_r207.tsv > {output.profile}"
