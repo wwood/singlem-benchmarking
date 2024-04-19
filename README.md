@@ -6,10 +6,19 @@ The benchmarks are:
 
 1. `1_novel_strains/` (i.e. 'known species benchmark') - benchmark profilers using communities simulated from genomes which have been assigned taxonomies at the species level in GTDB (the genomes chosen are _not_ representative genomes, however).
 2. `2_phylogenetic_novelty/` - benchmark profilers on community profiles made up of a novel lineage and a known species, at equal abundance. This benchmark tests the ability of profilers to detect and classify new lineages.
+3. `3_cami2_marine` - benchmark profilers on CAMI2 marine datasets, after converting the taxonomy to GTDB R207-based taxonomy.
+4. `4_complex_and_novel` - benchmark profilers on a complex community (defined by the CAMI2 marine coverages), where 0-100% of the community is new in GTDB R214 compared to R207.
+
+To get this repository, git clone with recursive option to get the submodules:
+
+```bash
+git clone --recursive https://github.com/wwood/singlem-benchmarking
+```
 
 To run a benchmark, first create a conda env
 
 ```bash
+cd singlem-benchmarking
 mamba env create -n singlem-benchmarking -f env.yml
 ```
 

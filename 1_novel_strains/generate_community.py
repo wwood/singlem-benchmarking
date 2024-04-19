@@ -30,9 +30,11 @@ __status__ = "Development"
 import argparse
 import logging
 import sys
-import os, re
+import os
 
 import pandas as pd
+import polars as pl
+import pyarrow
 import tempfile
 import extern
 
@@ -47,7 +49,8 @@ if __name__ == '__main__':
     parent_parser.add_argument('--coverage-file', required=True, help='Path to coverage file')
     parent_parser.add_argument('--genome-list', required=True, help='Path to genome list')
     # (env)cl5n007:20221031:~/m/msingle/mess/115_camisim_ish_benchmarking$ \ls -f ~/m/msingle/sam/1_gtdb_r207_smpkg/20220513/shadow_GTDB/genomes |grep GC |sed 's=\(.*\).fna=\1\t/work/microbiome/msingle/sam/1_gtdb_r207_smpkg/20220513/shadow_GTDB/genomes\1.fna=' >shadow_genome_paths.csv
-    parent_parser.add_argument('--gtdb-metadata', required=True, help='Path to GTDB metadata file, for genome length')
+    parent_parser.add_argument('--gtdb-bac-metadata', required=True, help='Path to GTDB metadata file, for genome length')
+    parent_parser.add_argument('--gtdb-ar-metadata', required=True, help='Path to GTDB metadata file, for genome length')
     parent_parser.add_argument('--output-condensed', required=True, help='Path to output file in singlem condensed format')
     parent_parser.add_argument('--output-genomewise-coverage', required=True, help='Path to output file specifying coverage for each strain')
     parent_parser.add_argument('-1', '--read1', required=True, help='Path to output fq.gz file')
@@ -82,7 +85,12 @@ if __name__ == '__main__':
     genomes = pd.read_csv(args.genome_list, sep='\t', header=None, names=['genome','fasta'])
     logging.info(f"Read {len(genomes)} genome fasta paths.")
 
-    metadata = pd.read_csv(args.gtdb_metadata, sep='\t', header=0)
+    bac = pl.read_csv('../bac120_metadata_r207.tsv', separator='\t', infer_schema_length=100000, ignore_errors=True)
+    ar = pl.read_csv('../ar53_metadata_r207.tsv', separator='\t', infer_schema_length=100000, ignore_errors=True)
+    metadata = pl.concat([
+        bac.select('accession', 'genome_size', 'gtdb_taxonomy'),
+        ar.select('accession', 'genome_size', 'gtdb_taxonomy'),
+    ]).to_pandas()
     logging.info(f"Read {len(metadata)} GTDB metadata entries.")
 
     metadata['genome'] = [g[3:] for g in metadata['accession']] # get rid of GB_, RS_
@@ -91,6 +99,9 @@ if __name__ == '__main__':
     metadata = metadata.sample(frac=1)
 
     g2 = pd.merge(genomes, metadata, on='genome', how='inner')
+
+    # Make paths absolute so that they work in a tempdir
+    g2['fasta'] = g2['fasta'].apply(lambda x: os.path.abspath(x))
 
     read_length = 150
 

@@ -365,8 +365,8 @@ rule bracken_to_profile:
         # Convert reports to singlem condense format
         "mkdir -p {params.biobox_dir} && " \
         "{workflow.basedir}/../bin/kraken_to_condensed.py --report-prefix {params.report_prefix} " \
-        "--bacterial-taxonomy bac120_taxonomy_r207.tsv " \
-        "--archaeal-taxonomy ar53_taxonomy_r207.tsv > {output.profile} 2> {log}"
+        "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \
+        "--archaeal-taxonomy ../ar53_taxonomy_r207.tsv > {output.profile} 2> {log}"
 
 ###############################################################################################
 ###############################################################################################

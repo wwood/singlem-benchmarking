@@ -36,4 +36,3 @@ tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b'
 tools_with_filled_output_profiles = ('kraken','metabuli','sourmash')
 
 r207_tools = ['singlem', 'metaphlan', 'kraken', 'sourmash', 'metabuli']
-

@@ -7,3 +7,4 @@ dependencies:
   - pandas
   - extern
   - polars
+  - pyarrow

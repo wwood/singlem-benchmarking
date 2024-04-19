@@ -29,8 +29,8 @@ datasets = [datasets[6]] # debug
 
 ##################################################################### things that should be in config
 
-gtdb_bac_metadata = '/work/microbiome/db/gtdb/gtdb_release207/bac120_metadata_r207.tsv'
-
+gtdb_bac_metadata = '../bac120_metadata_r207.tsv'
+gtdb_ar_metadata = '../ar53_metadata_r207.tsv'
 
 ##################################################################### reference databases
 
@@ -88,7 +88,7 @@ rule generate_community_and_reads:
     conda:
         'envs/art.yml'
     shell:
-        "{workflow.basedir}/generate_community.py --art art_illumina --threads {threads} --coverage-file {workflow.basedir}/coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-metadata {gtdb_bac_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --output-genomewise-coverage {output.genomewise}"
+        "{workflow.basedir}/generate_community.py --art art_illumina --threads {threads} --coverage-file {workflow.basedir}/coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-bac-metadata {gtdb_bac_metadata} --gtdb-ar-metadata {gtdb_ar_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --output-genomewise-coverage {output.genomewise}"
 
 rule truth_condensed_to_biobox:
     input:
@@ -102,7 +102,7 @@ rule truth_condensed_to_biobox:
         "--output-biobox {output.biobox}"
 
 def get_condensed_to_biobox_extra_args(tool):
-    if tool in ('kraken','metabuli'):
+    if tool in tools_with_filled_output_profiles:
         return ' --no-fill'
     else:
         return ''

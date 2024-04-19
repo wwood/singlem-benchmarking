@@ -57,7 +57,8 @@ if __name__ == '__main__':
     parent_parser.add_argument('--novel-genome-gtdbtk-output', required=True, help='Path to where new genomes have been run through gtdbtk')
     parent_parser.add_argument('--novel-genome-list', required=True, help='Path to genome list')
     parent_parser.add_argument('--percent-known', required=True, help='Percent of known genomes to use (percent, not fraction)')
-    parent_parser.add_argument('--gtdb-metadata', required=True, help='Path to GTDB metadata file, for genome length')
+    parent_parser.add_argument('--gtdb-bac-metadata', required=True, help='Path to GTDB metadata file, for genome length')
+    parent_parser.add_argument('--gtdb-ar-metadata', required=True, help='Path to GTDB metadata file, for genome length')
     parent_parser.add_argument('--output-condensed', required=True, help='Path to output file in singlem condensed format')
     parent_parser.add_argument('-1', '--read1', required=True, help='Path to output fq.gz file')
     parent_parser.add_argument('-2', '--read2', required=True, help='Path to output fq.gz file')
@@ -122,8 +123,12 @@ if __name__ == '__main__':
 
 
 # %%
-
-    metadata = pl.read_csv(args.gtdb_metadata, separator='\t', infer_schema_length=1000000)
+    bac = pl.read_csv('../bac120_metadata_r207.tsv', separator='\t', infer_schema_length=100000, ignore_errors=True)
+    ar = pl.read_csv('../ar53_metadata_r207.tsv', separator='\t', infer_schema_length=100000, ignore_errors=True)
+    metadata = pl.concat([
+        bac.select('accession', 'genome_size', 'gtdb_taxonomy'),
+        ar.select('accession', 'genome_size', 'gtdb_taxonomy'),
+    ])
     logging.info(f"Read {len(metadata)} GTDB metadata entries.")
     # metadata[:3]
 
@@ -180,7 +185,8 @@ if __name__ == '__main__':
     
     chosen_df.shape, chosen_df[:3], chosen_df[-3:]
 
-# %%
+    # Make paths absolute so that they work in a tempdir
+    chosen_df = chosen_df.with_columns(pl.col('path').map(lambda x: os.path.abspath(x)))
 
     read_length = 150
 

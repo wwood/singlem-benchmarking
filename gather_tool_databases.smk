@@ -40,6 +40,7 @@ rule all:
     input:
         [join(output_directory, f'{tool}.done') for tool in tools],
         join(output_directory, 'gtdb.done'),
+        join(output_directory, 'shadow-genomes.done'),
 
 rule metaphlan:
     output:
@@ -258,3 +259,44 @@ rule gtdb_extract:
         join(output_directory, 'gtdb-extract.log')
     shell:
         'tar -xzf {input.tar} &> {log}'
+
+rule shadow_genomes_download:
+    output:
+        done=touch(join(output_directory, 'shadow-genomes-download.done')),
+    log:
+        join(output_directory, 'shadow-genomes-download.log')
+    shell:
+        "cd {output_directory} && datasets download genome accession --inputfile ../1_novel_strains/shadow_genome_ids.txt &> {log} ; cd -"
+        
+rule shadow_genomes_extract:
+    input:
+        done=join(output_directory, 'shadow-genomes-download.done'),
+    output:
+        done=touch(join(output_directory, 'shadow-genomes.done')),
+    log:
+        join(output_directory, 'shadow-genomes.log')
+    shell:
+        'notathing'
+
+rule genome_pairs_download:
+    output:
+        done=touch(join(output_directory, 'genome-pairs-download.done')),
+    log:
+        join(output_directory, 'genome-pairs-download.log')
+    shell:
+        """
+        cd 2_phylogenetic_novelty
+        cd genomes
+        datasets download genome accession --inputfile ../genome_accessions.txt
+        unzip ncbi_dataset.zip
+
+        # Rename files to simple names (e.g. GCA_000508305.1_genomic.fna)
+        parallel --col-sep "\t" cp {1} {2} :::: ../genome_ncbi_names.tsv
+
+        cd ../genome_pairs
+        datasets download genome accession --inputfile ../genome_pairs_accessions.txt
+        unzip ncbi_dataset.zip
+
+        # Rename files to simple names (e.g. GCA_000508305.1_genomic.fna)
+        parallel --col-sep "\t" cp {1} {2} :::: ../genome_pairs_ncbi_names.tsv
+        """

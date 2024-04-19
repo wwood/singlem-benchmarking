@@ -33,9 +33,9 @@ novel_genome_list = 'gtdbtk_batchfile.random1000.csv'
 tools = r207_tools
 
 # debug
-# datasets = datasets = datasets[:1]
-# tools = ['metaphlan']
-# known_species_fractions = [10]
+datasets = datasets = datasets[:1]
+# tools = ['singlem']
+known_species_fractions = [10]
 # tools = ['singlem', 'metaphlan', 'sourmash', 'metabuli']
 
 ##################################################################### things that should be in config
@@ -136,7 +136,7 @@ rule truth_condensed_to_biobox:
         "--output-biobox {output.biobox}"
 
 def get_condensed_to_biobox_extra_args(tool):
-    if tool in ('kraken','metabuli'):
+    if tool in tools_with_filled_output_profiles:
         return ' --no-fill'
     else:
         return ''
@@ -496,7 +496,7 @@ rule sourmash_run:
     shell:
         # Sourmash does not seem to have a --threads option
         # sourmash tax annotate creates a file with-lineages in the CWD, so we need to cd into the output dir before running it
-        "bash -c sourmash sketch dna -p k=31,abund --merge blah -o {params.sourmash_prefix}.sig {input.r1} {input.r2} "\
+        "bash -c 'sourmash sketch dna -p k=31,abund --merge blah -o {params.sourmash_prefix}.sig {input.r1} {input.r2} "\
         "&& echo \"running gather..\" "\
         "&& sourmash gather -k 31 --dna {params.sourmash_prefix}.sig {sourmash_db_dna} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv "\
         "&& echo \"running tax ..\" "\
@@ -511,7 +511,7 @@ rule sourmash_to_condensed:
         mem_mb=4000,
         runtime='1h'
     shell:
-        "{workflow.basedir}/../bin/sourmash_to_condensed.py --with-lineages {input} " \
+        "{workflow.basedir}/../bin/sourmash_to_condensed.py --summary-csv {input} " \
         "--sample {wildcards.sample} " \
         " > {output} "
 
@@ -670,7 +670,7 @@ rule sourmash_to_condensed:
 
 rule metabuli_copy_db:
     input:
-        db=metabuli_db,
+        db=metabuli_db_dir,
     output:
         db=directory(metabuli_db_local),
         done=touch(output_dirs_dict['metabuli'] + "/metabuli/data/done")
