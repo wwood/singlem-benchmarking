@@ -25,7 +25,7 @@ tools = r207_tools
 
 # debug
 # tools = ['singlem']
-datasets = [datasets[6]] # debug
+# datasets = [datasets[6]] # debug
 
 ##################################################################### things that should be in config
 
@@ -592,7 +592,7 @@ rule metabuli_run:
     output:
         report=output_dirs_dict['metabuli'] + "/output/{sample}_report.tsv",
         done=touch(output_dirs_dict['metabuli'] + "/output/{sample}.done")
-    threads: num_threads
+    threads: kraken_num_threads
     benchmark:
         benchmark_dir + "/metabuli/{sample}-"+str(num_threads)+"threads.benchmark"
     conda:
