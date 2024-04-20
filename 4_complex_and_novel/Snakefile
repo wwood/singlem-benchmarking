@@ -2,6 +2,8 @@
 import extern
 import os
 
+# Add the parent directory to sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(workflow.snakefile)), '..')))
 from tool_reference_data import *
 
 num_threads = config['benchmarking_threads']
@@ -33,14 +35,13 @@ novel_genome_list = 'gtdbtk_batchfile.random1000.csv'
 tools = r207_tools
 
 # debug
-datasets = datasets = datasets[:1]
+# datasets = datasets = datasets[:1]
 # tools = ['singlem']
-known_species_fractions = [10]
+# known_species_fractions = [10]
 # tools = ['singlem', 'metaphlan', 'sourmash', 'metabuli']
 
 ##################################################################### things that should be in config
 
-gtdb_bac_metadata = '../bac120_metadata_r207.tsv'
 gtdb_bac_taxonomy = '../bac120_taxonomy_r207.tsv'
 gtdb_ar_taxonomy = '../ar53_taxonomy_r207.tsv'
 
@@ -98,10 +99,10 @@ rule generate_community_and_reads:
         coverage_number = lambda wildcards: wildcards.sample.replace('marine', ''),
     log:
         fastq_dir + "/known{known_percent}/{sample}.log"
-    threads: num_threads
+    threads: 8
     resources:
-        mem_mb=4000,
-        runtime='1h'
+        mem_mb=8000,
+        runtime='24h'
     conda:
         'envs/art.yml'
     shell:
@@ -109,7 +110,7 @@ rule generate_community_and_reads:
         " --art art_illumina " \
         " --threads {threads}" \
         " --coverage-file {workflow.basedir}/coverage_definitions/coverage{params.coverage_number}.tsv" \
-        " --gtdb-metadata {gtdb_bac_metadata}" \
+        " --gtdb-bac-metadata {gtdb_bac_metadata} --gtdb-ar-metadata {gtdb_ar_metadata}" \
         " --known-genome-list {known_genome_fasta_paths}" \
         " --novel-genome-gtdbtk-output {novel_genomes_gtdbtk_output_directory}" \
         " --novel-genome-list {novel_genome_list}" \
@@ -495,7 +496,6 @@ rule sourmash_run:
         output_dirs_dict['sourmash'] + "/logs/sourmash/known{known_percent}/{sample}.log"
     shell:
         # Sourmash does not seem to have a --threads option
-        # sourmash tax annotate creates a file with-lineages in the CWD, so we need to cd into the output dir before running it
         "bash -c 'sourmash sketch dna -p k=31,abund --merge blah -o {params.sourmash_prefix}.sig {input.r1} {input.r2} "\
         "&& echo \"running gather..\" "\
         "&& sourmash gather -k 31 --dna {params.sourmash_prefix}.sig {sourmash_db_dna} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv "\

@@ -6,6 +6,8 @@ from tool_reference_data import *
 
 num_threads = config['benchmarking_threads']
 kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
+if 'kraken_threads' in config:
+    kraken_num_threads = config['kraken_threads']
 
 output_prefix = 'output_'
 output_dirs = list([output_prefix+tool for tool in tools])
@@ -26,11 +28,6 @@ tools = r207_tools
 # debug
 # tools = ['singlem']
 # datasets = [datasets[6]] # debug
-
-##################################################################### things that should be in config
-
-gtdb_bac_metadata = '../bac120_metadata_r207.tsv'
-gtdb_ar_metadata = '../ar53_metadata_r207.tsv'
 
 ##################################################################### reference databases
 

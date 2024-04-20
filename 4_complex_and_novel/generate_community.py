@@ -186,7 +186,7 @@ if __name__ == '__main__':
     chosen_df.shape, chosen_df[:3], chosen_df[-3:]
 
     # Make paths absolute so that they work in a tempdir
-    chosen_df = chosen_df.with_columns(pl.col('path').map(lambda x: os.path.abspath(x)))
+    chosen_df = chosen_df.with_columns(pl.col('path').map_elements(lambda x: os.path.abspath(x)))
 
     read_length = 150
 
