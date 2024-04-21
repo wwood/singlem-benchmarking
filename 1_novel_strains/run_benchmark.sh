@@ -8,4 +8,4 @@
 rm -rf benchmarks
 rm -rf output*
 
-snakemake -c 1 --use-conda --conda-frontend mamba --configfile config-benchmarking.yaml
+snakemake -c 1 --use-conda --conda-frontend mamba --snakefile run_benchmarks.smk output_metaphlan/done --configfile config-benchmarking.yaml
