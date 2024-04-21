@@ -15,8 +15,6 @@ sys.path.append(os.path.abspath(os.path.dirname(os.path.abspath(workflow.snakefi
 from bench1_setup import *
 
 generated_fastq_dir = os.path.join(workflow.basedir, 'generated_reads')
-generated_fastq_dir = '/work/microbiome/msingle/mess/124_singlem-benchmarking/1_novel_strains/generated_reads' # For benchmarking from local disk within PBS
-
 fastq_dir = os.path.join(workflow.basedir, 'local_reads')
 
 #####################################################################
