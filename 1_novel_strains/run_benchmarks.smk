@@ -37,9 +37,9 @@ rule all_metaphlan:
         touch(output_prefix + "metaphlan/done")
 
 rule copy_reads_to_local:
-    input:
-        r1=generated_fastq_dir + "/{sample}.1.fq.gz",
-        r2=generated_fastq_dir + "/{sample}.2.fq.gz",
+    # input:
+    #     r1=generated_fastq_dir + "/{sample}.1.fq.gz",
+    #     r2=generated_fastq_dir + "/{sample}.2.fq.gz",
     output:
         r1=fastq_dir + "/{sample}.1.fq.gz",
         r2=fastq_dir + "/{sample}.2.fq.gz",
