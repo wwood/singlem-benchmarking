@@ -5,10 +5,19 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(workflow.snakefile)), '..')))
 from tool_reference_data import *
 
+num_threads = config['benchmarking_threads']
+kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
+if 'kraken_threads' in config:
+    kraken_num_threads = config['kraken_threads']
+truth_dir = os.path.join(workflow.basedir, 'truths')
+
 sys.path.append(os.path.abspath(os.path.dirname(os.path.abspath(workflow.snakefile))))
 from bench1_setup import *
 
+generated_fastq_dir = os.path.join(workflow.basedir, 'generated_reads')
+generated_fastq_dir = '/work/microbiome/msingle/mess/124_singlem-benchmarking/1_novel_strains/generated_reads' # For benchmarking from local disk within PBS
 
+fastq_dir = os.path.join(workflow.basedir, 'local_reads')
 
 #####################################################################
 
@@ -17,32 +26,28 @@ rule all:
     input:
         expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools)
 
-rule generate_community_and_reads:
+rule all_kraken:
+    input:
+        expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=datasets, tool=['kraken'])
+    output:
+        touch(output_prefix + "kraken/done")
+
+rule all_metaphlan:
+    input:
+        expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=datasets, tool=['metaphlan'])
+    output:
+        touch(output_prefix + "metaphlan/done")
+
+rule copy_reads_to_local:
+    input:
+        r1=generated_fastq_dir + "/{sample}.1.fq.gz",
+        r2=generated_fastq_dir + "/{sample}.2.fq.gz",
     output:
         r1=fastq_dir + "/{sample}.1.fq.gz",
         r2=fastq_dir + "/{sample}.2.fq.gz",
-        condensed = truth_dir + "/{sample}.condensed",
-        genomewise = truth_dir + "/{sample}.genomewise.csv",
-        done = touch(truth_dir + "/{sample}.finished"),
-        done2 = touch(fastq_dir + "/{sample}.finished"),
-    params:
-        coverage_number = lambda wildcards: wildcards.sample.replace('marine', ''),
-    threads: num_threads
-    conda:
-        'envs/art.yml'
+        done=touch(fastq_dir + "/{sample}.done")
     shell:
-        "{workflow.basedir}/generate_community.py --art art_illumina --threads {threads} --coverage-file {workflow.basedir}/coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-bac-metadata {gtdb_bac_metadata} --gtdb-ar-metadata {gtdb_ar_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --output-genomewise-coverage {output.genomewise}"
-
-rule truth_condensed_to_biobox:
-    input:
-        condensed = truth_dir + "/{sample}.condensed",
-    output:
-        biobox = truth_dir + "/{sample}.condensed.biobox",
-    conda:
-        "envs/singlem.yml"
-    shell:
-        "{workflow.basedir}/../bin/condensed_profile_to_biobox.py --input-condensed-table {input.condensed} " \
-        "--output-biobox {output.biobox}"
+        "cp {input.r1} {output.r1} && cp {input.r2} {output.r2}"
 
 def get_condensed_to_biobox_extra_args(tool):
     if tool in tools_with_filled_output_profiles:

@@ -1,4 +1,4 @@
-#!/bin/bash -e -o pipefail
+#!/bin/bash -e
 
 # Run this in the queue using
 
