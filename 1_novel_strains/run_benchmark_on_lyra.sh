@@ -10,10 +10,11 @@ cd checkout
 ln -s ~/m/msingle/mess/124_singlem-benchmarking/bac120_metadata_r207.tsv
 ln -s /home/woodcrob/m/msingle/mess/124_singlem-benchmarking/reference_genomes
 ln -s /home/woodcrob/m/msingle/mess/124_singlem-benchmarking/tool_reference_data
+
+cd 1_novel_strains
 ln -s /home/woodcrob/m/msingle/mess/124_singlem-benchmarking/generated_reads
 ln -s /home/woodcrob/m/msingle/mess/124_singlem-benchmarking/truths
 
-cd 1_novel_strains
 git log |head -1
 
 ./run_benchmark.sh
