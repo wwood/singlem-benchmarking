@@ -57,13 +57,12 @@ rule tool_condensed_to_biobox:
     input:
         profile = output_prefix + "{tool}/{tool}/{sample}.profile",
     params:
+        truth = truth_dir + "/{sample}.condensed.biobox",
         extra_args = lambda wildcards: get_condensed_to_biobox_extra_args(wildcards.tool)
     output:
         biobox = output_prefix + "{tool}/biobox/{sample}.biobox",
     conda:
         "envs/singlem.yml"
-    params:
-        truth = truth_dir + "/{sample}.condensed.biobox",
     shell:
         "{workflow.basedir}/../bin/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
         "--output-biobox {output.biobox} --template-biobox {params.truth} "

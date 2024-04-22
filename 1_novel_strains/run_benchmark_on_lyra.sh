@@ -2,7 +2,7 @@
 
 # Run this in the queue using
 
-# mqsub -m 250 --run-tmp-dir -t 1 -- run_benchmark_on_lyra.sh
+# ~/m/msingle/mess/124_singlem-benchmarking/1_novel_strains/full_run9$ rm -rf checkout/; mqsub --run-tmp-dir -t1 --days 3 -m 32 -- bash ~/m/msingle/mess/124_singlem-benchmarking/1_novel_strains/run_benchmark_on_lyra.sh
 
 git clone /home/woodcrob/m/msingle/mess/124_singlem-benchmarking/ checkout
 
