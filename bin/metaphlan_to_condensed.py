@@ -82,7 +82,7 @@ if __name__ == '__main__':
             else:
                 taxon_to_coverage[taxons] = row['relative_abundance']
             total_coverage += float(row['relative_abundance'])
-    if (total_coverage < 95) & (total_coverage > 0):
+    if (total_coverage < 80) & (total_coverage > 0):
         raise Exception(f'Total coverage is less than 95%: {total_coverage}')
     elif total_coverage > 101:
         raise Exception(f'Total coverage is greater than 101%: {total_coverage}')

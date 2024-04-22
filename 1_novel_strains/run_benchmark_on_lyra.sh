@@ -12,8 +12,8 @@ ln -s /home/woodcrob/m/msingle/mess/124_singlem-benchmarking/reference_genomes
 ln -s /home/woodcrob/m/msingle/mess/124_singlem-benchmarking/tool_reference_data
 
 cd 1_novel_strains
-ln -s /home/woodcrob/m/msingle/mess/124_singlem-benchmarking/generated_reads
-ln -s /home/woodcrob/m/msingle/mess/124_singlem-benchmarking/truths
+ln -s /home/woodcrob/m/msingle/mess/124_singlem-benchmarking/1_novel_strains/generated_reads
+ln -s /home/woodcrob/m/msingle/mess/124_singlem-benchmarking/1_novel_strains/truths
 
 git log |head -1
 
