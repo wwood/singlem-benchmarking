@@ -37,15 +37,15 @@ rule all_metaphlan:
         touch(output_prefix + "metaphlan/done")
 
 rule copy_reads_to_local:
-    # input:
-    #     r1=generated_fastq_dir + "/{sample}.1.fq.gz",
-    #     r2=generated_fastq_dir + "/{sample}.2.fq.gz",
+    params:
+        r1=generated_fastq_dir + "/{sample}.1.fq.gz",
+        r2=generated_fastq_dir + "/{sample}.2.fq.gz",
     output:
         r1=fastq_dir + "/{sample}.1.fq.gz",
         r2=fastq_dir + "/{sample}.2.fq.gz",
         done=touch(fastq_dir + "/{sample}.done")
     shell:
-        "cp {input.r1} {output.r1} && cp {input.r2} {output.r2}"
+        "cp {params.r1} {output.r1} && cp {params.r2} {output.r2}"
 
 def get_condensed_to_biobox_extra_args(tool):
     if tool in tools_with_filled_output_profiles:
