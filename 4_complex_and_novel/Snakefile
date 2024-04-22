@@ -8,6 +8,8 @@ from tool_reference_data import *
 
 num_threads = config['benchmarking_threads']
 kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
+if 'kraken_threads' in config:
+    kraken_num_threads = config['kraken_threads']
 
 tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'map2b', 'kaiju', 'metabuli']
 
@@ -374,7 +376,7 @@ rule kraken_run:
         copy_braken_data_done=output_dirs_dict['kraken'] + "/kraken/data/done"
     benchmark:
         benchmark_dir + "/kraken/known{known_percent}/{sample}-"+str(num_threads)+"threads.benchmark"
-    threads: kraken_num_threads
+    threads: min(kraken_num_threads, num_threads)
     resources:
         mem_mb=400000,
         runtime='1h'
