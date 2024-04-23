@@ -73,13 +73,12 @@ rule opal:
     params:
         output_dir = output_prefix+"{tool}",
         output_opal_dir = output_prefix+"{tool}/opal/{sample}.opal_output_directory",
+        truth = truth_dir + "/{sample}.condensed.biobox",
     output:
         report=output_prefix+"{tool}/opal/{sample}.opal_report",
         done=output_prefix+"{tool}/opal/{sample}.opal_report.done",
     conda:
         'envs/opal.yml'
-    params:
-        truth = truth_dir + "/{sample}.condensed.biobox",
     shell:
         "opal.py -g {params.truth} -o {params.output_opal_dir} {input.biobox} || echo 'expected opal non-zero existatus'; mv {params.output_opal_dir}/results.tsv {output.report} && rm -rf {params.output_opal_dir} && touch {output.done}"
 
