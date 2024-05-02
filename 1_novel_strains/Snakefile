@@ -5,17 +5,27 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(workflow.snakefile)), '..')))
 from tool_reference_data import *
 
+num_threads = config['benchmarking_threads']
+kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
+if 'kraken_threads' in config:
+    kraken_num_threads = config['kraken_threads']
+truth_dir = os.path.join(workflow.basedir, 'truths')
+genome_fasta_paths = os.path.join(workflow.basedir, 'shadow_genome_paths.csv')
+coverage_definitions_folder = 'coverage_definitions'
+
 sys.path.append(os.path.abspath(os.path.dirname(os.path.abspath(workflow.snakefile))))
 from bench1_setup import *
 
-
+generated_fastq_dir = os.path.join(workflow.basedir, 'generated_reads')
+fastq_dir = os.path.join(workflow.basedir, 'local_reads')
 
 #####################################################################
 
 
 rule all:
     input:
-        expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools)
+        expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools),
+        expand(output_prefix+"{tool}/opal_low_abund/{sample}.opal_report", sample=datasets, tool=tools),
 
 rule generate_community_and_reads:
     output:
@@ -79,6 +89,60 @@ rule opal:
     shell:
         "opal.py -g {input.truth} -o {params.output_opal_dir} {input.biobox} || echo 'expected opal non-zero existatus'; mv {params.output_opal_dir}/results.tsv {output.report} && rm -rf {params.output_opal_dir} && touch {output.done}"
 
+###############################################################################################
+###############################################################################################
+###############################################################################################
+## low abundance removal
+
+def get_remove_low_abund_extra_args(tool):
+    if tool in tools_with_filled_output_profiles:
+        return ' --is-filled'
+    else:
+        return ''
+
+rule remove_low_abundance_from_condensed:
+    input:
+        profile = output_prefix + "{tool}/{tool}/{sample}.profile",
+    params:
+        extra_args = lambda wildcards: get_remove_low_abund_extra_args(wildcards.tool)
+    output:
+        profile = output_prefix + "{tool}/low_abund/{sample}.profile",
+    log:
+        output_prefix + "{tool}/low_abund/{sample}.log",
+    conda:
+        "envs/singlem.yml"
+    shell:
+        # Threshold is 0.02% since total coverage in the truth is ~1704.973095 adn 0.35 divided by that is 0.02%
+        "{workflow.basedir}/../bin/remove_low_abundance_from_condensed.py {params.extra_args} --input-condensed {input.profile} " \
+        "--threshold 0.0002 > {output.profile} 2> {log}"
+
+rule tool_condensed_to_biobox_low_abund:
+    input:
+        profile = output_prefix + "{tool}/low_abund/{sample}.profile",
+        truth = truth_dir + "/{sample}.condensed.biobox",
+    params:
+        extra_args = lambda wildcards: get_condensed_to_biobox_extra_args(wildcards.tool)
+    output:
+        biobox = output_prefix + "{tool}/low_abund/{sample}.biobox",
+    conda:
+        "envs/singlem.yml"
+    shell:
+        "{workflow.basedir}/../bin/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
+        "--output-biobox {output.biobox} --template-biobox {input.truth} "
+
+rule opal_low_abund:
+    input:
+        biobox = output_prefix+"{tool}/low_abund/{sample}.biobox",
+        truth = truth_dir + "/{sample}.condensed.biobox",
+    params:
+        output_opal_dir = output_prefix+"{tool}/opal_low_abund/{sample}.opal_output_directory",
+    output:
+        report=output_prefix+"{tool}/opal_low_abund/{sample}.opal_report",
+        done=touch(output_prefix+"{tool}/opal_low_abund/{sample}.opal_report.done"),
+    conda:
+        'envs/opal.yml'
+    shell:
+        "opal.py -g {input.truth} -o {params.output_opal_dir} {input.biobox} || echo 'expected opal non-zero existatus'; mv {params.output_opal_dir}/results.tsv {output.report} && rm -rf {params.output_opal_dir}"
 
 ###############################################################################################
 ###############################################################################################

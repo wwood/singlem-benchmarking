@@ -36,6 +36,12 @@ rule all_metaphlan:
     output:
         touch(output_prefix + "metaphlan/done")
 
+rule all_singlem:
+    input:
+        expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=datasets, tool=['singlem'])
+    output:
+        touch(output_prefix + "singlem/done")
+
 rule copy_reads_to_local:
     params:
         r1=generated_fastq_dir + "/{sample}.1.fq.gz",

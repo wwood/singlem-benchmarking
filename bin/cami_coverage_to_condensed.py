@@ -44,8 +44,9 @@ if __name__ == '__main__':
     parent_parser.add_argument('--quiet', help='only output errors', action="store_true")
 
     parent_parser.add_argument('--gtdbtk-output-directory', help='GTDB-Tk output directory', required=True)
-    parent_parser.add_argument('--abundance-file', help='Abundance file from CAMI', required=True)
     parent_parser.add_argument('--genome-to-id', help='Mapping from genome to ID', required=True)
+    parent_parser.add_argument('--genome-lengths-directory', help='Directory of genome lengths', required=True)
+    parent_parser.add_argument('--read-mapping-counts', help='Read mapping counts', required=True)
 
     args = parent_parser.parse_args()
 
@@ -58,6 +59,17 @@ if __name__ == '__main__':
         loglevel = logging.INFO
     logging.basicConfig(level=loglevel, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
+    # Get the genome lengths of each CAMI genome
+    genome_to_length = {}
+    for tsv in os.listdir(args.genome_lengths_directory):
+        if 'tsv' not in tsv:
+            continue
+        gdf = pl.read_csv(os.path.join(args.genome_lengths_directory, tsv), separator='\t', has_header=False)
+        cami_genome_name = os.path.basename(tsv).replace('.fasta.tsv','')
+        genome_length = gdf['column_2'].sum()
+        genome_to_length[cami_genome_name] = genome_length
+    logging.info("Read in %d genome lengths" % len(genome_to_length))
+
     # Read genome to Id mapping
     # Otu520.0        /net/sgi/cami/data/CAMI2/nwillassen_data/marine/simulation_short_read/genomes/Filomicrobium_sp_W1_genomic.fasta
     # Otu1947 /net/sgi/cami/data/CAMI2/nwillassen_data/marine/simulation_short_read/genomes/Shewanella_sp_MR-4_genomic.fasta
@@ -67,6 +79,11 @@ if __name__ == '__main__':
     genome_to_id = {}
     for row in genome_to_id_df.rows():
         genome_to_id[row[0]] = os.path.basename(row[1]).replace('.fasta','')
+
+    # (coverm-v0.7.0)cl5n006:20240501:~/m/msingle/mess/124_singlem-benchmarking/3_cami2_marine$ seq 0 9 |parallel pigz -cd ../../114_cami2_benchmarking/data/marine/short_read/simulation_short_read/'*'_sample_{}/reads/reads_mapping.tsv.gz '|'cut -f2 '|'sort '|'uniq -c '|'sed '"s/^  *//g"' '>' read_mapping_counts/marine{}.tsv
+    mapping_counts = pl.read_csv(args.read_mapping_counts, separator=' ', has_header=False).filter(pl.col('column_2') != 'genome_id')
+    mapping_counts.columns = ['read_count','otu']
+    mapping_counts = mapping_counts.with_columns(pl.col('otu').map_dict(genome_to_id).alias('cami_name'))
 
     # Read in taxons from GTDB-Tk
     taxonomies = {}
@@ -87,18 +104,16 @@ if __name__ == '__main__':
     logging.info("Read %d taxonomies after Archaea" % len(taxonomies))
 
     print('sample\tcoverage\ttaxonomy')
-    abundances = pd.read_csv(args.abundance_file, sep='\t', header=None)
-    abundances.columns=['otu','abund']
     taxon_abundances = {}
-    for i, row in abundances.iterrows():
+    for row in mapping_counts.rows(named=True):
         otu = row['otu']
-        abund = row['abund']
+        abund = row['read_count'] * 150 / genome_to_length[row['cami_name']]
+        cami_name = row['cami_name']
         if 'RNODE' in otu:
-            continue # Ignore plasmids etc
-        if otu in genome_to_id:
-            otu = genome_to_id[otu]
-        if otu in taxonomies:
-            tax = taxonomies[otu]
+            continue  # Ignore plasmids etc
+
+        if cami_name in taxonomies:
+            tax = taxonomies[cami_name]
 
             # Remove empty taxon strings because they mess up biobox creation
             tax_splits = [s.strip() for s in tax.split(';')]
@@ -119,12 +134,12 @@ if __name__ == '__main__':
                 taxon_abundances[tax] = 0
             taxon_abundances[tax] += abund
         else:
-            logging.warning('No taxonomy for %s' % otu)
+            logging.warning('No taxonomy for %s' % cami_name)
 
     # Sort so biobox creation sees less defined taxons before more defined ones and doesn't croak.
     for tax in sorted(taxon_abundances.keys()):
         abund = taxon_abundances[tax]
         if abund > 0:
-            print('%s\t%f\t%s' % (os.path.basename(args.abundance_file).replace('.tsv','').replace('coverage','marine'), abund, 'Root;'+tax))
+            print('%s\t%f\t%s' % (os.path.basename(args.read_mapping_counts).replace('.tsv',''), abund, 'Root;'+tax))
 
 

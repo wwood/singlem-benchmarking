@@ -31,6 +31,8 @@ print("Profiling {} over {} communities".format(tools, len(datasets)))
 
 gtdbtk_output_dir = 'gtdbtk_r207'
 genome_to_id_file = 'marine/simulation_short_read/genome_to_id.tsv'
+read_counts_directory = 'read_mapping_counts'
+genome_lengths_directory = 'genome_lengths'
 # Otu520.0        /net/sgi/cami/data/CAMI2/nwillassen_data/marine/simulation_short_read/genomes/Filomicrobium_sp_W1_genomic.fasta
 # Otu1947 /net/sgi/cami/data/CAMI2/nwillassen_data/marine/simulation_short_read/genomes/Shewanella_sp_MR-4_genomic.fasta
 # Otu806.0        /net/sgi/cami/data/CAMI2/nwillassen_data/marine/simulation_short_read/genomes/Shewanella_violacea_DSS12_genomic.fasta
@@ -81,8 +83,9 @@ rule generate_truth_condensed_format:
         coverage_number = lambda wildcards: wildcards.sample.replace('marine', ''),
     shell:
         "{workflow.basedir}/../bin/cami_coverage_to_condensed.py --gtdbtk-output-directory {gtdbtk_output_dir} " \
-        "--abundance-file coverage_definitions/coverage{params.coverage_number}.tsv " \
         "--genome-to-id marine/simulation_short_read/genome_to_id.tsv " \
+        "--genome-lengths-directory {genome_lengths_directory} " \
+        "--read-mapping-counts {read_counts_directory}/{wildcards.sample}.tsv " \
         ">{output.condensed}"
 
 rule truth_condensed_to_biobox:
