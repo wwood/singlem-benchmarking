@@ -205,7 +205,7 @@ rule singlem_run_to_profile:
     threads:
         1
     shell:
-        "~/git/singlem/bin/singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} && touch {output.done}"
+        "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} && touch {output.done}"
 
 
 ###############################################################################################

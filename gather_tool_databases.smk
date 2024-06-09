@@ -61,16 +61,6 @@ rule kraken_download:
     shell:
         "mkdir -pv {kraken_db} && cd {kraken_db} && wget --no-directories -r -np -e robots=off http://ftp.tue.mpg.de/ebio/projects/struo2/GTDB_release207/kraken2/ &> {log}"
 
-rule kraken_process:
-    input:
-        done=join(output_directory, 'kraken-download.done'),
-    output:
-        done=touch(join(output_directory, 'kraken.done')),
-    log:
-        abspath(join(output_directory, 'kraken-process.log'))
-    shell:
-        'fail not a file'
-
 rule sourmash:
     input:
         join(output_directory, 'sourmash-dna.done'),
@@ -226,7 +216,7 @@ rule singlem_download:
     log:
         join(output_directory, 'singlem-download.log')
     shell:
-        "wget 'https://zenodo.org/records/8419620/files/S3.2.1.GTDB_r214.metapackage_20231006.smpkg.zb.tar.gz?download=1' -O {output.singlem_metapackage}.tar.gz &> {log}; fail /need-to-update-doi"
+        "wget 'https://zenodo.org/records/11107165/files/S4.1.0.GTDB_r207.metapackage_20240502.smpkg.zb.tar.gz?download=1' -O {output.singlem_metapackage}.tar.gz &> {log}"
 
 rule singlem_extract:
     input:

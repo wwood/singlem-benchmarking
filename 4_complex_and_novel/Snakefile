@@ -134,8 +134,7 @@ rule truth_condensed_to_biobox:
         mem_mb=4000,
         runtime='1h'
     shell:
-        # Need changes post 0.16
-        "PYTHONPATH=~/git/singlem {workflow.basedir}/../bin/condensed_profile_to_biobox.py --input-condensed-table {input.condensed} " \
+        "{workflow.basedir}/../bin/condensed_profile_to_biobox.py --input-condensed-table {input.condensed} " \
         "--output-biobox {output.biobox}"
 
 def get_condensed_to_biobox_extra_args(tool):
@@ -218,7 +217,7 @@ rule singlem_run_to_profile:
     log:
         output_dirs_dict['singlem'] + "/logs/singlem/known{known_percent}/{sample}.log"
     shell:
-        "~/git/singlem/bin/singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} &> {log}"
+        "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} &> {log}"
 
 
 ###############################################################################################

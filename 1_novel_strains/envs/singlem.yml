@@ -2,5 +2,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - singlem==0.16.0
+  - singlem==0.18.0
     

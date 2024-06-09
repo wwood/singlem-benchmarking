@@ -19,6 +19,9 @@ from bench1_setup import *
 generated_fastq_dir = os.path.join(workflow.basedir, 'generated_reads')
 fastq_dir = os.path.join(workflow.basedir, 'local_reads')
 
+# singlem_bin = '~/git/singlem/bin/singlem'
+singlem_bin = 'singlem'
+
 #####################################################################
 
 
@@ -113,21 +116,20 @@ rule remove_low_abundance_from_condensed:
         "envs/singlem.yml"
     shell:
         # Threshold is 0.02% since total coverage in the truth is ~1704.973095 adn 0.35 divided by that is 0.02%
-        "{workflow.basedir}/../bin/remove_low_abundance_from_condensed.py {params.extra_args} --input-condensed {input.profile} " \
+        "PYTHONPATH=../singlem {workflow.basedir}/../bin/remove_low_abundance_from_condensed.py {params.extra_args} --input-condensed {input.profile} " \
         "--threshold 0.0002 > {output.profile} 2> {log}"
 
 rule tool_condensed_to_biobox_low_abund:
     input:
         profile = output_prefix + "{tool}/low_abund/{sample}.profile",
         truth = truth_dir + "/{sample}.condensed.biobox",
-    params:
-        extra_args = lambda wildcards: get_condensed_to_biobox_extra_args(wildcards.tool)
     output:
         biobox = output_prefix + "{tool}/low_abund/{sample}.biobox",
     conda:
         "envs/singlem.yml"
     shell:
-        "{workflow.basedir}/../bin/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
+        # All profiles are unfilled since they came from remove_low_abundance_from_condensed.py
+        "{workflow.basedir}/../bin/condensed_profile_to_biobox.py --input-condensed-table {input.profile} " \
         "--output-biobox {output.biobox} --template-biobox {input.truth} "
 
 rule opal_low_abund:
@@ -177,7 +179,7 @@ rule singlem_run_to_profile:
     log:
         output_dirs_dict['singlem'] + "/logs/singlem/{sample}.log"
     shell:
-        "~/git/singlem/bin/singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} &> {log}"
+        "{singlem_bin} pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} &> {log}"
 
 
 ###############################################################################################
