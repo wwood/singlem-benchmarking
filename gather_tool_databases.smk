@@ -55,7 +55,7 @@ rule metaphlan:
 
 rule kraken_download:
     output:
-        done=touch(join(output_directory, 'kraken-download.done')),
+        done=touch(join(output_directory, 'kraken.done')),
     log:
         abspath(join(output_directory, 'kraken-download.log'))
     shell:
@@ -72,8 +72,6 @@ rule sourmash_sigs:
     output:
         done=touch(join(output_directory, 'sourmash-dna.done')),
         sourmash_dna=sourmash_db_dna,
-    conda:
-        '1_novel_strains/envs/sourmash.yml'
     log:
         join(output_directory, 'sourmash-sigs-download.log')
     params:

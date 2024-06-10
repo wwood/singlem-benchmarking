@@ -30,7 +30,7 @@ conda activate singlem-benchmarking
 
 First, download the reference databases for each tool
 ```bash
-snakemake --snakefile gather_tool_databases.smk
+snakemake --snakefile gather_tool_databases.smk --use-conda -c 8
 ```
 
 Then run a benchmarking, for instance #1
