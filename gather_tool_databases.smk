@@ -123,7 +123,7 @@ rule kaiju_extract:
     params:
         outdir = join(output_directory, 'kaiju')
     shell:
-        'cd {params.outdir} && tar -xzf ../kaiju_db_progenomes_2023-05-25.tgz &> {log}'
+        'cd {params.outdir} && tar -xzf ../kaiju/kaiju_db_progenomes_2023-05-25.tgz &> {log}'
 
 rule map2b_checkout:
     output:
@@ -228,7 +228,7 @@ rule singlem_extract:
     shell:
         'cd {output_directory} && tar -xzf {input.done} &> {log} && mv it {output.singlem_metapackage}'
 
-rule gtdb_download:
+rule gtdb_download_bac120:
     output:
         done=touch(join(output_directory, 'gtdb_download.done')),
         tar = 'bac120_metadata_r207.tar.gz'
@@ -237,12 +237,32 @@ rule gtdb_download:
     shell:
         'wget https://data.gtdb.ecogenomic.org/releases/release207/207.0/bac120_metadata_r207.tar.gz -O {output.tar} &> {log}'
 
-rule gtdb_extract:
+rule gtdb_extract_bac120:
     input:
         done=join(output_directory, 'gtdb_download.done'),
         tar = 'bac120_metadata_r207.tar.gz'
     output:
         done=touch(join(output_directory, 'gtdb.done')),
+    log:
+        join(output_directory, 'gtdb-extract.log')
+    shell:
+        'tar -xzf {input.tar} &> {log}'
+
+rule gtdb_download_ar53:
+    output:
+        done=touch(join(output_directory, 'gtdb_download_ar53.done')),
+        tar = 'ar53_metadata_r207.tar.gz'
+    log:
+        join(output_directory, 'gtdb.log')
+    shell:
+        'wget https://data.gtdb.ecogenomic.org/releases/release207/207.0/ar53_metadata_r207.tar.gz -O {output.tar} &> {log}'
+
+rule gtdb_extract_ar53:
+    input:
+        done=join(output_directory, 'gtdb_download_ar53.done'),
+        tar = 'ar53_metadata_r207.tar.gz'
+    output:
+        done=touch(join(output_directory, 'gtdb-ar.done')),
     log:
         join(output_directory, 'gtdb-extract.log')
     shell:
@@ -254,17 +274,27 @@ rule shadow_genomes_download:
     log:
         join(output_directory, 'shadow-genomes-download.log')
     shell:
-        "cd {output_directory} && datasets download genome accession --inputfile ../1_novel_strains/shadow_genome_ids.txt &> {log} ; cd -"
+        "rm -f reference_genomes.tar.gz && bash -c 'cd {output_directory} && wget 'https://zenodo.org/records/11002998/files/reference_genomes.tar.gz?download=1' -O reference_genomes.tar.gz' &> {log}"
         
 rule shadow_genomes_extract:
     input:
         done=join(output_directory, 'shadow-genomes-download.done'),
     output:
-        done=touch(join(output_directory, 'shadow-genomes.done')),
+        done=touch(join(output_directory, 'shadow-extract.done')),
     log:
         join(output_directory, 'shadow-genomes.log')
     shell:
-        'notathing'
+        "bash -c 'cd {output_directory} && tar xf reference_genomes.tar.gz' &> {log}"
+
+rule reference_genomes_link:
+    input:
+        done=join(output_directory, 'shadow-extract.done'),
+    output:
+        done=touch(join(output_directory, 'shadow-genomes.done')),
+    log:
+        join(output_directory, 'reference-genomes-link.log')
+    shell:
+        "bash -c 'cd {output_directory} && ln -s reference_genomes/shadow . && ln -s reference_genomes/new_in_r214 .' &> {log}"
 
 rule genome_pairs_download:
     output:
