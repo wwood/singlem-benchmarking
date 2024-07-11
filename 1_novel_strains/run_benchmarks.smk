@@ -42,16 +42,16 @@ rule all_singlem:
     output:
         touch(output_prefix + "singlem/done")
 
-rule copy_reads_to_local:
-    params:
-        r1=generated_fastq_dir + "/{sample}.1.fq.gz",
-        r2=generated_fastq_dir + "/{sample}.2.fq.gz",
-    output:
-        r1=fastq_dir + "/{sample}.1.fq.gz",
-        r2=fastq_dir + "/{sample}.2.fq.gz",
-        done=touch(fastq_dir + "/{sample}.done")
-    shell:
-        "cp {params.r1} {output.r1} && cp {params.r2} {output.r2}"
+# rule copy_reads_to_local:
+#     params:
+#         r1=generated_fastq_dir + "/{sample}.1.fq.gz",
+#         r2=generated_fastq_dir + "/{sample}.2.fq.gz",
+#     output:
+#         r1=fastq_dir + "/{sample}.1.fq.gz",
+#         r2=fastq_dir + "/{sample}.2.fq.gz",
+#         done=touch(fastq_dir + "/{sample}.done")
+#     shell:
+#         "cp {params.r1} {output.r1} && cp {params.r2} {output.r2}"
 
 def get_condensed_to_biobox_extra_args(tool):
     if tool in tools_with_filled_output_profiles:
@@ -122,7 +122,7 @@ rule singlem_run_to_profile:
     log:
         output_dirs_dict['singlem'] + "/logs/singlem/{sample}.log"
     shell:
-        "~/git/singlem/bin/singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} &> {log}"
+        "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} &> {log}"
 
 
 ###############################################################################################

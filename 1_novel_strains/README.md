@@ -1,11 +1,11 @@
-To run these benchmarks, first setup the master environment
+To run these benchmarks, after setting up the master conda environment (see ../README.md)
 
+First generate the reads and ground truth community profiles:
 ```
-mamba env create -f env.yml -p ./env
-conda activate ./env
+snakemake --use-conda -c 8 generate_all_communities --configfile config-8threads.yaml
 ```
 
-Then run the benchmarks with different numbers of threads
+Then run the benchmarks:
 ```
 ./run_benchmark.sh
 ```

@@ -119,10 +119,12 @@ if __name__ == '__main__':
                         tax_to_coverage[gtdb_taxonomy] = 0
                     tax_to_coverage[gtdb_taxonomy] += coverage
 
-                    # num_reads = int(coverage*float(genome_size)/(float(read_length)*2.0))
                     sim_commands.append(
                         f"{args.art} -ss HSXt -i {fasta} -p -l {read_length} -f {coverage} -m 400 -s 10 -o simulated_reads/{i}. &>/dev/null"
                     )
+                    # sim_commands.append(
+                    #     f"{args.art} -ss HSXt -i {fasta} -p -l {read_length} -f {coverage} -m 400 -s 10 -o simulated_reads/{i}. &>/tmp/benlog{i}"
+                    # )
 
                     genome_wise_f.write(f"{g2['accession'][i]}\t{coverage}\t{fasta}\t{gtdb_taxonomy}\n")
 

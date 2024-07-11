@@ -11,3 +11,6 @@ genome_pairs/
 tool_reference_data
 bac120_metadata_r207*
 ar53_metadata*
+3_cami2_marine/simulation_short_read
+3_cami2_marine/split_reads
+reference_genomes

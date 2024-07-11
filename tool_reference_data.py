@@ -5,7 +5,7 @@ from os.path import join, abspath
 
 output_directory = abspath('../tool_reference_data')
 
-singlem_metapackage = join(output_directory, 'S3.1.2.GTDB_r207.metapackage_20240405.smpkg')
+singlem_metapackage = join(output_directory, 'S4.1.0.GTDB_r207.metapackage_20240502.smpkg')
 singlem_metapackage_tgz = singlem_metapackage + '.zb.tar.gz'
 
 metaphlan_db = join(output_directory, 'metaphlan_bowtiedb')

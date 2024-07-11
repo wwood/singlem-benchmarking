@@ -22,6 +22,8 @@ fastq_dir = os.path.join(workflow.basedir, 'local_reads')
 # singlem_bin = '~/git/singlem/bin/singlem'
 singlem_bin = 'singlem'
 
+datasets = [f'marine{i}' for i in range(10)]
+
 #####################################################################
 
 
@@ -29,6 +31,12 @@ rule all:
     input:
         expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools),
         expand(output_prefix+"{tool}/opal_low_abund/{sample}.opal_report", sample=datasets, tool=tools),
+
+rule generate_all_communities:
+    input:
+        [f'{truth_dir}/marine{i}.finished' for i in range(10)],
+        [f'{fastq_dir}/marine{i}.finished' for i in range(10)],
+        [f'{truth_dir}/marine{i}.condensed.biobox' for i in range(10)],
 
 rule generate_community_and_reads:
     output:
@@ -44,7 +52,7 @@ rule generate_community_and_reads:
     conda:
         'envs/art.yml'
     shell:
-        "{workflow.basedir}/generate_community.py --art art_illumina --threads {threads} --coverage-file {workflow.basedir}/coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-bac-metadata {gtdb_bac_metadata} --gtdb-ar-metadata {gtdb_ar_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --output-genomewise-coverage {output.genomewise}"
+        "mkdir -p {fastq_dir} {truth_dir} && {workflow.basedir}/generate_community.py --art art_illumina --threads {threads} --coverage-file {workflow.basedir}/coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-bac-metadata {gtdb_bac_metadata} --gtdb-ar-metadata {gtdb_ar_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --output-genomewise-coverage {output.genomewise}"
 
 rule truth_condensed_to_biobox:
     input:

@@ -83,7 +83,7 @@ rule generate_truth_condensed_format:
         coverage_number = lambda wildcards: wildcards.sample.replace('marine', ''),
     shell:
         "{workflow.basedir}/../bin/cami_coverage_to_condensed.py --gtdbtk-output-directory {gtdbtk_output_dir} " \
-        "--genome-to-id marine/simulation_short_read/genome_to_id.tsv " \
+        "--genome-to-id genome_to_id.tsv " \
         "--genome-lengths-directory {genome_lengths_directory} " \
         "--read-mapping-counts {read_counts_directory}/{wildcards.sample}.tsv " \
         ">{output.condensed}"

@@ -6,7 +6,8 @@ output_directory = 'tool_reference_data'
 # mkdir
 os.makedirs(output_directory, exist_ok=True)
 
-singlem_metapackage = join(output_directory, 'S3.1.1.GTDB_r207.metapackage_20240302.smpkg')
+# https://zenodo.org/records/11107165/files/S4.1.0.GTDB_r207.metapackage_20240502.smpkg.zb.tar.gz?download=1
+singlem_metapackage = join(output_directory, 'S4.1.0.GTDB_r207.metapackage_20240502.smpkg')
 singlem_metapackage_tgz = singlem_metapackage + '.zb.tar.gz'
 
 metaphlan_db = join(output_directory, 'metaphlan_bowtiedb')
@@ -29,18 +30,21 @@ kaiju_db_original_progenomes_names = kaiju_db_original_dir + '/names.dmp'
 map2b_checkout_dir = join(output_directory, 'MAP2B-checkout')
 map2b_db = os.path.join(map2b_checkout_dir, 'database/GTDB')
 
-metabuli_db_dir = join(output_directory, 'metabuli') #'metabuli-gtdb207'
+# metabuli_db_dir = join(output_directory, 'metabuli')
+# metabuli_db = join(metabuli_db_dir, 'gtdb')
 
-tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b', 'metabuli']
-
-# debug
-tools = ['metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b']
+# tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b', 'metabuli']
+## metabuli download is not scripted because it is via sharepoint, which gives an indirect link.
+tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b']
 
 rule all:
     input:
         [join(output_directory, f'{tool}.done') for tool in tools],
         join(output_directory, 'gtdb.done'),
         join(output_directory, 'shadow-genomes.done'),
+        ["3_cami2_marine/split_reads/marine{sample_number}.done".format(sample_number=sample_number) for sample_number in range(10)],
+        "2_phylogenetic_novelty/genomes",
+        "2_phylogenetic_novelty/genome_pairs",
 
 rule metaphlan:
     output:
@@ -146,13 +150,14 @@ rule map2b:
     shell:
         'python3 {map2b_checkout_dir}/scripts/DownloadDB.py -l {map2b_checkout_dir}/config/GTDB.CjePI.database.list -d {map2b_checkout_dir}/database/GTDB &> {log}'
 
+## metabuli database download doesn't work because it is via sharepoint, which gives an indirect link.
 # rule metabuli_download:
 #     output:
 #         done=touch(join(output_directory, 'metabuli-download.done')),
 #     log:
 #         join(output_directory, 'metabuli-download.log')
 #     shell:
-#         'mkdir {metabuli_db_dir} && wget https://metabuli.steineggerlab.workers.dev/gtdb.tar.gz -O {metabuli_db_dir}/gtdb.tar.gz &> {log}'
+#         "mkdir -p {metabuli_db_dir} && wget 'https://connectqutedu.sharepoint.com/:u:/s/metabuli_gtdb_207/EYk7N71mp-NAtET5_X_fBDABM6AC_DCbxGiDc2rdVVlNiw?e=3i6ak0' -O {metabuli_db_dir}/gtdb.tar.gz &> {log}"
 
 # rule metabuli_extract:
 #     input:
@@ -163,7 +168,7 @@ rule map2b:
 #     log:
 #         abspath(join(output_directory, 'metabuli-extract.log'))
 #     shell:
-#         'cd {output_directory} && tar -xzf metabuli-gtdb.tar.gz &> {log}'
+#         'cd {metabuli_db_dir} && tar -xzf gtdb.tar.gz &> {log}'
 
 rule motus_db:
     output:
@@ -207,26 +212,28 @@ rule motus:
 
 rule singlem_download:
     output:
-        done=touch(join(output_directory, 'singlem.done')),
+        done=touch(join(output_directory, 'singlem-download.done')),
         singlem_metapackage_tgz=singlem_metapackage_tgz
     conda:
         '1_novel_strains/envs/singlem.yml'
     log:
         join(output_directory, 'singlem-download.log')
     shell:
-        "wget 'https://zenodo.org/records/11107165/files/S4.1.0.GTDB_r207.metapackage_20240502.smpkg.zb.tar.gz?download=1' -O {output.singlem_metapackage}.tar.gz &> {log}"
+        "wget 'https://zenodo.org/records/11107165/files/S4.1.0.GTDB_r207.metapackage_20240502.smpkg.zb.tar.gz?download=1' -O {output.singlem_metapackage_tgz} &> {log}"
 
 rule singlem_extract:
     input:
-        done=join(output_directory, 'singlem.done'),
+        done=join(output_directory, 'singlem-download.done'),
         singlem_metapackage_tgz=singlem_metapackage_tgz,
     output:
-        done=touch(join(output_directory, 'singlem-extract.done')),
-        singlem_metapackage=singlem_metapackage
+        done=touch(join(output_directory, 'singlem.done')),
+        singlem_metapackage=directory(singlem_metapackage)
     log:
         abspath(join(output_directory, 'singlem-extract.log'))
+    params:
+        singlem_metapackage_basename = os.path.basename(singlem_metapackage)
     shell:
-        'cd {output_directory} && tar -xzf {input.done} &> {log} && mv it {output.singlem_metapackage}'
+        "bash -c 'cd {output_directory} && tar -xzf {params.singlem_metapackage_basename}.zb.tar.gz && mv -v {params.singlem_metapackage_basename}.zb/payload_directory ../{output.singlem_metapackage}' &> {log}"
 
 rule gtdb_download_bac120:
     output:
@@ -294,7 +301,7 @@ rule reference_genomes_link:
     log:
         join(output_directory, 'reference-genomes-link.log')
     shell:
-        "bash -c 'cd {output_directory} && ln -s reference_genomes/shadow . && ln -s reference_genomes/new_in_r214 .' &> {log}"
+        "bash -c 'ln -sf {output_directory}/reference_genomes && cd {output_directory} && ln -sf reference_genomes/shadow . && ln -sf reference_genomes/new_in_r214 .' &> {log}"
 
 rule genome_pairs_download:
     output:
@@ -317,4 +324,64 @@ rule genome_pairs_download:
 
         # Rename files to simple names (e.g. GCA_000508305.1_genomic.fna)
         parallel --col-sep "\t" cp {1} {2} :::: ../genome_pairs_ncbi_names.tsv
+        """
+
+rule download_cami_reads:
+    output:
+        "3_cami2_marine/simulation_short_read/marmgCAMI2_sample_{sample_number}_reads.tar.gz"
+    log:
+        "3_cami2_marine/simulation_short_read/marmgCAMI2_sample_{sample_number}_reads-download.log"
+    shell:
+        """
+        bash -c 'mkdir -p 3_cami2_marine/simulation_short_read && cd 3_cami2_marine/simulation_short_read && rm -f marmgCAMI2_sample_{wildcards.sample_number}_reads.tar.gz && wget https://frl.publisso.de/data/frl:6425521/marine/short_read/marmgCAMI2_sample_{wildcards.sample_number}_reads.tar.gz' &> {log}
+        """
+
+rule extract_cami_reads:
+    input:
+        "3_cami2_marine/simulation_short_read/marmgCAMI2_sample_{sample_number}_reads.tar.gz"
+    output:
+        "3_cami2_marine/simulation_short_read/simulation_short_read/2018.08.15_09.49.32_sample_{sample_number}/reads/anonymous_reads.fq.gz"
+    log:
+        "3_cami2_marine/simulation_short_read/marmgCAMI2_sample_{sample_number}_reads-extract.log"
+    shell:
+        """
+        bash -c 'cd 3_cami2_marine/simulation_short_read && tar -xzf marmgCAMI2_sample_{wildcards.sample_number}_reads.tar.gz' &> {log}
+        """
+
+rule split_cami_reads:
+    input:
+        "3_cami2_marine/simulation_short_read/simulation_short_read/2018.08.15_09.49.32_sample_{sample_number}/reads/anonymous_reads.fq.gz"
+    output:
+        r1="3_cami2_marine/split_reads/marine{sample_number}.1.fq.gz",
+        r2="3_cami2_marine/split_reads/marine{sample_number}.2.fq.gz",
+        done=touch("3_cami2_marine/split_reads/marine{sample_number}.done")
+    log:
+        "3_cami2_marine/split_reads/marine{sample_number}.log"
+    shell:
+        """
+        bash -c 'mkdir -p 3_cami2_marine/split_reads && zcat {input[0]} |./bin/deinterleave_fastq.sh {output.r1} {output.r2} compress' &> {log}
+        """
+
+rule bench2_genomes_download:
+    output:
+        touch("2_phylogenetic_novelty/reference_genomes-download.done"),
+    log:
+        "2_phylogenetic_novelty/reference_genomes-download.log"
+    shell:
+        """
+        cd 2_phylogenetic_novelty && wget 'https://zenodo.org/records/12525852/files/bench2_genomes.tar.gz?download=1' -O bench2_genomes.tar.gz &> ../{log}
+        """
+
+rule bench2_genomes_extract:
+    input:
+        "2_phylogenetic_novelty/reference_genomes-download.done"
+    output:
+        touch("2_phylogenetic_novelty/reference_genomes-extract.done"),
+        d1 = directory("2_phylogenetic_novelty/genomes"),
+        d2 = directory("2_phylogenetic_novelty/genome_pairs"),
+    log:
+        "2_phylogenetic_novelty/reference_genomes-extract.log"
+    shell:
+        """
+        cd 2_phylogenetic_novelty && tar -xzf bench2_genomes.tar.gz &> ../{log}
         """

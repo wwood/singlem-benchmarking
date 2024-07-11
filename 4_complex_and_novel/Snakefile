@@ -134,7 +134,7 @@ rule truth_condensed_to_biobox:
         mem_mb=4000,
         runtime='1h'
     shell:
-        "{workflow.basedir}/../bin/condensed_profile_to_biobox.py --input-condensed-table {input.condensed} " \
+        "PYTHONPATH=../singlem {workflow.basedir}/../bin/condensed_profile_to_biobox.py --input-condensed-table {input.condensed} " \
         "--output-biobox {output.biobox}"
 
 def get_condensed_to_biobox_extra_args(tool):

@@ -294,7 +294,7 @@ rule motus_run:
     input:
         r1=fastq_dir + "/{sample}.1.fq.gz",
         r2=fastq_dir + "/{sample}.2.fq.gz",
-        done=output_dirs_dict['motus'] + "/motus/data/done"
+        # done=output_dirs_dict['motus'] + "/motus/data/done"
     benchmark:
         benchmark_dir + "/motus/{sample}-"+str(num_threads)+"threads.benchmark"
     output:
@@ -414,7 +414,7 @@ rule sourmash_run:
     input:
         r1=fastq_dir + "/{sample}.1.fq.gz",
         r2=fastq_dir + "/{sample}.2.fq.gz",
-        done=output_dirs_dict['sourmash'] + "/sourmash/data/done"
+        # done=output_dirs_dict['sourmash'] + "/sourmash/data/done"
     benchmark:
         benchmark_dir + "/sourmash/{sample}-"+str(num_threads)+"threads.benchmark"
     threads: num_threads
@@ -542,7 +542,7 @@ rule map2b_sample_setup:
 rule map2b_run:
     input:
         listfile=output_dirs_dict['map2b'] + "/map2b/listfiles/{sample}",
-        done=output_dirs_dict['map2b'] + "/map2b/data/done"
+        # done=output_dirs_dict['map2b'] + "/map2b/data/done"
     output:
         tsv=output_dirs_dict['map2b'] + "/map2b/{sample}/Abundance.xls",
         done=touch(output_dirs_dict['map2b'] + "/map2b/done/run/{sample}.done")

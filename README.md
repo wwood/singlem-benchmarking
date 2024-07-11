@@ -33,6 +33,16 @@ First, download the reference databases for each tool
 snakemake --snakefile gather_tool_databases.smk --use-conda -c 8
 ```
 
+The Metabuli R207 database is downloaded separately. Download the tar.gz file from https://connectqutedu.sharepoint.com/:u:/s/metabuli_gtdb_207/EYk7N71mp-NAtET5_X_fBDABM6AC_DCbxGiDc2rdVVlNiw?e=Ra5rVZ and put it into a new folder `tool_reference_data/metabuli`. Then extract it with
+
+```bash
+tar -xvf metabuli.tar.gz
+```
+
+Then run the benchmarking, for instance #1
+
+```bash
+
 Then run a benchmarking, for instance #1
 
 ```bash
