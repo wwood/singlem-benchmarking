@@ -33,9 +33,9 @@ map2b_db = os.path.join(map2b_checkout_dir, 'database/GTDB')
 # metabuli_db_dir = join(output_directory, 'metabuli')
 # metabuli_db = join(metabuli_db_dir, 'gtdb')
 
-# tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b', 'metabuli']
+tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b', 'metabuli']
 ## metabuli download is not scripted because it is via sharepoint, which gives an indirect link.
-tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b']
+# tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b']
 
 rule all:
     input:
@@ -385,3 +385,26 @@ rule bench2_genomes_extract:
         """
         cd 2_phylogenetic_novelty && tar -xzf bench2_genomes.tar.gz &> ../{log}
         """
+
+rule download_metabuli:
+    output:
+        metabuli_tar = join(output_directory, 'metabuli', 'metabuli.tar.gz'),
+    log:
+        join(output_directory, 'metabuli.log')
+    shell:
+        """
+        mkdir -p {output_directory}/metabuli
+        wget https://connectqutedu.sharepoint.com/:u:/s/metabuli_gtdb_207/EYk7N71mp-NAtET5_X_fBDABM6AC_DCbxGiDc2rdVVlNiw?download=1 -O {output.metabuli_tar} &> {log}
+        """
+
+rule extract_metabuli:
+    input:
+        metabuli_tar = join(output_directory, 'metabuli', 'metabuli.tar.gz'),
+    params:
+        output_directory = join(output_directory, 'metabuli'),
+    output:
+        done=touch(join(output_directory, 'metabuli.done')),
+    log:
+        join(output_directory, 'metabuli-extract.log')
+    shell:
+        'tar -xzf {input.metabuli_tar} -C {params.output_directory} &> {log}'
