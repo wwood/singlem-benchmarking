@@ -20,7 +20,7 @@
 ###############################################################################
 
 __author__ = "Ben Woodcroft"
-__copyright__ = "Copyright 2021"
+__copyright__ = "Copyright 2024"
 __credits__ = ["Ben Woodcroft"]
 __license__ = "GPL3"
 __maintainer__ = "Ben Woodcroft"
@@ -31,12 +31,8 @@ import argparse
 import logging
 import sys
 import os
-import pandas as pd
-import re
-
-import extern
-import pandas as pd
 import polars as pl
+import pandas as pd
 
 sys.path = [os.path.join(os.path.dirname(os.path.realpath(__file__)),'..')] + sys.path
 
@@ -47,13 +43,10 @@ if __name__ == '__main__':
     parent_parser.add_argument('--quiet', help='only output errors', action="store_true")
 
     parent_parser.add_argument('--motus', required=True)
-    parent_parser.add_argument('--gtdb-map', required=True)
-    parent_parser.add_argument('--sample')
+    parent_parser.add_argument('--sample', required=True)
     parent_parser.add_argument('--genome-pairs')
 
     args = parent_parser.parse_args()
-
-    raise Exception("This script was changed to address a probable bug, but has not been tested. Please test before using.")
 
     # Setup logging
     if args.debug:
@@ -66,52 +59,44 @@ if __name__ == '__main__':
 
     print('sample\tcoverage\ttaxonomy')
 
-    ## git tag version 3.0.3 |  motus version 3.0.3 | map_tax 3.0.3 | gene database: nr3.0.3 | calc_mgc 3.0.3 -y insert.scaled_counts -l 75 | calc_motu 3.0.3 -k mOTU -C no_CAMI -g 3 | taxonomy: ref_mOTU_3.0.3 meta_mOTU_3.0.3
-    ## call: python /home/woodcrob/e/motus-v3.0.3/bin/motus profile -f 1.fq -r 2.fq -o test.motus
-    ## consensus_taxonomy     unnamed sample
-    # Leptospira alexanderi [ref_mOTU_v3_00001]       0.0000000000
-    # Leptospira weilii [ref_mOTU_v3_00002]   0.0000000000
-    # Chryseobacterium sp. [ref_mOTU_v3_00004]        0.0000000000
+    # # git tag version 3.1.0 |  motus version 3.1.0 | map_tax 3.1.0 | gene database: nr3.1.0 | calc_mgc 3.1.0 -y insert.scaled_counts -l 75 | calc_motu 3.1.0 -k kingdom -C no_CAMI -g 3 | taxonomy: ref_mOTU_3.1.0 meta_mOTU_3.1.0
+    # # call: python /home/woodcrob/e/motus-v3.1.0/bin/motus profile -s local_reads/GCA_019720975.1_genomic.1.fq.gz -k kingdom -q -t 32 -db ../tool_reference_data/motus/db_mOTU/
+    # #consensus_taxonomy     unnamed sample
+    # k__Bacteria     1.0000000000
+    # k__Archaea      0.0000000000
+    # k__Eukaryota    0.0000000000
+    # k__Unknown cellular organism    0.0000000000
+    # unassigned      0.0000000000
     d = pl.read_csv(args.motus, separator='\t', skip_rows=2)
-    d.columns = ['motu_full', 'coverage']
+    d.columns = ['kingdom', 'coverage']
+    d = d.filter(pl.col('coverage')>0)
     d = d.select([
+        pl.col('kingdom').str.replace('k__', 'd__'),
         'coverage',
-        pl.col('motu_full').str.replace(r'.*\[(.*)\]', r'\1')
     ])
 
-    gtdb = pl.read_csv(args.gtdb_map, separator='\t', has_header=False)
-
-    gtdb2 = pl.DataFrame(pd.DataFrame({
-        'motu': gtdb.loc[:,0],
-        'taxonomy': ['; '.join(r[1:]) for _, r in gtdb.iterrows()]
-    }))
-
-    d1p5 = d.filter(pl.col('coverage')>0)
-    d2 = d1p5.join(gtdb2, on='motu', how='left')
-    if len(d2) != len(d1p5):
-        raise Exception(f'Could not find taxonomy for all mOTUs in {args.motus}')
-    if d2.select(pl.col('taxonomy').is_null()).shape[0] > 0:
-        raise Exception(f'Could not find taxonomy for all mOTUs in {args.gtdb_map}')
-
     taxon_to_cov = {}
-    for i, row in d2.rows(named=True):
-        tax = row['taxonomy']
-        if tax not in taxon_to_cov:
-            taxon_to_cov[tax] = 0.
-        taxon_to_cov[tax] += row['coverage']
+    for row in d.rows(named=True):
+        if row['kingdom'] in ('d__Eukaryota', 'd__Unknown cellular organism', 'unassigned'):
+            continue  # Skip these
+        if row['kingdom'] in taxon_to_cov:
+            logging.warning(f"Duplicate kingdom {row['kingdom']} in {args.motus}")
+        taxon_to_cov[row['kingdom']] = row['coverage']
 
     if len(taxon_to_cov) > 0:
         for taxon, cov in taxon_to_cov.items():
-            print('sample_name\t{coverage}\t{taxon}'.format(
-                coverage=cov, taxon=taxon))
+            print('{sample}\t{coverage}\t{taxon}'.format(
+                sample=args.sample, coverage=cov, taxon=taxon))
     else:
         if bool(args.genome_pairs) & bool(args.sample):
             logging.warning(f'No taxa identified in {args.sample}, setting known taxonomy to 100%')
             genome_pairs = pd.read_csv(args.genome_pairs, sep='\t')
             paired_taxonomy = genome_pairs[genome_pairs['genome_ID'] == args.sample]['paired_taxonomy'].values[0]
 
-            print(f'{args.sample}\t100.0\t{paired_taxonomy}')
+            print(f'{args.sample}\t1.0\t{paired_taxonomy}')
 
+    # Add in a lower level level classification, because otherwise opal croaks. Must be non-zero, but make it tiny since all we care about is Bray-Curtis distance.
+    print(f'{args.sample}\t0.000000001\td__Archaea; p__Archaeoglobi; c__Archaeoglobi; o__Archaeoglobales; f__Archaeoglobaceae; g__Archaeoglobus; s__Archaeoglobus fulgidus')
 
     logging.info("Done")
 

@@ -34,7 +34,7 @@ paired_genomes = (
 paired_genomes.columns = ['sample','example_genome','example_taxonomy']
 
 # Debug
-# relabund_tools = ['sourmash']
+# relabund_tools = ['motus']
 # reads_wise_tools = []
 # novelties = novelties.filter(pl.col('sample')=='GCA_020052375.1_genomic')
 
@@ -303,8 +303,8 @@ rule motus_run:
     threads: num_threads
     conda:
         "envs/motus.yml"
-    shell:
-        "motus profile -t {threads} -db {motus_db} -f {input.r1} -r {input.r2} -o {output.report} && touch {output.done}"
+    shell: # Run to kingdom level only
+        "motus profile -t {threads} -db {motus_db} -f {input.r1} -r {input.r2} -o {output.report} -k kingdom -q && touch {output.done}"
 
 rule motus_profile_to_condensed:
     input:
@@ -316,8 +316,7 @@ rule motus_profile_to_condensed:
     conda:
         "envs/singlem.yml"
     shell:
-        "{workflow.basedir}/../bin/motus_to_condensed.py --motus {input.report} "
-        "--gtdb {motus_gtdb_tsv} "
+        "{workflow.basedir}/../bin/motus_full_to_condensed_kingdom.py --motus {input.report} "
         "--sample {wildcards.sample} "
         "--genome-pairs {params.genome_pairs} "
         "> {output.profile} "

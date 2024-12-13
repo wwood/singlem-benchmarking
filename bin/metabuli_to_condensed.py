@@ -33,9 +33,8 @@ import sys
 import os
 import pandas as pd
 import polars as pl
-import re
 
-import extern
+from singlem.condense import CondensedCommunityProfile
 
 sys.path = [os.path.join(os.path.dirname(os.path.realpath(__file__)),'..')] + sys.path
 
@@ -95,42 +94,24 @@ if __name__ == '__main__':
     sample_name = os.path.basename(args.input.replace('_profile.tsv',''))
 
     df = pl.read_csv(args.input, separator='\t')
-    df.columns = ['relabund', 'id1', 'id2', 'rank', 'id3', 'taxonomy']
-    
-    # These profiles are 'unfilled', so need to add the subspecies to the species' totals
-    last_species_taxonomy = None
-    last_species_relabund = 0
-
-    def print_last_species():
-        global last_species_taxonomy, last_species_relabund
-        if last_species_taxonomy:
-            rank_id = ('superkingdom','phylum','class','order','family','genus','species').index('species')
-            tax = name_to_taxonomy[rank_id][last_species_taxonomy.strip()]
-            print("\t".join([
-                sample_name,
-                str(last_species_relabund),
-                'Root;'+tax]))
+    df.columns = ['relabund', 'count', 'count2', 'rank', 'id3', 'taxonomy']
 
     for row in df.rows(named=True):
-        # Ignore taxons that aren't in GTDB
-        if row['rank'] not in ('no rank') and row['taxonomy'].strip() not in ('d__Eukaryota','p__Chordata','c__Mammalia','o__Primates','f__Hominidae','g__Homo','s__Homo sapiens'):
+        # Ignore taxons that aren't in GTDB, and anything unclassified or root only
+        if row['rank'] not in ('no rank','unclassified','subspecies') and row['taxonomy'].strip() not in ('d__Eukaryota','p__Chordata','c__Mammalia','o__Primates','f__Hominidae','g__Homo','s__Homo sapiens'):
             rank = row['rank']
+
             if rank == 'species':
-                print_last_species()
-                last_species_taxonomy = row['taxonomy']
-                last_species_relabund = row['relabund']
-            elif rank == 'subspecies':
-                last_species_relabund += row['relabund']
+                abund = row['count'] # filled count, to include subspecies
             else:
-                last_species_taxonomy = None
-                rank_id = ('superkingdom','phylum','class','order','family','genus','species').index(rank)
-                
-                tax = name_to_taxonomy[rank_id][row['taxonomy'].strip()]
-                print("\t".join([
-                    sample_name,
-                    str(row['relabund']),
-                    'Root;'+tax]))
-    print_last_species()
+                abund = row['count2'] # unfilled count
+            rank_id = ('superkingdom','phylum','class','order','family','genus','species').index(rank)
+            tax = name_to_taxonomy[rank_id][row['taxonomy'].strip()]
+            print("\t".join([
+                sample_name,
+                str(abund),
+                'Root;'+tax
+            ]))
 
     logging.info("Done")
 
