@@ -81,12 +81,14 @@ rule generate_truth_condensed_format:
         condensed = truth_dir + "/{sample}.condensed",
     params:
         coverage_number = lambda wildcards: wildcards.sample.replace('marine', ''),
+    log:
+        truth_dir + "/logs/generate_truth_condensed_format-{sample}.log"
     shell:
         "{workflow.basedir}/../bin/cami_coverage_to_condensed.py --gtdbtk-output-directory {gtdbtk_output_dir} " \
         "--genome-to-id genome_to_id.tsv " \
         "--genome-lengths-directory {genome_lengths_directory} " \
         "--read-mapping-counts {read_counts_directory}/{wildcards.sample}.tsv " \
-        ">{output.condensed}"
+        ">{output.condensed} 2> {log}"
 
 rule truth_condensed_to_biobox:
     input:
@@ -594,6 +596,8 @@ rule metabuli_report_to_condensed:
         report=output_dirs_dict['metabuli'] + "/output/{sample}_report.tsv",
     output:
         profile = output_dirs_dict['metabuli'] + "/metabuli/{sample}.profile",
+    conda:
+        "envs/singlem.yml"
     shell:
         "{workflow.basedir}/../bin/metabuli_to_condensed.py --input {input} " \
         "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \
