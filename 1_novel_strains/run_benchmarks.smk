@@ -551,6 +551,8 @@ rule metabuli_run:
         "envs/metabuli.yml"
     params:
         output_dir = output_dirs_dict['metabuli'],
+    log:
+        output_dirs_dict['metabuli'] + "/logs/metabuli/{sample}.log"
     shell:
         "metabuli classify --threads {threads} {input.r1} {input.r2} {input.db} {params.output_dir}/output {wildcards.sample}"
 
