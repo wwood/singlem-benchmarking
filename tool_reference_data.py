@@ -33,7 +33,7 @@ metabuli_db_dir = '/work/microbiome/db/metabuli/gtdb207'
 
 tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b', 'metabuli']
 
-tools_with_filled_output_profiles = ('kraken','metabuli','sourmash')
+tools_with_filled_output_profiles = ('kraken','sourmash')
 
 r207_tools = ['singlem', 'metaphlan', 'kraken', 'sourmash', 'metabuli']
 

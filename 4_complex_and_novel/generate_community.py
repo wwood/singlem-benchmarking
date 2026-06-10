@@ -160,7 +160,7 @@ if __name__ == '__main__':
 
     # Merge with GTDBTK output
     # novel_genome_list.filter(~(pl.col('genome').is_in(r207_taxonomy.keys())))
-    novel_info = novel_genome_list.with_columns(pl.col('genome').map_dict(r207_taxonomy).alias('taxonomy'))
+    novel_info = novel_genome_list.with_columns(pl.col('genome').replace(r207_taxonomy).alias('taxonomy'))
     novel_info = novel_info.rename({'fasta': 'path'})
     novel_info[:3]
     # r207_taxonomy['GB_GCA_023301765.1']

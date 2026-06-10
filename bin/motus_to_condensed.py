@@ -36,6 +36,7 @@ import re
 
 import extern
 import pandas as pd
+import polars as pl
 
 sys.path = [os.path.join(os.path.dirname(os.path.realpath(__file__)),'..')] + sys.path
 
@@ -51,6 +52,8 @@ if __name__ == '__main__':
     parent_parser.add_argument('--genome-pairs')
 
     args = parent_parser.parse_args()
+
+    raise Exception("This script was changed to address a probable bug, but has not been tested. Please test before using.")
 
     # Setup logging
     if args.debug:
@@ -69,20 +72,29 @@ if __name__ == '__main__':
     # Leptospira alexanderi [ref_mOTU_v3_00001]       0.0000000000
     # Leptospira weilii [ref_mOTU_v3_00002]   0.0000000000
     # Chryseobacterium sp. [ref_mOTU_v3_00004]        0.0000000000
-    d = pd.read_csv(args.motus, sep='\t', names=['motu_full','coverage'], header=None, comment='#')
-    d['motu'] = [n.split(' ')[-1].replace('[','').replace(']','') for n in d['motu_full']]
+    d = pl.read_csv(args.motus, separator='\t', skip_rows=2)
+    d.columns = ['motu_full', 'coverage']
+    d = d.select([
+        'coverage',
+        pl.col('motu_full').str.replace(r'.*\[(.*)\]', r'\1')
+    ])
 
-    gtdb = pd.read_csv(args.gtdb_map, sep='\t', header=None)
+    gtdb = pl.read_csv(args.gtdb_map, separator='\t', has_header=False)
 
-    gtdb2 = pd.DataFrame({
+    gtdb2 = pl.DataFrame(pd.DataFrame({
         'motu': gtdb.loc[:,0],
         'taxonomy': ['; '.join(r[1:]) for _, r in gtdb.iterrows()]
-    })
+    }))
 
-    d2 = pd.merge(d[d['coverage']>0], gtdb2, on='motu')
+    d1p5 = d.filter(pl.col('coverage')>0)
+    d2 = d1p5.join(gtdb2, on='motu', how='left')
+    if len(d2) != len(d1p5):
+        raise Exception(f'Could not find taxonomy for all mOTUs in {args.motus}')
+    if d2.select(pl.col('taxonomy').is_null()).shape[0] > 0:
+        raise Exception(f'Could not find taxonomy for all mOTUs in {args.gtdb_map}')
 
     taxon_to_cov = {}
-    for i, row in d2.iterrows():
+    for i, row in d2.rows(named=True):
         tax = row['taxonomy']
         if tax not in taxon_to_cov:
             taxon_to_cov[tax] = 0.

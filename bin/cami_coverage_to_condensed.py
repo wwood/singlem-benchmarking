@@ -83,7 +83,7 @@ if __name__ == '__main__':
     # (coverm-v0.7.0)cl5n006:20240501:~/m/msingle/mess/124_singlem-benchmarking/3_cami2_marine$ seq 0 9 |parallel pigz -cd ../../114_cami2_benchmarking/data/marine/short_read/simulation_short_read/'*'_sample_{}/reads/reads_mapping.tsv.gz '|'cut -f2 '|'sort '|'uniq -c '|'sed '"s/^  *//g"' '>' read_mapping_counts/marine{}.tsv
     mapping_counts = pl.read_csv(args.read_mapping_counts, separator=' ', has_header=False).filter(pl.col('column_2') != 'genome_id')
     mapping_counts.columns = ['read_count','otu']
-    mapping_counts = mapping_counts.with_columns(pl.col('otu').map_dict(genome_to_id).alias('cami_name'))
+    mapping_counts = mapping_counts.with_columns(pl.col('otu').replace(genome_to_id).alias('cami_name'))
 
     # Read in taxons from GTDB-Tk
     taxonomies = {}
@@ -134,7 +134,7 @@ if __name__ == '__main__':
                 taxon_abundances[tax] = 0
             taxon_abundances[tax] += abund
         else:
-            logging.warning('No taxonomy for %s' % cami_name)
+            raise Exception('No taxonomy for %s' % cami_name)
 
     # Sort so biobox creation sees less defined taxons before more defined ones and doesn't croak.
     for tax in sorted(taxon_abundances.keys()):

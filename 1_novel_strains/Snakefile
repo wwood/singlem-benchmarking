@@ -624,6 +624,8 @@ rule metabuli_report_to_condensed:
         report=output_dirs_dict['metabuli'] + "/output/{sample}_report.tsv",
     output:
         profile = output_dirs_dict['metabuli'] + "/metabuli/{sample}.profile",
+    conda:
+        "envs/singlem.yml"
     shell:
         "{workflow.basedir}/../bin/metabuli_to_condensed.py --input {input} " \
         "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \

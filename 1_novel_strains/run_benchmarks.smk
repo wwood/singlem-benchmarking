@@ -551,6 +551,8 @@ rule metabuli_run:
         "envs/metabuli.yml"
     params:
         output_dir = output_dirs_dict['metabuli'],
+    log:
+        output_dirs_dict['metabuli'] + "/logs/metabuli/{sample}.log"
     shell:
         "metabuli classify --threads {threads} {input.r1} {input.r2} {input.db} {params.output_dir}/output {wildcards.sample}"
 
@@ -559,6 +561,8 @@ rule metabuli_report_to_condensed:
         report=output_dirs_dict['metabuli'] + "/output/{sample}_report.tsv",
     output:
         profile = output_dirs_dict['metabuli'] + "/metabuli/{sample}.profile",
+    conda:
+        "envs/singlem.yml"
     shell:
         "{workflow.basedir}/../bin/metabuli_to_condensed.py --input {input} " \
         "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \
