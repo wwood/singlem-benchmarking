@@ -15,22 +15,26 @@ To get this repository, git clone with recursive option to get the submodules:
 git clone --recursive https://github.com/wwood/singlem-benchmarking
 ```
 
-To run a benchmark, first create a conda env
+Software is managed with [pixi](https://pixi.sh). The `pixi.toml` defines a
+default environment (used to drive the Snakemake workflows, plotting and
+notebooks) plus one isolated environment per benchmarked tool. The Snakemake
+rules activate the relevant per-tool environment themselves at runtime via
+`pixi shell-hook`, so there is no longer any need for `--use-conda`.
+
+To run a benchmark, first install the environments (this solves and downloads
+all tool environments up front):
 
 ```bash
 cd singlem-benchmarking
-mamba env create -n singlem-benchmarking -f env.yml
+pixi install --all
 ```
 
-Then activate it
-
-```bash
-conda activate singlem-benchmarking
-```
+You can either prefix commands with `pixi run` (as shown below), or enter the
+default environment once with `pixi shell` and drop the prefix.
 
 First, download the reference databases for each tool
 ```bash
-snakemake --snakefile gather_tool_databases.smk --use-conda -c 8
+pixi run snakemake --snakefile gather_tool_databases.smk -c 8
 ```
 
 Then run the benchmarking, for instance #1
@@ -48,7 +52,9 @@ Results can be viewed by rerunning the `plot.ipynb` in each benchmark directory,
 
 ## Download genomes for benchmark #2
 
-Using NCBI datasets CLI (on conda as `ncbi-datasets-cli=14.29.0`)
+Using the NCBI datasets CLI (provided by the `ncbi-datasets-cli` package in the
+default pixi environment). Either run these inside `pixi shell`, or prefix the
+`datasets` calls with `pixi run`.
 
 ```bash
 cd 2_phylogenetic_novelty

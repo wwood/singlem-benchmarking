@@ -30,9 +30,8 @@ rule generate_community_and_reads:
     params:
         coverage_number = lambda wildcards: wildcards.sample.replace('marine', ''),
     threads: num_threads
-    conda:
-        'envs/art.yml'
     shell:
+        'eval "$(pixi shell-hook -e art)" && '
         "{workflow.basedir}/generate_community.py --art art_illumina --threads {threads} --coverage-file {workflow.basedir}/coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-bac-metadata {gtdb_bac_metadata} --gtdb-ar-metadata {gtdb_ar_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --output-genomewise-coverage {output.genomewise}"
 
 rule truth_condensed_to_biobox:
@@ -40,8 +39,7 @@ rule truth_condensed_to_biobox:
         condensed = truth_dir + "/{sample}.condensed",
     output:
         biobox = truth_dir + "/{sample}.condensed.biobox",
-    conda:
-        "envs/singlem.yml"
     shell:
+        'eval "$(pixi shell-hook -e singlem)" && '
         "{workflow.basedir}/../bin/condensed_profile_to_biobox.py --input-condensed-table {input.condensed} " \
         "--output-biobox {output.biobox}"

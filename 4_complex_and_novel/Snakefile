@@ -105,9 +105,8 @@ rule generate_community_and_reads:
     resources:
         mem_mb=8000,
         runtime='24h'
-    conda:
-        'envs/art.yml'
     shell:
+        'eval "$(pixi shell-hook -e art)" && '
         "{workflow.basedir}/generate_community.py " \
         " --art art_illumina " \
         " --threads {threads}" \
@@ -127,13 +126,12 @@ rule truth_condensed_to_biobox:
         condensed = os.path.join(truth_dir, "known{known_percent}/{sample}.condensed"),
     output:
         biobox = os.path.join(truth_dir, "known{known_percent}/{sample}.condensed.biobox"),
-    conda:
-        #"envs/singlem.yml"
         'singlem-dev' # Need changes post 0.16
     resources:
         mem_mb=4000,
         runtime='1h'
     shell:
+        'eval "$(pixi shell-hook -e singlem)" && '
         "PYTHONPATH=../singlem {workflow.basedir}/../bin/condensed_profile_to_biobox.py --input-condensed-table {input.condensed} " \
         "--output-biobox {output.biobox}"
 
@@ -151,12 +149,11 @@ rule tool_condensed_to_biobox:
         extra_args = lambda wildcards: get_condensed_to_biobox_extra_args(wildcards.tool)
     output:
         biobox = output_prefix + "{tool}/biobox/known{known_percent}/{sample}.biobox",
-    conda:
-        "envs/singlem.yml"
     resources:
         mem_mb=4000,
         runtime='1h'
     shell:
+        'eval "$(pixi shell-hook -e singlem)" && '
         "{workflow.basedir}/../bin/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
         "--output-biobox {output.biobox} --template-biobox {input.truth} "
 
@@ -169,12 +166,11 @@ rule opal:
     output:
         report=output_prefix+"{tool}/opal/known{known_percent}/{sample}.opal_report",
         done=output_prefix+"{tool}/opal/known{known_percent}/{sample}.opal_report.done",
-    conda:
-        'envs/opal.yml'
     resources:
         mem_mb=4000,
         runtime='1h'
     shell:
+        'eval "$(pixi shell-hook -e opal)" && '
         "opal.py -g {input.truth} -o {params.output_opal_dir} {input.biobox} || echo 'expected opal non-zero existatus'; mv {params.output_opal_dir}/results.tsv {output.report} && rm -rf {params.output_opal_dir} && touch {output.done}"
 
 
@@ -207,8 +203,6 @@ rule singlem_run_to_profile:
     output:
         report=output_dirs_dict['singlem'] + "/singlem/known{known_percent}/{sample}.profile",
         done=touch(output_dirs_dict['singlem'] + "/singlem/known{known_percent}/{sample}.profile.done")
-    conda:
-        "envs/singlem.yml"
     threads:
         num_threads
     resources:
@@ -217,6 +211,7 @@ rule singlem_run_to_profile:
     log:
         output_dirs_dict['singlem'] + "/logs/singlem/known{known_percent}/{sample}.log"
     shell:
+        'eval "$(pixi shell-hook -e singlem)" && '
         "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} &> {log}"
 
 
@@ -253,8 +248,6 @@ rule metaphlan_profile:
     output:
         sgb_report=output_dirs_dict['metaphlan'] + "/metaphlan/known{known_percent}/{sample}.sgb_report",
         done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/known{known_percent}/{sample}.profile.done")
-    conda:
-        "envs/metaphlan.yml"
     threads: num_threads
     resources:
         mem_mb=32000,
@@ -265,6 +258,7 @@ rule metaphlan_profile:
         output_dirs_dict['metaphlan'] + "/logs/metaphlan/known{known_percent}/{sample}.log"
     shell:
         # Concatenate input files because metaphlan can't handle multiple input files
+        'eval "$(pixi shell-hook -e metaphlan)" && '
         "rm -f {output.sgb_report} {params.cat_reads}.bowtie2out.txt; cat {input.r1} {input.r2} > {params.cat_reads} && metaphlan {params.cat_reads} --index {metaphlan_index} --nproc {threads} --input_type fastq --bowtie2db {metaphlan_db_local1} -o {output.sgb_report} &> {log}"
 
 rule metaphlan_convert_profile_to_GTDB:
@@ -273,14 +267,13 @@ rule metaphlan_convert_profile_to_GTDB:
     output:
         gtdb_report=output_dirs_dict['metaphlan'] + "/metaphlan/known{known_percent}/{sample}.gtdb_profile",
         done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/known{known_percent}/{sample}.gtdb_report.done")
-    conda:
-        "envs/metaphlan.yml"
     resources:
         mem_mb=4000,
         runtime='1h'
     log:
         output_dirs_dict['metaphlan'] + "/logs/metaphlan/known{known_percent}/{sample}-convert.log"
     shell:
+        'eval "$(pixi shell-hook -e metaphlan)" && '
         "sgb_to_gtdb_profile.py -i {input.report} -o {output.gtdb_report} -d {metaphlan_db_local1}/mpa_vOct22_CHOCOPhlAnSGB_202212.pkl &> {log}"
 
 rule metaphlan_profile_to_condensed:
@@ -288,12 +281,11 @@ rule metaphlan_profile_to_condensed:
         report=output_dirs_dict['metaphlan'] + "/metaphlan/known{known_percent}/{sample}.gtdb_profile"
     output:
         profile = output_dirs_dict['metaphlan'] + "/metaphlan/known{known_percent}/{sample}.profile",
-    conda:
-        "envs/singlem.yml"
     resources:
         mem_mb=4000,
         runtime='1h'
     shell:
+        'eval "$(pixi shell-hook -e singlem)" && '
         "{workflow.basedir}/../bin/metaphlan_to_condensed.py --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
 
 ###############################################################################################
@@ -382,11 +374,10 @@ rule kraken_run:
     output:
         report=output_dirs_dict['kraken'] + "/kraken/known{known_percent}/{sample}.kraken",
         done=touch(output_dirs_dict['kraken'] + "/kraken/known{known_percent}/{sample}.kraken.done")
-    conda:
-        "envs/kraken.yml"
     log:
         output_dirs_dict['kraken'] + "/logs/kraken/known{known_percent}/{sample}.log"
     shell:
+        'eval "$(pixi shell-hook -e kraken)" && '
         "kraken2 --db {input.db} --threads {num_threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} &> {log}"
 
 rule braken_run:
@@ -403,14 +394,13 @@ rule braken_run:
         p=output_dirs_dict['kraken'] + "/braken/known{known_percent}/{sample}.report.P",
         d=output_dirs_dict['kraken'] + "/braken/known{known_percent}/{sample}.report.D",
         done=touch(output_dirs_dict['kraken'] + "/braken/known{known_percent}/{sample}.done")
-    conda:
-        "envs/bracken.yml"
     resources:
         mem_mb=4000,
         runtime='1h'
     log:
         output_dirs_dict['kraken'] + "/logs/bracken/known{known_percent}/{sample}.log"
     shell:
+        'eval "$(pixi shell-hook -e bracken)" && '
         "bash -c 'bracken -d {input.db} -r 150 -l S -t 10 -o {output.s} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l G -t 10 -o {output.g} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l F -t 10 -o {output.f} -i {input.kraken_report} && " \
@@ -436,8 +426,6 @@ rule bracken_to_profile:
         truth = truth_dir + "/known{known_percent}/{sample}.condensed.biobox",
     output:
         profile = output_dirs_dict['kraken'] + "/kraken/known{known_percent}/{sample}.profile",
-    conda:
-        "singlem-dev"
     resources:
         mem_mb=4000,
         runtime='1h'
@@ -445,6 +433,7 @@ rule bracken_to_profile:
         output_dirs_dict['kraken'] + "/logs/bracken_to_profile/known{known_percent}/{sample}.log"
     shell:
         # Convert reports to singlem condense format
+        'eval "$(pixi shell-hook -e singlem)" && '
         "mkdir -p {params.biobox_dir} && " \
         "{workflow.basedir}/../bin/kraken_to_condensed.py --report-prefix {params.report_prefix} " \
         "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \
@@ -488,8 +477,6 @@ rule sourmash_run:
     output:
         report=output_dirs_dict['sourmash'] + "/sourmash/known{known_percent}/{sample}.csv",
         done=touch(output_dirs_dict['sourmash'] + "/sourmash/known{known_percent}/{sample}.profile.done")
-    conda:
-        "envs/sourmash.yml"
     params:
         output_dir = output_dirs_dict['sourmash'],
         sourmash_prefix = lambda wildcards: output_dirs_dict['sourmash'] + f"/sourmash/known{wildcards.known_percent}/"+wildcards.sample
@@ -497,6 +484,7 @@ rule sourmash_run:
         output_dirs_dict['sourmash'] + "/logs/sourmash/known{known_percent}/{sample}.log"
     shell:
         # Sourmash does not seem to have a --threads option
+        'eval "$(pixi shell-hook -e sourmash)" && '
         "bash -c 'sourmash sketch dna -p k=31,abund --merge blah -o {params.sourmash_prefix}.sig {input.r1} {input.r2} "\
         "&& echo \"running gather..\" "\
         "&& sourmash gather -k 31 --dna {params.sourmash_prefix}.sig {sourmash_db_dna} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv "\
@@ -696,13 +684,12 @@ rule metabuli_run:
         runtime='4h' # Failed with 1h, most finish within 3h
     benchmark:
         benchmark_dir + "/metabuli/known{known_percent}/{sample}-"+str(num_threads)+"threads.benchmark"
-    conda:
-        "envs/metabuli.yml"
     log:
         output_dirs_dict['metabuli'] + "/logs/metabuli/known{known_percent}/{sample}.log"
     params:
         output_dir = output_dirs_dict['metabuli'],
     shell:
+        'eval "$(pixi shell-hook -e metabuli)" && '
         "metabuli classify --threads {threads} {input.r1} {input.r2} {input.db} {params.output_dir}/output/known{wildcards.known_percent} {wildcards.sample} &> {log}"
 
 rule metabuli_report_to_condensed:
@@ -713,9 +700,8 @@ rule metabuli_report_to_condensed:
     resources:
         mem_mb=4000,
         runtime='1h'
-    conda:
-        "envs/singlem.yml"
     shell:
+        'eval "$(pixi shell-hook -e singlem)" && '
         "{workflow.basedir}/../bin/metabuli_to_condensed.py --input {input} " \
         "--bacterial-taxonomy {gtdb_bac_taxonomy} " \
         "--archaeal-taxonomy {gtdb_ar_taxonomy} > {output.profile}"

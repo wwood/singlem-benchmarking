@@ -33,9 +33,11 @@ map2b_db = os.path.join(map2b_checkout_dir, 'database/GTDB')
 # metabuli_db_dir = join(output_directory, 'metabuli')
 # metabuli_db = join(metabuli_db_dir, 'gtdb')
 
-tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b', 'metabuli']
-## metabuli download is not scripted because it is via sharepoint, which gives an indirect link.
-# tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b']
+# map2b is excluded: its database is GTDB r202 (a release behind this benchmark's
+# r207) and its DownloadDB.py figshare links currently return empty 202
+# responses, so the download cannot complete. See the commented-out map2b rules
+# below.
+tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'metabuli']
 
 rule all:
     input:
@@ -50,11 +52,10 @@ rule metaphlan:
     output:
         done=touch(join(output_directory, 'metaphlan.done')),
         metaphlan_db=directory(metaphlan_db)
-    conda:
-        '1_novel_strains/envs/metaphlan.yml'
     log:
         join(output_directory, 'metaphlan.log')
     shell:
+        'eval "$(pixi shell-hook -e metaphlan)" && '
         'metaphlan --install --bowtie2db {metaphlan_db} --index {metaphlan_index} &> {log}'
 
 rule kraken_download:
@@ -99,11 +100,10 @@ rule sourmash_tax_convert:
     output:
         done=touch(join(output_directory, 'sourmash-tax.done')),
         sourmash_taxonomy=sourmash_db_taxonomy,
-    conda:
-        '1_novel_strains/envs/sourmash.yml'
     log:
         join(output_directory, 'sourmash-tax-convert.log')
     shell:
+        'eval "$(pixi shell-hook -e sourmash)" && '
         'sourmash tax prepare -t {input.sourmash_taxonomy} -o {output.sourmash_taxonomy} -F sql &> {log}'
 
 rule kaiju_download:
@@ -129,26 +129,29 @@ rule kaiju_extract:
     shell:
         'cd {params.outdir} && tar -xzf ../kaiju/kaiju_db_progenomes_2023-05-25.tgz &> {log}'
 
-rule map2b_checkout:
-    output:
-        done=touch(join(output_directory, 'map2b-checkout.done')),
-    log:
-        join(output_directory, 'map2b-checkout.log')
-    shell:
-        'rm -rf {map2b_checkout_dir} && git clone --branch MAP2Bv1.5 https://github.com/sunzhengCDNM/MAP2B {map2b_checkout_dir} &> {log}'
+# map2b download disabled: its DownloadDB.py pulls the GTDB r202 database from
+# figshare, whose links currently return empty 202 ("preparing") responses, so
+# the download never completes. (Updating MAP2B v1.5 -> v1.8 refreshes the
+# figshare IDs but the links still stall and the DB stays GTDB r202.)
+# rule map2b_checkout:
+#     output:
+#         done=touch(join(output_directory, 'map2b-checkout.done')),
+#     log:
+#         join(output_directory, 'map2b-checkout.log')
+#     shell:
+#         'rm -rf {map2b_checkout_dir} && git clone --branch MAP2Bv1.5 https://github.com/sunzhengCDNM/MAP2B {map2b_checkout_dir} &> {log}'
 
-rule map2b:
-    input:
-        join(output_directory, 'map2b-checkout.done'),
-    output:
-        done=touch(join(output_directory, 'map2b.done')),
-        map2b_db=directory(map2b_db)
-    conda:
-        "1_novel_strains/envs/MAP2B-20230420-conda.yml"
-    log:
-        join(output_directory, 'map2b.log')
-    shell:
-        'python3 {map2b_checkout_dir}/scripts/DownloadDB.py -l {map2b_checkout_dir}/config/GTDB.CjePI.database.list -d {map2b_checkout_dir}/database/GTDB &> {log}'
+# rule map2b:
+#     input:
+#         join(output_directory, 'map2b-checkout.done'),
+#     output:
+#         done=touch(join(output_directory, 'map2b.done')),
+#         map2b_db=directory(map2b_db)
+#     log:
+#         join(output_directory, 'map2b.log')
+#     shell:
+#         'eval "$(pixi shell-hook -e map2b)" && '
+#         'python3 {map2b_checkout_dir}/scripts/DownloadDB.py -l {map2b_checkout_dir}/config/GTDB.CjePI.database.list -d {map2b_checkout_dir}/database/GTDB &> {log}'
 
 ## metabuli database download doesn't work because it is via sharepoint, which gives an indirect link.
 # rule metabuli_download:
@@ -173,11 +176,10 @@ rule map2b:
 rule motus_db:
     output:
         done=touch(join(output_directory, 'motus-download.done')),
-    conda:
-        "1_novel_strains/envs/motus.yml"
     log:
         abspath(join(output_directory, 'motus-download.log'))
     shell:
+        'eval "$(pixi shell-hook -e motus)" && '
         'motus downloadDB &> {log}'
 
 rule motus_db_move:
@@ -186,12 +188,11 @@ rule motus_db_move:
     output:
         motus_db=directory(motus_db),
         done=touch(join(output_directory, 'motus-db.done')),
-    conda:
-        "1_novel_strains/envs/motus.yml"
     log:
         abspath(join(output_directory, 'motus-db-move.log'))
     shell:
         # ls /mnt/hpccs01/work/microbiome/msingle/mess/124_singlem-benchmarking/.snakemake/conda/b06521a4ea0bdbb4dd2eabbe19701683_/lib/python3.9/site-packages/motus/db_mOTU/
+        'eval "$(pixi shell-hook -e motus)" && '
         'bin/migrate_motus_db.py {output.motus_db}'
 
 rule motus_gtdb:
@@ -214,11 +215,10 @@ rule singlem_download:
     output:
         done=touch(join(output_directory, 'singlem-download.done')),
         singlem_metapackage_tgz=singlem_metapackage_tgz
-    conda:
-        '1_novel_strains/envs/singlem.yml'
     log:
         join(output_directory, 'singlem-download.log')
     shell:
+        'eval "$(pixi shell-hook -e singlem)" && '
         "wget 'https://zenodo.org/records/11107165/files/S4.1.0.GTDB_r207.metapackage_20240502.smpkg.zb.tar.gz?download=1' -O {output.singlem_metapackage_tgz} &> {log}"
 
 rule singlem_extract:
@@ -394,7 +394,7 @@ rule download_metabuli:
     shell:
         """
         mkdir -p {output_directory}/metabuli
-        wget https://connectqutedu.sharepoint.com/:u:/s/metabuli_gtdb_207/EYk7N71mp-NAtET5_X_fBDABM6AC_DCbxGiDc2rdVVlNiw?download=1 -O {output.metabuli_tar} &> {log}
+        wget 'https://connectqutedu.sharepoint.com/:u:/s/metabuli_gtdb_207/IQCJOze9ZqfjQLRE-f1_3wQwATOgAvwwm8Rog3Nq3VVZTYs?e=10gHU1&download=1' -O {output.metabuli_tar} &> {log}
         """
 
 rule extract_metabuli:

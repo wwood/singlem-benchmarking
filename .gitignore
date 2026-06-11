@@ -14,3 +14,6 @@ ar53_metadata*
 3_cami2_marine/simulation_short_read
 3_cami2_marine/split_reads
 reference_genomes
+# pixi environments
+.pixi/*
+!.pixi/config.toml

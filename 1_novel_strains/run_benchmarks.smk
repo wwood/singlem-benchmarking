@@ -67,9 +67,8 @@ rule tool_condensed_to_biobox:
         extra_args = lambda wildcards: get_condensed_to_biobox_extra_args(wildcards.tool)
     output:
         biobox = output_prefix + "{tool}/biobox/{sample}.biobox",
-    conda:
-        "envs/singlem.yml"
     shell:
+        'eval "$(pixi shell-hook -e singlem)" && '
         "{workflow.basedir}/../bin/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
         "--output-biobox {output.biobox} --template-biobox {params.truth} "
 
@@ -83,9 +82,8 @@ rule opal:
     output:
         report=output_prefix+"{tool}/opal/{sample}.opal_report",
         done=output_prefix+"{tool}/opal/{sample}.opal_report.done",
-    conda:
-        'envs/opal.yml'
     shell:
+        'eval "$(pixi shell-hook -e opal)" && '
         "opal.py -g {params.truth} -o {params.output_opal_dir} {input.biobox} || echo 'expected opal non-zero existatus'; mv {params.output_opal_dir}/results.tsv {output.report} && rm -rf {params.output_opal_dir} && touch {output.done}"
 
 
@@ -115,13 +113,12 @@ rule singlem_run_to_profile:
     output:
         report=output_dirs_dict['singlem'] + "/singlem/{sample}.profile",
         done=touch(output_dirs_dict['singlem'] + "/singlem/{sample}.profile.done")
-    conda:
-        "envs/singlem.yml"
     threads:
         num_threads
     log:
         output_dirs_dict['singlem'] + "/logs/singlem/{sample}.log"
     shell:
+        'eval "$(pixi shell-hook -e singlem)" && '
         "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} &> {log}"
 
 
@@ -153,9 +150,8 @@ rule cat_reads_for_metaphlan:
     output:
         cat_reads = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.cat.fq.gz",
         done = touch(output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.cat.done")
-    conda:
-        "envs/metaphlan.yml"
     shell:
+        'eval "$(pixi shell-hook -e metaphlan)" && '
         "cat {input.r1} {input.r2} > {output.cat_reads}"
 
 rule metaphlan_profile:
@@ -170,13 +166,12 @@ rule metaphlan_profile:
     output:
         sgb_report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.sgb_report",
         done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile.done")
-    conda:
-        "envs/metaphlan.yml"
     threads: num_threads
     log:
         output_dirs_dict['metaphlan'] + "/logs/metaphlan/{sample}.log"
     shell:
         # Concatenate input files because metaphlan can't handle multiple input files
+        'eval "$(pixi shell-hook -e metaphlan)" && '
         "rm -f {output.sgb_report} {input.cat_reads}.bowtie2out.txt; metaphlan {input.cat_reads} --index {metaphlan_index} --nproc {threads} --input_type fastq --bowtie2db {metaphlan_db_local1} -o {output.sgb_report} &> {log}"
 
 rule metaphlan_convert_profile_to_GTDB:
@@ -185,11 +180,10 @@ rule metaphlan_convert_profile_to_GTDB:
     output:
         gtdb_report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_profile",
         done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_report.done")
-    conda:
-        "envs/metaphlan.yml"
     log:
         output_dirs_dict['metaphlan'] + "/logs/metaphlan/{sample}-convert.log"
     shell:
+        'eval "$(pixi shell-hook -e metaphlan)" && '
         "sgb_to_gtdb_profile.py -i {input.report} -o {output.gtdb_report} -d {metaphlan_db_local1}/mpa_vOct22_CHOCOPhlAnSGB_202212.pkl &> {log}"
 
 rule metaphlan_profile_to_condensed:
@@ -197,9 +191,8 @@ rule metaphlan_profile_to_condensed:
         report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_profile"
     output:
         profile = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile",
-    conda:
-        "envs/singlem.yml"
     shell:
+        'eval "$(pixi shell-hook -e singlem)" && '
         "{workflow.basedir}/../bin/metaphlan_to_condensed.py --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
 
 ###############################################################################################
@@ -273,11 +266,10 @@ rule kraken_run:
     output:
         report=output_dirs_dict['kraken'] + "/kraken/{sample}.kraken",
         done=touch(output_dirs_dict['kraken'] + "/kraken/{sample}.kraken.done")
-    conda:
-        "envs/kraken.yml"
     log:
         output_dirs_dict['kraken'] + "/logs/kraken/{sample}.log"
     shell:
+        'eval "$(pixi shell-hook -e kraken)" && '
         "kraken2 --db {input.db} --threads {num_threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} &> {log}"
 
 rule braken_run:
@@ -294,11 +286,10 @@ rule braken_run:
         p=output_dirs_dict['kraken'] + "/braken/{sample}.report.P",
         d=output_dirs_dict['kraken'] + "/braken/{sample}.report.D",
         done=touch(output_dirs_dict['kraken'] + "/braken/{sample}.done")
-    conda:
-        "envs/bracken.yml"
     log:
         output_dirs_dict['kraken'] + "/logs/bracken/{sample}.log"
     shell:
+        'eval "$(pixi shell-hook -e bracken)" && '
         "bash -c 'bracken -d {input.db} -r 150 -l S -t 10 -o {output.s} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l G -t 10 -o {output.g} -i {input.kraken_report} && " \
         "bracken -d {input.db} -r 150 -l F -t 10 -o {output.f} -i {input.kraken_report} && " \
@@ -324,12 +315,11 @@ rule bracken_to_profile:
         truth = truth_dir + "/{sample}.condensed.biobox",
     output:
         profile = output_dirs_dict['kraken'] + "/kraken/{sample}.profile",
-    conda:
-        "envs/singlem.yml"
     log:
         output_dirs_dict['kraken'] + "/logs/bracken_to_profile/{sample}.log"
     shell:
         # Convert reports to singlem condense format
+        'eval "$(pixi shell-hook -e singlem)" && '
         "mkdir -p {params.biobox_dir} && " \
         "{workflow.basedir}/../bin/kraken_to_condensed.py --report-prefix {params.report_prefix} " \
         "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \
@@ -369,8 +359,6 @@ rule sourmash_run:
     output:
         report=output_dirs_dict['sourmash'] + "/sourmash/{sample}.csv",
         done=touch(output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile.done")
-    conda:
-        "envs/sourmash.yml"
     params:
         output_dir = output_dirs_dict['sourmash'],
         sourmash_prefix = lambda wildcards: output_dirs_dict['sourmash'] + "/sourmash/"+wildcards.sample
@@ -378,6 +366,7 @@ rule sourmash_run:
         output_dirs_dict['sourmash'] + "/logs/sourmash/{sample}.log"
     shell:
         # Sourmash does not seem to have a --threads option
+        'eval "$(pixi shell-hook -e sourmash)" && '
         "sourmash sketch dna -p k=31,abund --merge blah -o {params.sourmash_prefix}.sig {input.r1} {input.r2} "\
         "&& echo \"running gather..\" "\
         "&& sourmash gather -k 31 --dna {params.sourmash_prefix}.sig {sourmash_db_dna} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv "\
@@ -547,13 +536,12 @@ rule metabuli_run:
     threads: kraken_num_threads
     benchmark:
         benchmark_dir + "/metabuli/{sample}-"+str(num_threads)+"threads.benchmark"
-    conda:
-        "envs/metabuli.yml"
     params:
         output_dir = output_dirs_dict['metabuli'],
     log:
         output_dirs_dict['metabuli'] + "/logs/metabuli/{sample}.log"
     shell:
+        'eval "$(pixi shell-hook -e metabuli)" && '
         "metabuli classify --threads {threads} {input.r1} {input.r2} {input.db} {params.output_dir}/output {wildcards.sample}"
 
 rule metabuli_report_to_condensed:
@@ -561,9 +549,8 @@ rule metabuli_report_to_condensed:
         report=output_dirs_dict['metabuli'] + "/output/{sample}_report.tsv",
     output:
         profile = output_dirs_dict['metabuli'] + "/metabuli/{sample}.profile",
-    conda:
-        "envs/singlem.yml"
     shell:
+        'eval "$(pixi shell-hook -e singlem)" && '
         "{workflow.basedir}/../bin/metabuli_to_condensed.py --input {input} " \
         "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \
         "--archaeal-taxonomy ../ar53_taxonomy_r207.tsv > {output.profile}"

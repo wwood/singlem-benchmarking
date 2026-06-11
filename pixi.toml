@@ -1,0 +1,120 @@
+[workspace]
+authors = ["Ben Woodcroft <benjwoodcroft@gmail.com>"]
+channels = ["conda-forge", "bioconda"]
+name = "singlem-benchmarking"
+platforms = ["linux-64"]
+version = "0.1.0"
+# These environments were originally created from conda yml files with the
+# default (flexible) channel priority. Pixi defaults to strict channel priority,
+# which fails to solve some of the older pinned tool environments (e.g. map2b's
+# perl stack). Use flexible priority to reproduce the original solving behaviour.
+channel-priority = "disabled"
+
+# The default environment drives the Snakemake workflows themselves
+# (orchestration, plotting and notebook rendering). Individual tools that are
+# benchmarked each get their own isolated environment below, mirroring what used
+# to be the per-rule conda `envs/*.yml` files.
+[dependencies]
+python = ">=3.10"
+snakemake = "*"
+snakemake-executor-plugin-cluster-generic = "*"
+polars = "*"
+extern = "*"
+jupyterlab = "*"
+nbconvert = "*"
+r = "*"
+r-irkernel = "*"
+"r-data.table" = "*"
+r-ggplot2 = "*"
+r-ggbeeswarm = "*"
+r-ggpubr = "*"
+r-patchwork = "*"
+r-svglite = "*"
+ncbi-datasets-cli = "*"
+bird_tool_utils_python = "*"
+tqdm = "*"
+scipy = "*"
+pyarrow = "*"
+
+#####################################################################
+# Per-tool environments. Each one is isolated (no-default-feature) so that
+# conflicting dependencies (e.g. MAP2B needs python 3.7) do not clash with the
+# default orchestration environment. Snakemake rules activate the relevant one
+# at runtime via `pixi shell-hook` (see the `pixi(...)` helper in each
+# Snakefile).
+
+[feature.singlem.dependencies]
+singlem = "==0.18.0"
+
+[feature.metaphlan.dependencies]
+metaphlan = "==4.0.6"
+# metaphlan 4.0.6 imports distutils (removed in python 3.12+); without this pin
+# the solver picks python 3.13 and `metaphlan --install` fails with
+# ModuleNotFoundError: No module named 'distutils'.
+python = "<3.12"
+
+[feature.motus.dependencies]
+motus = "==3.1.0"
+
+[feature.metabuli.dependencies]
+metabuli = "==1.0.3"
+
+[feature.sourmash.dependencies]
+sourmash = "==4.8.8"
+
+[feature.kraken.dependencies]
+kraken2 = "*"
+
+[feature.bracken.dependencies]
+bracken = "*"
+
+[feature.kaiju.dependencies]
+kaiju = "==1.9.2"
+
+[feature.kaiju-to-kingdom.dependencies]
+pytaxonkit = "*"
+polars = "*"
+ipython = "*"
+
+[feature.opal.dependencies]
+cami-opal = "==1.0.11"
+
+[feature.art.dependencies]
+python = ">=3.10"
+art = "*"
+pandas = "*"
+extern = "*"
+polars = "*"
+pyarrow = "*"
+
+[feature.coverm.dependencies]
+coverm = "*"
+
+# MAP2B's classification output is determined by its python stack (pinned
+# below). The original conda env also pinned perl=5.26.2 and
+# perl-parallel-forkmanager=2.02, but those pins no longer co-solve against
+# current repodata (the only remaining perl-parallel-forkmanager builds require
+# perl>=5.32), so the perl pins are left open for the solver to satisfy.
+[feature.map2b.dependencies]
+perl = "*"
+perl-parallel-forkmanager = "*"
+python = "3.7.0.*"
+joblib = "0.13.2.*"
+scikit-learn = "0.24.1.*"
+pandas = "1.2.0.*"
+marisa-trie = "0.7.7.*"
+
+[environments]
+singlem = { features = ["singlem"], no-default-feature = true }
+metaphlan = { features = ["metaphlan"], no-default-feature = true }
+motus = { features = ["motus"], no-default-feature = true }
+metabuli = { features = ["metabuli"], no-default-feature = true }
+sourmash = { features = ["sourmash"], no-default-feature = true }
+kraken = { features = ["kraken"], no-default-feature = true }
+bracken = { features = ["bracken"], no-default-feature = true }
+kaiju = { features = ["kaiju"], no-default-feature = true }
+kaiju-to-kingdom = { features = ["kaiju-to-kingdom"], no-default-feature = true }
+opal = { features = ["opal"], no-default-feature = true }
+art = { features = ["art"], no-default-feature = true }
+coverm = { features = ["coverm"], no-default-feature = true }
+map2b = { features = ["map2b"], no-default-feature = true }
