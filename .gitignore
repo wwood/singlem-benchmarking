@@ -14,6 +14,11 @@ ar53_metadata*
 3_cami2_marine/simulation_short_read
 3_cami2_marine/split_reads
 reference_genomes
+2_phylogenetic_novelty/bench2_genomes.tar.gz
+2_phylogenetic_novelty/reference_genomes-download.done
+2_phylogenetic_novelty/reference_genomes-extract.done
+__pycache__
+**/__pycache__
 # pixi environments
 .pixi/*
 !.pixi/config.toml

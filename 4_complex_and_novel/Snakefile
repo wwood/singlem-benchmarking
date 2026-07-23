@@ -8,10 +8,11 @@ from tool_reference_data import *
 
 num_threads = config['benchmarking_threads']
 kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
+kraken_num_threads = 1
 if 'kraken_threads' in config:
     kraken_num_threads = config['kraken_threads']
 
-tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'map2b', 'kaiju', 'metabuli']
+tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'map2b', 'kaiju', 'metabuli', 'sylph']
 
 output_prefix = 'output_'
 output_dirs = list([output_prefix+tool for tool in tools])
@@ -78,6 +79,8 @@ sourmash_db_dna_local = output_dirs_dict['sourmash'] + '/sourmash/data/gtdb-rs20
 # metabuli_db = '/work/microbiome/db/metabuli/gtdb207'
 metabuli_db_local = output_dirs_dict['metabuli'] + '/metabuli/data/gtdb207'
 
+sylph_db_local = output_dirs_dict['sylph'] + '/sylph/data/gtdb_database.syldb'
+
 #####################################################################
 
 
@@ -125,8 +128,7 @@ rule truth_condensed_to_biobox:
     input:
         condensed = os.path.join(truth_dir, "known{known_percent}/{sample}.condensed"),
     output:
-        biobox = os.path.join(truth_dir, "known{known_percent}/{sample}.condensed.biobox"),
-        'singlem-dev' # Need changes post 0.16
+        biobox = os.path.join(truth_dir, "known{known_percent}/{sample}.condensed.biobox")
     resources:
         mem_mb=4000,
         runtime='1h'
@@ -706,3 +708,48 @@ rule metabuli_report_to_condensed:
         "--bacterial-taxonomy {gtdb_bac_taxonomy} " \
         "--archaeal-taxonomy {gtdb_ar_taxonomy} > {output.profile}"
 
+###############################################################################################
+###############################################################################################
+###############################################################################################
+######### sylph
+
+rule sylph_copy_db:
+    input:
+        db=sylph_db,
+    output:
+        db=sylph_db_local,
+        done=touch(output_dirs_dict['sylph'] + "/sylph/data/done")
+    shell:
+        "mkdir -p output.db && cp -r {input.db} {output.db}"
+
+rule sylph_run:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db=sylph_db_local,
+        done=output_dirs_dict['sylph'] + "/sylph/data/done"
+    output:
+        report=output_dirs_dict['sylph'] + "/output/{sample}.tsv",
+        done=touch(output_dirs_dict['sylph'] + "/output/{sample}.done")
+    threads: num_threads
+    resources:
+        mem_mb=32000
+    benchmark:
+        benchmark_dir + "/sylph/{sample}-"+str(num_threads)+"threads.benchmark"
+    log:
+        output_dirs_dict['sylph'] + "/logs/sylph/{sample}.log"
+    shell:
+        "pixi run --environment sylph sylph profile {input.db} -1 {input.r1} -2 {input.r2} -t {threads} > {output.report} 2> {log}"
+
+rule sylph_report_to_condensed:
+    input:
+        report=output_dirs_dict['sylph'] + "/output/{sample}.tsv",
+    output:
+        profile = output_dirs_dict['sylph'] + "/sylph/{sample}.profile",
+    conda:
+        "envs/singlem.yml"
+    shell:
+        "python3 {workflow.basedir}/../bin/sylph_to_condensed.py --sylph-genome {input} " \
+        "--sample {wildcards.sample} " \
+        "--bac-tax {gtdb_bac_taxonomy} " \
+        "--arc-tax {gtdb_ar_taxonomy} > {output.profile}"

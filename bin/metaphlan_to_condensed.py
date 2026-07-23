@@ -65,7 +65,9 @@ if __name__ == '__main__':
     total_coverage = 0
     taxon_to_coverage = {}
     for i, row in d.iterrows():
-        if 's__' in row['clade_name']:
+        if row['clade_name'] == 'UNCLASSIFIED':
+            total_coverage += float(row['relative_abundance'])
+        elif 's__' in row['clade_name']:
             splits = [s.strip() for s in row['clade_name'].split(';')]
             if len(splits) != 7:
                 raise Exception(f'Unexpected number of splits: {len(splits)}')

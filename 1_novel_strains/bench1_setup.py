@@ -28,6 +28,8 @@ singlem_metapackage_local = join(output_dirs_dict['singlem'], 'data', os.path.ba
 # metaphlan_db_original1 = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/metaphlan_bowtiedb'
 metaphlan_db_local1 = output_dirs_dict['metaphlan'] + '/metaphlan/data/metaphlan_bowtiedb'
 
+metaphlan42_db_local1 = output_dirs_dict['metaphlan42'] + '/metaphlan42/data/metaphlan_bowtiedb'
+
 # motus_db_path_original = '/work/microbiome/msingle/mess/124_singlem-benchmarking/db_mOTU'
 # motus_db_path_local = output_dirs_dict['motus'] + '/motus/data/db_mOTU'
 # motus_gtdb_tsv = '/work/microbiome/msingle/mess/115_camisim_ish_benchmarking/motus/mOTUs_3.0.0_GTDB_tax.tsv'
@@ -54,3 +56,7 @@ kaiju_db_progenomes_names = output_dirs_dict['kaiju'] + '/kaiju/data/names.dmp'
 
 # metabuli_db = '/work/microbiome/db/metabuli/gtdb207'
 metabuli_db_local = output_dirs_dict['metabuli'] + '/metabuli/data/gtdb207'
+
+sylph_db_local = output_dirs_dict['sylph'] + '/sylph/data/gtdb_database.syldb'
+
+metakssd_markerdb_local = output_dirs_dict['metakssd'] + '/metakssd/data/markerdb'

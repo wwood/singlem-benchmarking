@@ -19,6 +19,7 @@ fastq_dir = os.path.join(workflow.basedir, 'local_reads')
 
 #####################################################################
 
+tools = tools + ["metaphlan42", "metakssd"]
 
 rule all:
     input:
@@ -42,16 +43,22 @@ rule all_singlem:
     output:
         touch(output_prefix + "singlem/done")
 
-# rule copy_reads_to_local:
-#     params:
-#         r1=generated_fastq_dir + "/{sample}.1.fq.gz",
-#         r2=generated_fastq_dir + "/{sample}.2.fq.gz",
-#     output:
-#         r1=fastq_dir + "/{sample}.1.fq.gz",
-#         r2=fastq_dir + "/{sample}.2.fq.gz",
-#         done=touch(fastq_dir + "/{sample}.done")
-#     shell:
-#         "cp {params.r1} {output.r1} && cp {params.r2} {output.r2}"
+rule all_metakssd:
+    input:
+        expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=datasets, tool=['metakssd'])
+    output:
+        touch(output_prefix + "singlem/done")
+
+rule copy_reads_to_local:
+    params:
+        r1=generated_fastq_dir + "/{sample}.1.fq.gz",
+        r2=generated_fastq_dir + "/{sample}.2.fq.gz",
+    output:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        done=touch(fastq_dir + "/{sample}.done")
+    shell:
+        "cp {params.r1} {output.r1} && cp {params.r2} {output.r2}"
 
 def get_condensed_to_biobox_extra_args(tool):
     if tool in tools_with_filled_output_profiles:
@@ -167,6 +174,8 @@ rule metaphlan_profile:
         sgb_report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.sgb_report",
         done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile.done")
     threads: num_threads
+    resources:
+        mem_mb=256000
     log:
         output_dirs_dict['metaphlan'] + "/logs/metaphlan/{sample}.log"
     shell:
@@ -193,6 +202,85 @@ rule metaphlan_profile_to_condensed:
         profile = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile",
     shell:
         'eval "$(pixi shell-hook -e singlem)" && '
+        "{workflow.basedir}/../bin/metaphlan_to_condensed.py --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+#########
+######### metaphlan42
+
+
+rule metaphlan42_copy_db:
+    # input:
+    # Cannot use the directory as input/output because humann complains when
+    # there's a snakemake hidden file in the dir
+    # db1=directory(metaphlan_db_original1),
+    # db2=directory(metaphlan_db_original2),
+    output:
+        # db1=directory(metaphlan_db_local1),
+        # db2=directory(metaphlan_db_local2),
+        done=touch(output_dirs_dict['metaphlan42'] + "/metaphlan42/data/done")
+    shell:
+        "cp -rvL {metaphlan42_db} {metaphlan42_db_local1}"
+
+rule cat_reads_for_metaphlan42:
+    # Concatenate input files because metaphlan can't handle multiple input files
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+    output:
+        cat_reads = output_dirs_dict['metaphlan42'] + "/metaphlan42/{sample}.cat.fq.gz",
+        done = touch(output_dirs_dict['metaphlan42'] + "/metaphlan42/{sample}.cat.done")
+    #conda:
+    #    "envs/metaphlan.yml"
+    shell:
+        "cat {input.r1} {input.r2} > {output.cat_reads}"
+
+rule metaphlan42_profile:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db_done=output_dirs_dict['metaphlan42'] + "/metaphlan42/data/done",
+        cat_reads = output_dirs_dict['metaphlan42'] + "/metaphlan42/{sample}.cat.fq.gz",
+        cat_done = output_dirs_dict['metaphlan42'] + "/metaphlan42/{sample}.cat.done",
+    benchmark:
+        benchmark_dir + "/metaphlan42/{sample}-"+str(num_threads)+"threads.benchmark"
+    output:
+        sgb_report=output_dirs_dict['metaphlan42'] + "/metaphlan42/{sample}.sgb_report",
+        done=touch(output_dirs_dict['metaphlan42'] + "/metaphlan42/{sample}.profile.done")
+    #conda:
+    #    "envs/metaphlan.yml"
+    threads: num_threads
+    resources:
+        mem_mb=256000
+    log:
+        output_dirs_dict['metaphlan42'] + "/logs/metaphlan42/{sample}.log"
+    shell:
+        # Concatenate input files because metaphlan42 can't handle multiple input files
+        "rm -f {output.sgb_report} {input.cat_reads}.mapout.txt; pixi run --environment metaphlan42 metaphlan {input.cat_reads} --index {metaphlan_index} --nproc {threads} --input_type fastq --db_dir {metaphlan42_db_local1} --mapout {input.cat_reads}.mapout.txt -o {output.sgb_report} &> {log}"
+
+rule metaphlan42_convert_profile_to_GTDB:
+    input:
+        report=output_dirs_dict['metaphlan42'] + "/metaphlan42/{sample}.sgb_report"
+    output:
+        gtdb_report=output_dirs_dict['metaphlan42'] + "/metaphlan42/{sample}.gtdb_profile",
+        done=touch(output_dirs_dict['metaphlan42'] + "/metaphlan42/{sample}.gtdb_report.done")
+    conda:
+        "envs/metaphlan.yml"
+    log:
+        output_dirs_dict['metaphlan42'] + "/logs/metaphlan42/{sample}-convert.log"
+    shell:
+        "sgb_to_gtdb_profile.py -i {input.report} -o {output.gtdb_report} -d {metaphlan42_db_local1}/mpa_vOct22_CHOCOPhlAnSGB_202212.pkl &> {log}"
+
+rule metaphlan42_profile_to_condensed:
+    input:
+        report=output_dirs_dict['metaphlan42'] + "/metaphlan42/{sample}.gtdb_profile"
+    output:
+        profile = output_dirs_dict['metaphlan42'] + "/metaphlan42/{sample}.profile",
+    conda:
+        "envs/singlem.yml"
+    shell:
         "{workflow.basedir}/../bin/metaphlan_to_condensed.py --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
 
 ###############################################################################################
@@ -263,6 +351,8 @@ rule kraken_run:
     benchmark:
         benchmark_dir + "/kraken/{sample}-"+str(num_threads)+"threads.benchmark"
     threads: kraken_num_threads
+    resources:
+        mem_mb=512000
     output:
         report=output_dirs_dict['kraken'] + "/kraken/{sample}.kraken",
         done=touch(output_dirs_dict['kraken'] + "/kraken/{sample}.kraken.done")
@@ -534,6 +624,8 @@ rule metabuli_run:
         report=output_dirs_dict['metabuli'] + "/output/{sample}_report.tsv",
         done=touch(output_dirs_dict['metabuli'] + "/output/{sample}.done")
     threads: kraken_num_threads
+    resources:
+        mem_mb=256000
     benchmark:
         benchmark_dir + "/metabuli/{sample}-"+str(num_threads)+"threads.benchmark"
     params:
@@ -554,3 +646,116 @@ rule metabuli_report_to_condensed:
         "{workflow.basedir}/../bin/metabuli_to_condensed.py --input {input} " \
         "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \
         "--archaeal-taxonomy ../ar53_taxonomy_r207.tsv > {output.profile}"
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+######### sylph
+
+rule sylph_copy_db:
+    input:
+        db=sylph_db,
+    output:
+        db=sylph_db_local,
+        done=touch(output_dirs_dict['sylph'] + "/sylph/data/done")
+    shell:
+        "mkdir -p output.db && cp -r {input.db} {output.db}"
+
+rule sylph_run:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db=sylph_db_local,
+        done=output_dirs_dict['sylph'] + "/sylph/data/done"
+    output:
+        report=output_dirs_dict['sylph'] + "/output/{sample}.tsv",
+        done=touch(output_dirs_dict['sylph'] + "/output/{sample}.done")
+    threads: num_threads
+    resources:
+        mem_mb=32000
+    benchmark:
+        benchmark_dir + "/sylph/{sample}-"+str(num_threads)+"threads.benchmark"
+    log:
+        output_dirs_dict['sylph'] + "/logs/sylph/{sample}.log"
+    shell:
+        "pixi run --environment sylph sylph profile {input.db} -1 {input.r1} -2 {input.r2} -t {threads} > {output.report} 2> {log}"
+
+rule sylph_report_to_condensed:
+    input:
+        report=output_dirs_dict['sylph'] + "/output/{sample}.tsv",
+    output:
+        profile = output_dirs_dict['sylph'] + "/sylph/{sample}.profile",
+    conda:
+        "envs/singlem.yml"
+    shell:
+        "python3 {workflow.basedir}/../bin/sylph_to_condensed.py --sylph-genome {input} " \
+        "--sample {wildcards.sample} " \
+        "--bac-tax ../bac120_taxonomy_r207.tsv " \
+        "--arc-tax ../ar53_taxonomy_r207.tsv > {output.profile}"
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+######### metakssd
+
+rule metakssd_copy_db:
+    input:
+        db=metakssd_markerdb,
+    output:
+        db=directory(metakssd_markerdb_local),
+        done=touch(output_dirs_dict['metakssd'] + "/metakssd/data/done")
+    shell:
+        "mkdir -p output.db && cp -r {input.db} {output.db}"
+
+rule cat_reads_for_metakssd:
+    # Concatenate input files because metakssd can't handle multiple input files
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+    output:
+        cat_reads = output_dirs_dict['metakssd'] + "/metakssd/{sample}.cat.fq.gz",
+        done = touch(output_dirs_dict['metakssd'] + "/metakssd/{sample}.cat.done")
+    shell:
+        "cat {input.r1} {input.r2} > {output.cat_reads}"
+
+rule metakssd_run:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db=metakssd_markerdb_local,
+        done=output_dirs_dict['metakssd'] + "/metakssd/data/done",
+        cat_reads = output_dirs_dict['metakssd'] + "/metakssd/{sample}.cat.fq.gz",
+        cat_done = output_dirs_dict['metakssd'] + "/metakssd/{sample}.cat.done",
+    output:
+        sketch=directory(output_dirs_dict['metakssd'] + "/output/{sample}_K3K11_sketch"),
+        coverage=output_dirs_dict['metakssd'] + "/output/{sample}_species_coverage.tsv",
+        report=output_dirs_dict['metakssd'] + "/output/{sample}_profile.tsv",
+        done=touch(output_dirs_dict['metakssd'] + "/output/{sample}.done")
+    threads: num_threads
+    resources:
+        mem_mb=32000
+    benchmark:
+        benchmark_dir + "/metakssd/{sample}-"+str(num_threads)+"threads.benchmark"
+    log:
+        output_dirs_dict['metakssd'] + "/logs/metakssd/{sample}.log"
+    shell:
+        "pixi run --environment metakssd metakssd dist " \
+        "-L {metakssd_checkout_dir}/shuf_files/L3K11.shuf -A " \
+        "-o {output.sketch} {input.cat_reads} && " \
+        "pixi run --environment metakssd metakssd composite " \
+        "-r {metakssd_markerdb_local} -q {output.sketch} > {output.coverage} && " \
+        "pixi run --environment metakssd perl {metakssd_checkout_dir}/scripts/possion.kssd2out.pl " \
+        "{output.coverage} 18 > {output.report}"
+
+rule metakssd_report_to_condensed:
+    input:
+        report=output_dirs_dict['metakssd'] + "/output/{sample}_profile.tsv",
+    output:
+        profile = output_dirs_dict['metakssd'] + "/metakssd/{sample}.profile",
+    conda:
+        "envs/singlem.yml"
+    shell:
+        "python3 {workflow.basedir}/../bin/metakssd_to_condensed.py --metakssd-genome {input} " \
+        "--sample {wildcards.sample} " \
+        "--bac-tax ../bac120_taxonomy_r207.tsv " \
+        "--arc-tax ../ar53_taxonomy_r207.tsv > {output.profile}"
