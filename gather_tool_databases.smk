@@ -11,6 +11,7 @@ singlem_metapackage = join(output_directory, 'S4.1.0.GTDB_r207.metapackage_20240
 singlem_metapackage_tgz = singlem_metapackage + '.zb.tar.gz'
 
 metaphlan_db = join(output_directory, 'metaphlan_bowtiedb')
+metaphlan42_db = join(output_directory, 'metaphlan42_bowtiedb')
 metaphlan_index = 'mpa_vOct22_CHOCOPhlAnSGB_202212'
 
 motus_db = join(output_directory, 'motus', 'db_mOTU')
@@ -36,17 +37,26 @@ map2b_db = os.path.join(map2b_checkout_dir, 'database/GTDB')
 # map2b is excluded: its database is GTDB r202 (a release behind this benchmark's
 # r207) and its DownloadDB.py figshare links currently return empty 202
 # responses, so the download cannot complete. See the commented-out map2b rules
-# below.
-tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'metabuli']
+# below.s
+## metabuli download is not scripted because it is via sharepoint, which gives an indirect link.
+tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'metaphlan42']
 
 rule all:
     input:
         [join(output_directory, f'{tool}.done') for tool in tools],
-        join(output_directory, 'gtdb.done'),
+#        join(output_directory, 'gtdb.done'),
+#        join(output_directory, 'gtdb-ar.done'),
         join(output_directory, 'shadow-genomes.done'),
         ["3_cami2_marine/split_reads/marine{sample_number}.done".format(sample_number=sample_number) for sample_number in range(10)],
         "2_phylogenetic_novelty/genomes",
         "2_phylogenetic_novelty/genome_pairs",
+        "9_zymo/zymo_refseq.v2-download.done"
+
+rule dev:
+    input:
+        [join(output_directory, f'{tool}.done') for tool in ['singlem', 'sylph']],
+        join(output_directory, 'gtdb.done'),
+        join(output_directory, 'gtdb-ar.done'),
 
 rule metaphlan:
     output:
@@ -58,13 +68,22 @@ rule metaphlan:
         'eval "$(pixi shell-hook -e metaphlan)" && '
         'metaphlan --install --bowtie2db {metaphlan_db} --index {metaphlan_index} &> {log}'
 
+rule metaphlan42:
+    output:
+        done=touch(join(output_directory, 'metaphlan42.done')),
+        metaphlan_db=directory(metaphlan42_db)
+    log:
+        join(output_directory, 'metaphlan42.log')
+    shell:
+        'pixi run --environment metaphlan42 metaphlan --install --db_dir {metaphlan42_db} --index {metaphlan_index} &> {log}' ## metaphlan 4.2.2
+
 rule kraken_download:
     output:
         done=touch(join(output_directory, 'kraken.done')),
     log:
         abspath(join(output_directory, 'kraken-download.log'))
     shell:
-        "mkdir -pv {kraken_db} && cd {kraken_db} && wget --no-directories -r -np -e robots=off http://ftp.tue.mpg.de/ebio/projects/struo2/GTDB_release207/kraken2/ &> {log}"
+        "mkdir -pv {kraken_db} && cd {kraken_db} && wget --no-directories -r -np -c --progress=dot:mega -e robots=off http://ftp.tue.mpg.de/ebio/projects/struo2/GTDB_release207/kraken2/ &> {log}"
 
 rule sourmash:
     input:
@@ -235,45 +254,45 @@ rule singlem_extract:
     shell:
         "bash -c 'cd {output_directory} && tar -xzf {params.singlem_metapackage_basename}.zb.tar.gz && mv -v {params.singlem_metapackage_basename}.zb/payload_directory ../{output.singlem_metapackage}' &> {log}"
 
-rule gtdb_download_bac120:
-    output:
-        done=touch(join(output_directory, 'gtdb_download.done')),
-        tar = 'bac120_metadata_r207.tar.gz'
-    log:
-        join(output_directory, 'gtdb.log')
-    shell:
-        'wget https://data.gtdb.ecogenomic.org/releases/release207/207.0/bac120_metadata_r207.tar.gz -O {output.tar} &> {log}'
+#rule gtdb_download_bac120:
+#    output:
+#        done=touch(join(output_directory, 'gtdb-download-bac.done')),
+#        tar = 'bac120_metadata_r207.tar.gz'
+#    log:
+#        join(output_directory, 'gtdb-bac.log')
+#    shell:
+#        'wget https://data.gtdb.ecogenomic.org/releases/release207/207.0/bac120_metadata_r207.tar.gz -O {output.tar} &> {log}'
 
-rule gtdb_extract_bac120:
-    input:
-        done=join(output_directory, 'gtdb_download.done'),
-        tar = 'bac120_metadata_r207.tar.gz'
-    output:
-        done=touch(join(output_directory, 'gtdb.done')),
-    log:
-        join(output_directory, 'gtdb-extract.log')
-    shell:
-        'tar -xzf {input.tar} &> {log}'
+#rule gtdb_extract_bac120:
+#    input:
+#        done=join(output_directory, 'gtdb-download-bac.done'),
+#        tar = 'bac120_metadata_r207.tar.gz'
+#    output:
+#        done=touch(join(output_directory, 'gtdb-bac.done')),
+#    log:
+#        join(output_directory, 'gtdb-extract.log')
+#    shell:
+#        'tar -xzf {input.tar} &> {log}'
 
-rule gtdb_download_ar53:
-    output:
-        done=touch(join(output_directory, 'gtdb_download_ar53.done')),
-        tar = 'ar53_metadata_r207.tar.gz'
-    log:
-        join(output_directory, 'gtdb.log')
-    shell:
-        'wget https://data.gtdb.ecogenomic.org/releases/release207/207.0/ar53_metadata_r207.tar.gz -O {output.tar} &> {log}'
+#rule gtdb_download_ar53:
+#    output:
+#        done=touch(join(output_directory, 'gtdb-download-ar.done')),
+#        tar = 'ar53_metadata_r207.tar.gz'
+#    log:
+#        join(output_directory, 'gtdb-ar.log')
+#    shell:
+#        'wget https://data.gtdb.ecogenomic.org/releases/release207/207.0/ar53_metadata_r207.tar.gz -O {output.tar} &> {log}'
 
-rule gtdb_extract_ar53:
-    input:
-        done=join(output_directory, 'gtdb_download_ar53.done'),
-        tar = 'ar53_metadata_r207.tar.gz'
-    output:
-        done=touch(join(output_directory, 'gtdb-ar.done')),
-    log:
-        join(output_directory, 'gtdb-extract.log')
-    shell:
-        'tar -xzf {input.tar} &> {log}'
+#rule gtdb_extract_ar53:
+#    input:
+#        done=join(output_directory, 'gtdb-download-ar.done'),
+#        tar = 'ar53_metadata_r207.tar.gz'
+#    output:
+#        done=touch(join(output_directory, 'gtdb-ar.done')),
+#    log:
+#        join(output_directory, 'gtdb-extract-ar.log')
+#    shell:
+#        'tar -xzf {input.tar} &> {log}'
 
 rule shadow_genomes_download:
     output:
@@ -385,26 +404,3 @@ rule bench2_genomes_extract:
         """
         cd 2_phylogenetic_novelty && tar -xzf bench2_genomes.tar.gz &> ../{log}
         """
-
-rule download_metabuli:
-    output:
-        metabuli_tar = join(output_directory, 'metabuli', 'metabuli.tar.gz'),
-    log:
-        join(output_directory, 'metabuli.log')
-    shell:
-        """
-        mkdir -p {output_directory}/metabuli
-        wget 'https://connectqutedu.sharepoint.com/:u:/s/metabuli_gtdb_207/IQCJOze9ZqfjQLRE-f1_3wQwATOgAvwwm8Rog3Nq3VVZTYs?e=10gHU1&download=1' -O {output.metabuli_tar} &> {log}
-        """
-
-rule extract_metabuli:
-    input:
-        metabuli_tar = join(output_directory, 'metabuli', 'metabuli.tar.gz'),
-    params:
-        output_directory = join(output_directory, 'metabuli'),
-    output:
-        done=touch(join(output_directory, 'metabuli.done')),
-    log:
-        join(output_directory, 'metabuli-extract.log')
-    shell:
-        'tar -xzf {input.metabuli_tar} -C {params.output_directory} &> {log}'
