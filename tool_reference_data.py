@@ -37,7 +37,15 @@ sylph_db = join(output_directory, "gtdb_database.syldb")
 metakssd_checkout_dir = join(output_directory, 'MetaKSSD-checkout')
 metakssd_markerdb = join(output_directory, "GTDBr207_genomes_L3K11_sketch_markerdb")
 
-tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b', 'metabuli', 'sylph', 'metaphlan42', 'metakssd']
+# singlem-regime3: the sylph-condense-regime3 SingleM branch (checked out as the
+# singlem_sylph_condense_regime submodule, env `singlem-regime3`). It reuses the
+# standard r207 SingleM metapackage, but its --joint condense also needs a sylph
+# profile, which is produced by the `weebill` sylph fork (built from the weebill
+# submodule) against a GTDB r207 two-stage sylph database built at -c 100.
+weebill_binary = abspath(join('..', 'weebill', 'target', 'release', 'weebill'))
+weebill_db = '/scratch/microbiome/woodcrob/non_sensitive/weebill_dbs/r207.100.syl2db'
+
+tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b', 'metabuli', 'sylph', 'metaphlan42', 'metakssd', 'singlem-regime3']
 
 tools_with_filled_output_profiles = ('kraken','sourmash')
 

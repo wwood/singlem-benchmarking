@@ -88,6 +88,10 @@ pandas = "*"
 extern = "*"
 polars = "*"
 pyarrow = "*"
+# generate_community.py pipes simulated reads through pigz; without it here the
+# rule only worked when a system pigz happened to be on the login-node PATH,
+# which is absent in the compute-node sandbox.
+pigz = "*"
 
 [feature.coverm.dependencies]
 coverm = "*"
@@ -179,7 +183,10 @@ gtdbtk = "==2.1.0"
 numpy = "<=1.20"
 
 [feature.singlem-regime3.dependencies]
-diamond = ">=2.1.21"  # some issues e.g. RAM before this, though not extensively tested.
+# >=2.1.21 for RAM fixes, but 2.2.2/2.2.3 have a gzip-FASTQ parsing regression
+# ("Malformed FASTQ record" on valid .fq.gz during pipe's DIAMOND prefilter);
+# 2.2.4 fixes it, so require that.
+diamond = ">=2.2.4"
 hmmer = "*"
 orfm = ">=2.1.1" #2.1.0 was fail.
 mfqe = "*"

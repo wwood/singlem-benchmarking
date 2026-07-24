@@ -24,6 +24,27 @@ singlem_bin = 'singlem'
 
 datasets = [f'marine{i}' for i in range(10)]
 
+# The sylph-condense-regime3 branch of SingleM (submodule) + its weebill scripts,
+# mirrored from 2_phylogenetic_novelty for the singlem-regime3 joint method.
+singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
+regime3_weebill_scripts = os.path.join(singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
+singlem_regime3_metapackage_local = join(output_dirs_dict['singlem-regime3'], 'data', os.path.basename(singlem_metapackage))
+
+# Constrain wildcards so the generic {tool}/{tool} biobox+opal rules cannot
+# greedily match across path separators now that a tool name contains a hyphen
+# and shares the `singlem` prefix (singlem-regime3).
+wildcard_constraints:
+    tool="[A-Za-z0-9._-]+",
+    method="[A-Za-z0-9._]+",
+    sample="[A-Za-z0-9._]+",
+
+# Prepend `cd <workdir>` to every rule's shell. Cluster jobs submitted via the
+# aqua profile (snakemake_mqsub -> PBS) start in $HOME, not the snakemake working
+# directory, which breaks the many rules that use workdir-relative paths
+# (output_<tool>/..., ../bac120_metadata_r207.tsv) and pixi manifest discovery
+# (../pixi.toml). Harmless no-op for local execution where CWD is already here.
+shell.prefix("cd {} && ".format(workflow.basedir))
+
 #####################################################################
 
 
@@ -31,6 +52,17 @@ rule all:
     input:
         expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools),
         expand(output_prefix+"{tool}/opal_low_abund/{sample}.opal_report", sample=datasets, tool=tools),
+
+# These rules are trivial (fast Python table conversions). Run them on the
+# snakemake host rather than submitting each as its own cluster job, otherwise
+# they sit in the queue holding a full default walltime allocation (48h) for
+# work that takes seconds.
+localrules:
+    truth_condensed_to_biobox,
+    tool_condensed_to_biobox,
+    tool_condensed_to_biobox_low_abund,
+    remove_low_abundance_from_condensed,
+    sylph_report_to_condensed,
 
 rule generate_all_communities:
     input:
@@ -49,9 +81,15 @@ rule generate_community_and_reads:
     params:
         coverage_number = lambda wildcards: wildcards.sample.replace('marine', ''),
     threads: num_threads
+    log:
+        truth_dir + "/{sample}.readgen.log",
     shell:
-        'eval "$(pixi shell-hook -e art)" && '
-        "mkdir -p {fastq_dir} {truth_dir} && {workflow.basedir}/generate_community.py --art art_illumina --threads {threads} --coverage-file {workflow.basedir}/coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-bac-metadata {gtdb_bac_metadata} --gtdb-ar-metadata {gtdb_ar_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --output-genomewise-coverage {output.genomewise}"
+        # cd into the workflow dir so relative paths (../bac120_metadata_r207.tsv,
+        # ../reference_genomes/shadow/..., which generate_community.py also hardcodes)
+        # resolve and pixi finds ../pixi.toml, regardless of the submitted job's CWD.
+        # &> {log} captures stderr to a scratch file for debugging cluster jobs.
+        'cd {workflow.basedir} && eval "$(pixi shell-hook -e art)" && '
+        "mkdir -p {fastq_dir} {truth_dir} && {workflow.basedir}/generate_community.py --art art_illumina --threads {threads} --coverage-file {workflow.basedir}/coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-bac-metadata {gtdb_bac_metadata} --gtdb-ar-metadata {gtdb_ar_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --output-genomewise-coverage {output.genomewise} &> {log}"
 
 rule truth_condensed_to_biobox:
     input:
@@ -92,6 +130,8 @@ rule opal:
     output:
         report=output_prefix+"{tool}/opal/{sample}.opal_report",
         done=output_prefix+"{tool}/opal/{sample}.opal_report.done",
+    resources:
+        runtime=60,  # opal is quick; request 1h (not the 48h default) so it gets backfill priority
     shell:
         'eval "$(pixi shell-hook -e opal)" && '
         "opal.py -g {input.truth} -o {params.output_opal_dir} {input.biobox} || echo 'expected opal non-zero existatus'; mv {params.output_opal_dir}/results.tsv {output.report} && rm -rf {params.output_opal_dir} && touch {output.done}"
@@ -143,6 +183,8 @@ rule opal_low_abund:
     output:
         report=output_prefix+"{tool}/opal_low_abund/{sample}.opal_report",
         done=touch(output_prefix+"{tool}/opal_low_abund/{sample}.opal_report.done"),
+    resources:
+        runtime=60,  # opal is quick; request 1h (not the 48h default) so it gets backfill priority
     shell:
         'eval "$(pixi shell-hook -e opal)" && '
         "opal.py -g {input.truth} -o {params.output_opal_dir} {input.biobox} || echo 'expected opal non-zero existatus'; mv {params.output_opal_dir}/results.tsv {output.report} && rm -rf {params.output_opal_dir}"
@@ -612,3 +654,134 @@ rule metabuli_report_to_condensed:
         "{workflow.basedir}/../bin/metabuli_to_condensed.py --input {input} " \
         "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \
         "--archaeal-taxonomy ../ar53_taxonomy_r207.tsv > {output.profile}"
+
+###############################################################################################
+######### sylph (standard bioconda, single-stage `sylph profile`)
+###############################################################################################
+
+rule sylph_copy_db:
+    input:
+        db=sylph_db,
+    output:
+        db=sylph_db_local,
+        done=touch(output_dirs_dict['sylph'] + "/sylph/data/done")
+    shell:
+        "mkdir -p $(dirname {output.db}) && cp -r {input.db} {output.db}"
+
+rule sylph_run:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db=sylph_db_local,
+        done=output_dirs_dict['sylph'] + "/sylph/data/done"
+    output:
+        report=output_dirs_dict['sylph'] + "/output/{sample}.tsv",
+        done=touch(output_dirs_dict['sylph'] + "/output/{sample}.done")
+    threads: num_threads
+    resources:
+        mem_mb=32000
+    benchmark:
+        benchmark_dir + "/sylph/{sample}-"+str(num_threads)+"threads.benchmark"
+    log:
+        output_dirs_dict['sylph'] + "/logs/sylph/{sample}.log"
+    shell:
+        "pixi run --environment sylph sylph profile {input.db} -1 {input.r1} -2 {input.r2} -t {threads} > {output.report} 2> {log}"
+
+rule sylph_report_to_condensed:
+    input:
+        report=output_dirs_dict['sylph'] + "/output/{sample}.tsv",
+    output:
+        profile = output_dirs_dict['sylph'] + "/sylph/{sample}.profile",
+    shell:
+        'eval "$(pixi shell-hook -e art)" && '
+        "python3 {workflow.basedir}/../bin/sylph_to_condensed.py --sylph-genome {input} "
+        "--sample {wildcards.sample} "
+        "--bac-tax ../bac120_taxonomy_r207.tsv "
+        "--arc-tax ../ar53_taxonomy_r207.tsv > {output.profile}"
+
+
+###############################################################################################
+######### singlem-regime3 (weebill --two-stage + singlem pipe + condense --joint)
+###############################################################################################
+
+rule singlem_regime3_copy_metapackage:
+    input:
+        singlem_metapackage
+    output:
+        db=directory(singlem_regime3_metapackage_local),
+        done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/data/done",
+    shell:
+        "cp -rL {input} {output.db} && touch {output.done}"
+
+rule singlem_regime3_pipe_to_archive:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db=singlem_regime3_metapackage_local,
+        data_done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/data/done"
+    benchmark:
+        benchmark_dir + "/singlem-regime3-pipe/{sample}-"+str(num_threads)+"threads.benchmark"
+    output:
+        archive=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.json",
+        done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.done"
+    threads: num_threads
+    log:
+        output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.pipe.log"
+    shell:
+        'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
+        "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} "
+        "--no-sylph --archive-otu-table {output.archive} --metapackage {input.db} &> {log} && "
+        "touch {output.done}"
+
+rule singlem_regime3_weebill_profile:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        database=weebill_db,
+        weebill=weebill_binary,
+    benchmark:
+        benchmark_dir + "/singlem-regime3-weebill/{sample}-"+str(num_threads)+"threads.benchmark"
+    output:
+        profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.tsv",
+        done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.done"
+    threads: num_threads
+    resources:
+        mem_mb=16000
+    log:
+        output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.weebill.log"
+    shell:
+        "{input.weebill} profile --two-stage -t {threads} -c 100 "
+        "-1 {input.r1} -2 {input.r2} -o {output.profile} {input.database} &> {log} && "
+        "awk 'END {{ exit NR < 2 }}' {output.profile} && touch {output.done}"
+
+rule singlem_regime3_annotate_weebill:
+    input:
+        profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.tsv",
+        db=singlem_regime3_metapackage_local,
+    output:
+        annotated=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.annotated.tsv",
+    log:
+        output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.annotate.log"
+    shell:
+        'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
+        "PYTHONPATH={singlem_regime3_git_base_directory} python3 {regime3_weebill_scripts}/annotate_weebill.py "
+        "--profile {input.profile} --metapackage {input.db} --output {output.annotated} &> {log}"
+
+rule singlem_regime3_condense_joint:
+    input:
+        archive=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.json",
+        sylph_profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.annotated.tsv",
+        db=singlem_regime3_metapackage_local,
+    benchmark:
+        benchmark_dir + "/singlem-regime3-condense/{sample}-"+str(num_threads)+"threads.benchmark"
+    output:
+        profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.profile",
+        done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.profile.done"
+    threads: 1
+    log:
+        output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.condense.log"
+    shell:
+        'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
+        "singlem condense --input-archive-otu-table {input.archive} --metapackage {input.db} "
+        "--sylph-profile {input.sylph_profile} --joint --taxonomic-profile {output.profile} &> {log} && "
+        "touch {output.done}"
