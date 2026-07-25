@@ -185,6 +185,8 @@ rule singlem_copy_metapackage:
     output:
         db=directory(singlem_metapackage_local),
         done=output_dirs_dict['singlem'] + "/singlem/data/done",
+    resources:
+        runtime=60,  # trivial cp; 1h so it isn't stuck at the 48h default
     shell:
         "cp -rL {input} {output.db} && touch {output.done}"
 
@@ -201,6 +203,8 @@ rule singlem_run_to_profile:
         done=touch(output_dirs_dict['singlem'] + "/singlem/{sample}.profile.done")
     threads:
         num_threads
+    resources:
+        runtime=180,  # bench1 ~7min; 3h ceiling covers larger CAMI samples
     log:
         output_dirs_dict['singlem'] + "/logs/singlem/{sample}.log"
     shell:
@@ -225,6 +229,8 @@ rule metaphlan_copy_db:
         # db1=directory(metaphlan_db_local1),
         # db2=directory(metaphlan_db_local2),
         done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/data/done")
+    resources:
+        runtime=60,  # db cp; 1h so it isn't stuck at the 48h default
     shell:
         "cp -rvL {metaphlan_db} {metaphlan_db_local1}"
 
@@ -239,6 +245,8 @@ rule metaphlan_profile:
         sgb_report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.sgb_report",
         done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile.done")
     threads: num_threads
+    resources:
+        runtime=180,  # bowtie2 vs SGB db; bench1 ~26min, 3h ceiling for CAMI
     params:
         cat_reads = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.cat.fq.gz",
     log:
@@ -254,6 +262,8 @@ rule metaphlan_convert_profile_to_GTDB:
     output:
         gtdb_report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_profile",
         done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_report.done")
+    resources:
+        runtime=60,  # trivial conversion
     log:
         output_dirs_dict['metaphlan'] + "/logs/metaphlan/{sample}-convert.log"
     shell:
@@ -265,6 +275,8 @@ rule metaphlan_profile_to_condensed:
         report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_profile"
     output:
         profile = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile",
+    resources:
+        runtime=60,  # trivial conversion
     shell:
         'eval "$(pixi shell-hook -e singlem)" && '
         "{workflow.basedir}/../bin/metaphlan_to_condensed.py "
@@ -711,6 +723,8 @@ rule sylph_copy_db:
     output:
         db=sylph_db_local,
         done=touch(output_dirs_dict['sylph'] + "/sylph/data/done")
+    resources:
+        runtime=60,  # db cp; 1h so it isn't stuck at the 48h default
     shell:
         "mkdir -p output.db && cp -r {input.db} {output.db}"
 
@@ -725,7 +739,8 @@ rule sylph_run:
         done=touch(output_dirs_dict['sylph'] + "/output/{sample}.done")
     threads: num_threads
     resources:
-        mem_mb=32000
+        mem_mb=32000,
+        runtime=120,  # sylph is fast (bench1 ~1.5min); 2h is ample
     benchmark:
         benchmark_dir + "/sylph/{sample}-"+str(num_threads)+"threads.benchmark"
     log:
@@ -761,6 +776,7 @@ rule coverm_strobealign_index:
     threads: num_threads
     resources:
         mem_mb=500000,
+        runtime=180,  # one-time strobealign index of the 219GB reference
     log:
         output_dirs_dict['coverm'] + "/logs/coverm/strobealign_index.log"
     shell:
@@ -778,6 +794,7 @@ rule coverm_run:
     threads: num_threads
     resources:
         mem_mb=500000,
+        runtime=180,  # strobealign map vs 219GB ref; 3h ceiling
     benchmark:
         benchmark_dir + "/coverm/{sample}-"+str(num_threads)+"threads.benchmark"
     log:
@@ -811,6 +828,8 @@ rule singlem_regime3_copy_metapackage:
     output:
         db=directory(singlem_regime3_metapackage_local),
         done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/data/done",
+    resources:
+        runtime=60,  # trivial cp; 1h so it isn't stuck at the 48h default
     shell:
         "cp -rL {input} {output.db} && touch {output.done}"
 
@@ -826,6 +845,8 @@ rule singlem_regime3_pipe_to_archive:
         archive=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.json",
         done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.done"
     threads: num_threads
+    resources:
+        runtime=180,  # singlem pipe --no-sylph; 3h ceiling for CAMI samples
     log:
         output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.pipe.log"
     shell:
@@ -847,7 +868,8 @@ rule singlem_regime3_weebill_profile:
         done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.done"
     threads: num_threads
     resources:
-        mem_mb=16000
+        mem_mb=16000,
+        runtime=120,  # weebill profile is fast (bench1 ~1.6min); 2h is ample
     log:
         output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.weebill.log"
     shell:
@@ -861,6 +883,8 @@ rule singlem_regime3_annotate_weebill:
         db=singlem_regime3_metapackage_local,
     output:
         annotated=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.annotated.tsv",
+    resources:
+        runtime=60,  # trivial annotation step
     log:
         output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.annotate.log"
     shell:
@@ -879,6 +903,8 @@ rule singlem_regime3_condense_joint:
         profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.profile",
         done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.profile.done"
     threads: 1
+    resources:
+        runtime=60,  # condense is quick (bench1 ~0.2min)
     log:
         output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.condense.log"
     shell:
