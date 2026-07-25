@@ -94,7 +94,8 @@ pyarrow = "*"
 pigz = "*"
 
 [feature.coverm.dependencies]
-coverm = "*"
+coverm = ">=0.8.0"      # newest; supports `coverm genome --mapper strobealign`
+strobealign = "*"       # strobealign mapping backend (faster/lower-RAM than minimap2)
 
 # MAP2B's classification output is determined by its python stack (pinned
 # below). The original conda env also pinned perl=5.26.2 and

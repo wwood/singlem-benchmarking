@@ -34,6 +34,14 @@ metabuli_db_dir = '/work/microbiome/db/metabuli/gtdb207'
 
 sylph_db = join(output_directory, "gtdb_database.syldb")
 
+# coverm: map reads against all GTDB r207 genomes with strobealign and report
+# per-genome coverage. The reference is a single concatenated multi-FASTA whose
+# contigs are named `<genome>~<contig>`, so `coverm genome --separator '~'`
+# groups contigs back into genomes. (Staged from the historical minimap2 coverm
+# db dir; we use the .fna, not the .mmi, because strobealign builds its own
+# index.)
+coverm_reference_fna = join(output_directory, "gtdb_r207_genomes.fna")
+
 metakssd_checkout_dir = join(output_directory, 'MetaKSSD-checkout')
 metakssd_markerdb = join(output_directory, "GTDBr207_genomes_L3K11_sketch_markerdb")
 

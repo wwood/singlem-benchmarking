@@ -8,18 +8,25 @@ num_threads = config['benchmarking_threads']
 kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
 kraken_num_threads = 1
 
-tools = r207_tools + ['metaphlan42']
+# Comparison set + coverm (strobealign) for this run.
+tools = ['singlem', 'sylph', 'singlem-regime3', 'metaphlan', 'coverm']
 
 output_prefix = 'output_'
+# output_dirs_dict covers every tool the rules below reference (some ref-path
+# vars for unused tools are still defined at parse time), while `tools` above
+# drives what `rule all` / opal actually build.
+_all_possible_tools = ['singlem', 'metaphlan', 'kraken', 'sourmash', 'metabuli',
+                       'sylph', 'metaphlan42', 'coverm', 'singlem-regime3']
 output_dirs = list([output_prefix+tool for tool in tools])
-output_dirs_dict = dict(zip(tools, output_dirs))
+output_dirs_dict = {tool: output_prefix+tool for tool in _all_possible_tools}
 
 benchmark_dir = 'benchmarks'
 
 fastq_dir = 'split_reads'
 truth_dir = 'truths'
 
-datasets = list(['marine'+str(i) for i in range(10)])
+# marine0's upstream CAMI reads are a 0-byte placeholder, so start at marine1.
+datasets = list(['marine'+str(i) for i in range(1, 10)])
 
 # # Read GTDBtk data
 # gtdb_bac = pl.read_csv('data/marine/source_genomes.gtdbtk/gtdbtk.bac120.summary.tsv', separator='\t', infer_schema_length=10000).select('user_genome','classification')
@@ -73,9 +80,34 @@ metabuli_db_local = output_dirs_dict['metabuli'] + '/metabuli/data/gtdb207'
 
 sylph_db_local = output_dirs_dict['sylph'] + '/sylph/data/gtdb_database.syldb'
 
+# coverm maps against the concatenated GTDB r207 genomes FASTA (contigs named
+# <genome>~<contig>) with strobealign; coverm_reference_fna is staged in
+# ../tool_reference_data (see tool_reference_data.py).
+
+# singlem-regime3 (weebill --two-stage + singlem pipe + condense --joint).
+singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
+regime3_weebill_scripts = os.path.join(singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
+singlem_regime3_metapackage_local = join(output_dirs_dict['singlem-regime3'], 'data', os.path.basename(singlem_metapackage))
+
 #####################################################################
 
 #####################################################################
+
+# PBS/aqua jobs start in $HOME, not the workdir; cd in so workdir-relative paths
+# (bin/, gtdbtk_r207, genome_to_id.tsv, ../*_taxonomy_r207.tsv) and the pixi
+# manifest resolve on compute nodes.
+wildcard_constraints:
+    tool="[A-Za-z0-9._-]+",
+    sample="[A-Za-z0-9._]+",
+shell.prefix("cd {} && ".format(workflow.basedir))
+
+# Trivial table conversions run on the orchestrator host, not as 48h queue jobs.
+localrules:
+    generate_truth_condensed_format,
+    truth_condensed_to_biobox,
+    tool_condensed_to_biobox,
+    sylph_report_to_condensed,
+    coverm_to_condensed,
 
 rule all:
     input:
@@ -134,6 +166,8 @@ rule opal:
     output:
         report=output_prefix+"{tool}/opal/{sample}.opal_report",
         done=output_prefix+"{tool}/opal/{sample}.opal_report.done",
+    resources:
+        runtime=60,  # opal is quick; request 1h (not the 48h default) for backfill priority
     shell:
         'eval "$(pixi shell-hook -e opal)" && '
         "opal.py -g {input.truth} -o {params.output_opal_dir} {input.biobox} || echo 'expected opal non-zero existatus'; mv {params.output_opal_dir}/results.tsv {output.report} && rm -rf {params.output_opal_dir} && touch {output.done}"
@@ -704,10 +738,151 @@ rule sylph_report_to_condensed:
         report=output_dirs_dict['sylph'] + "/output/{sample}.tsv",
     output:
         profile = output_dirs_dict['sylph'] + "/sylph/{sample}.profile",
-    conda:
-        "envs/singlem.yml"
     shell:
+        'eval "$(pixi shell-hook -e art)" && '  # for polars
         "python3 {workflow.basedir}/../bin/sylph_to_condensed.py --sylph-genome {input} " \
         "--sample {wildcards.sample} " \
         "--bac-tax ../bac120_taxonomy_r207.tsv " \
         "--arc-tax ../ar53_taxonomy_r207.tsv > {output.profile}"
+
+
+###############################################################################################
+######### coverm (strobealign mapping vs all GTDB r207 genomes -> per-genome coverage)
+###############################################################################################
+
+# Build the strobealign index of the 219GB GTDB genome FASTA once and reuse it
+# across all samples (indexing is the expensive part; re-indexing per sample
+# would dominate runtime).
+rule coverm_strobealign_index:
+    input:
+        ref=coverm_reference_fna,
+    output:
+        index=coverm_reference_fna + ".sti",
+    threads: num_threads
+    resources:
+        mem_mb=500000,
+    log:
+        output_dirs_dict['coverm'] + "/logs/coverm/strobealign_index.log"
+    shell:
+        'eval "$(pixi shell-hook -e coverm)" && '
+        "strobealign --create-index -t {threads} {input.ref} &> {log}"
+
+rule coverm_run:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        ref=coverm_reference_fna,
+        index=coverm_reference_fna + ".sti",
+    output:
+        tsv=output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
+    threads: num_threads
+    resources:
+        mem_mb=500000,
+    benchmark:
+        benchmark_dir + "/coverm/{sample}-"+str(num_threads)+"threads.benchmark"
+    log:
+        output_dirs_dict['coverm'] + "/logs/coverm/{sample}.log"
+    shell:
+        'eval "$(pixi shell-hook -e coverm)" && '
+        "coverm genome -1 {input.r1} -2 {input.r2} "
+        "--reference {input.ref} --mapper strobealign --strobealign-use-index "
+        "--separator '~' -m trimmed_mean -t {threads} > {output.tsv} 2> {log}"
+
+rule coverm_to_condensed:
+    input:
+        output_dirs_dict['coverm'] + "/coverm/{sample}.tsv",
+    output:
+        profile = output_dirs_dict['coverm'] + "/coverm/{sample}.profile",
+    shell:
+        'eval "$(pixi shell-hook -e art)" && '  # for polars
+        "{workflow.basedir}/../bin/coverm_to_condensed.py "
+        "--coverm-genome {input} --sample {wildcards.sample} "
+        "--bac-tax ../bac120_taxonomy_r207.tsv "
+        "--arc-tax ../ar53_taxonomy_r207.tsv > {output.profile}"
+
+
+###############################################################################################
+######### singlem-regime3 (weebill --two-stage + singlem pipe + condense --joint)
+###############################################################################################
+
+rule singlem_regime3_copy_metapackage:
+    input:
+        singlem_metapackage
+    output:
+        db=directory(singlem_regime3_metapackage_local),
+        done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/data/done",
+    shell:
+        "cp -rL {input} {output.db} && touch {output.done}"
+
+rule singlem_regime3_pipe_to_archive:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db=singlem_regime3_metapackage_local,
+        data_done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/data/done"
+    benchmark:
+        benchmark_dir + "/singlem-regime3-pipe/{sample}-"+str(num_threads)+"threads.benchmark"
+    output:
+        archive=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.json",
+        done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.done"
+    threads: num_threads
+    log:
+        output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.pipe.log"
+    shell:
+        'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
+        "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} "
+        "--no-sylph --archive-otu-table {output.archive} --metapackage {input.db} &> {log} && "
+        "touch {output.done}"
+
+rule singlem_regime3_weebill_profile:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        database=weebill_db,
+        weebill=weebill_binary,
+    benchmark:
+        benchmark_dir + "/singlem-regime3-weebill/{sample}-"+str(num_threads)+"threads.benchmark"
+    output:
+        profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.tsv",
+        done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.done"
+    threads: num_threads
+    resources:
+        mem_mb=16000
+    log:
+        output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.weebill.log"
+    shell:
+        "{input.weebill} profile --two-stage -t {threads} -c 100 "
+        "-1 {input.r1} -2 {input.r2} -o {output.profile} {input.database} &> {log} && "
+        "awk 'END {{ exit NR < 2 }}' {output.profile} && touch {output.done}"
+
+rule singlem_regime3_annotate_weebill:
+    input:
+        profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.tsv",
+        db=singlem_regime3_metapackage_local,
+    output:
+        annotated=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.annotated.tsv",
+    log:
+        output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.annotate.log"
+    shell:
+        'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
+        "PYTHONPATH={singlem_regime3_git_base_directory} python3 {regime3_weebill_scripts}/annotate_weebill.py "
+        "--profile {input.profile} --metapackage {input.db} --output {output.annotated} &> {log}"
+
+rule singlem_regime3_condense_joint:
+    input:
+        archive=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.json",
+        sylph_profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.annotated.tsv",
+        db=singlem_regime3_metapackage_local,
+    benchmark:
+        benchmark_dir + "/singlem-regime3-condense/{sample}-"+str(num_threads)+"threads.benchmark"
+    output:
+        profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.profile",
+        done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.profile.done"
+    threads: 1
+    log:
+        output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.condense.log"
+    shell:
+        'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
+        "singlem condense --input-archive-otu-table {input.archive} --metapackage {input.db} "
+        "--sylph-profile {input.sylph_profile} --joint --taxonomic-profile {output.profile} &> {log} && "
+        "touch {output.done}"
