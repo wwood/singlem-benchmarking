@@ -81,6 +81,11 @@ metabuli_db_local = output_dirs_dict['metabuli'] + '/metabuli/data/gtdb207'
 
 sylph_db_local = output_dirs_dict['sylph'] + '/sylph/data/gtdb_database.syldb'
 
+# Databases this benchmark stages locally via the shared ../rules/staging.smk.
+# Only the DB-copy rules are shared; every run/convert/OPAL rule below stays
+# bench4-specific because it carries the known{known_percent}/ path layer.
+staged_tools = {'singlem', 'metaphlan', 'kraken', 'sourmash', 'metabuli', 'sylph'}
+
 #####################################################################
 
 
@@ -182,17 +187,10 @@ rule opal:
 #########
 ######### tool-specific rules - singlem first
 
-rule singlem_copy_metapackage:
-    input:
-        singlem_metapackage
-    output:
-        db=directory(singlem_metapackage_local),
-        done=output_dirs_dict['singlem'] + "/singlem/data/done",
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    shell:
-        "cp -rL {input} {output.db} && touch {output.done}"
+# DB staging (cp of each tool's reference database) is shared from
+# ../rules/staging.smk; see the include at the bottom and `staged_tools` near the
+# top. Only bench4-specific rules (the known{known_percent}/ path layer in every
+# run/convert path, and the novel+known read generation) live in this file.
 
 rule singlem_run_to_profile:
     input:
@@ -224,21 +222,7 @@ rule singlem_run_to_profile:
 ######### metaphlan
 
 
-rule metaphlan_copy_db:
-    # input:
-    # Cannot use the directory as input/output because humann complains when
-    # there's a snakemake hidden file in the dir
-    # db1=directory(metaphlan_db_original1),
-    # db2=directory(metaphlan_db_original2),
-    output:
-        # db1=directory(metaphlan_db_local1),
-        # db2=directory(metaphlan_db_local2),
-        done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/data/done")
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    shell:
-        "cp -rvL {metaphlan_db} {metaphlan_db_local1}"
+# metaphlan_copy_db is shared from ../rules/staging.smk.
 
 rule metaphlan_profile:
     input:
@@ -351,15 +335,7 @@ rule metaphlan_profile_to_condensed:
 ######### bracken
 
 
-rule braken_copy_data:
-    output:
-        db=directory(kraken_db_local),
-        done=output_dirs_dict['kraken'] + "/kraken/data/done"
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    shell:
-        "cp -r {kraken_db} {output.db}/ && touch {output.done}"
+# braken_copy_data is shared from ../rules/staging.smk.
 
 rule kraken_run:
     input:
@@ -447,21 +423,7 @@ rule bracken_to_profile:
 ######### sourmash
 
 
-rule copy_db:
-    input:
-        db1 = sourmash_db_taxonomy,
-        db2 = sourmash_db_dna,
-    output:
-        db1=sourmash_db_taxonomy_local,
-        db2=sourmash_db_dna_local,
-        done=output_dirs_dict['sourmash'] + "/sourmash/data/done"
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    params:
-        output_dir = output_dirs_dict['sourmash'],
-    shell:
-        "mkdir -p {params.output_dir}/sourmash/data && cp -rvL {input.db1} {output.db1} && cp -rvL {input.db2} {output.db2} && touch {output.done}"
+# sourmash DB staging (sourmash_copy_db) is shared from ../rules/staging.smk.
 
 rule sourmash_run:
     input:
@@ -659,17 +621,7 @@ rule sourmash_to_condensed:
 ###############################################################################################
 ######### metabuli
 
-rule metabuli_copy_db:
-    input:
-        db=metabuli_db_dir,
-    output:
-        db=directory(metabuli_db_local),
-        done=touch(output_dirs_dict['metabuli'] + "/metabuli/data/done")
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    shell:
-        "cp -r {input.db} {output.db}"
+# metabuli_copy_db is shared from ../rules/staging.smk.
 
 rule metabuli_run:
     input:
@@ -713,14 +665,7 @@ rule metabuli_report_to_condensed:
 ###############################################################################################
 ######### sylph
 
-rule sylph_copy_db:
-    input:
-        db=sylph_db,
-    output:
-        db=sylph_db_local,
-        done=touch(output_dirs_dict['sylph'] + "/sylph/data/done")
-    shell:
-        "mkdir -p output.db && cp -r {input.db} {output.db}"
+# sylph_copy_db is shared from ../rules/staging.smk.
 
 rule sylph_run:
     input:
@@ -753,3 +698,10 @@ rule sylph_report_to_condensed:
         "--sample {wildcards.sample} " \
         "--bac-tax {gtdb_bac_taxonomy} " \
         "--arc-tax {gtdb_ar_taxonomy} > {output.profile}"
+
+
+###############################################################################################
+# Shared DB-staging rules only (../rules/staging.smk). Every run/convert/OPAL rule
+# above stays bench4-specific because it carries the known{known_percent}/ path
+# layer that the other benchmarks do not have.
+include: "../rules/staging.smk"

@@ -92,6 +92,15 @@ metabuli_db_local = output_dirs_dict['metabuli'] + '/metabuli/data/gtdb207'
 
 sylph_db_local = output_dirs_dict['sylph'] + '/sylph/data/gtdb_database.syldb'
 
+# Databases this benchmark stages locally via the shared ../rules/staging.smk.
+# Only the DB-copy rules are shared with the other benchmarks; every run/convert
+# rule below stays bench2-specific (2-component reads, {method} truth/opal,
+# kingdom-level motus/kaiju, genome-pairs metaphlan). sourmash/kaiju/motus/map2b
+# are not listed: bench2 either has no copy rule for them or stages them
+# differently, so their (commented-out or bespoke) handling stays local.
+staged_tools = {'singlem', 'metaphlan', 'metaphlan42', 'kraken', 'metabuli',
+                'sylph', 'singlem-regime3'}
+
 #####################################################################
 
 
@@ -205,15 +214,12 @@ rule opal:
 ###############################################################################################
 #########
 ######### tool-specific rules - singlem first
-
-rule singlem_copy_metapackage:
-    input:
-        singlem_metapackage
-    output:
-        db=directory(singlem_metapackage_local),
-        done=output_dirs_dict['singlem'] + "/singlem/data/done",
-    shell:
-        "cp -rL {input} {output.db} && touch {output.done}"
+#########
+######### DB staging (cp of each tool's reference database) is shared from
+######### ../rules/staging.smk; see the include at the bottom of this file and
+######### `staged_tools` near the top. Only bench2-specific run/convert rules
+######### (2-component read-gen, {method} truth/opal, kingdom-level motus/kaiju,
+######### genome-pairs metaphlan, threads:1 singlem) live in this file.
 
 rule singlem_run_to_profile:
     input:
@@ -247,14 +253,7 @@ rule singlem_run_to_profile:
 
 singlem_regime3_metapackage_local = join(output_dirs_dict['singlem-regime3'], 'data', os.path.basename(singlem_metapackage))
 
-rule singlem_regime3_copy_metapackage:
-    input:
-        singlem_metapackage
-    output:
-        db=directory(singlem_regime3_metapackage_local),
-        done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/data/done",
-    shell:
-        "cp -rL {input} {output.db} && touch {output.done}"
+# singlem_regime3_copy_metapackage is shared from ../rules/staging.smk.
 
 rule singlem_regime3_pipe_to_archive:
     input:
@@ -345,19 +344,7 @@ rule singlem_regime3_condense_joint:
 ######### metaphlan
 
 
-rule metaphlan_copy_db:
-    input:
-        # Cannot use the directory as input/output because humann complains when
-        # there's a snakemake hidden file in the dir
-
-        # db1=directory(metaphlan_db_original1),
-        # db2=directory(metaphlan_db_original2),
-    output:
-        # db1=directory(metaphlan_db_local1),
-        # db2=directory(metaphlan_db_local2),
-        done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/data/done")
-    shell:
-        "cp -rvL {metaphlan_db} {metaphlan_db_local1}"
+# metaphlan_copy_db is shared from ../rules/staging.smk.
 
 rule metaphlan_profile:
     input:
@@ -409,18 +396,7 @@ rule metaphlan_profile_to_condensed:
 ######### metaphlan42
 
 
-rule metaphlan42_copy_db:
-    # input:
-    # Cannot use the directory as input/output because humann complains when
-    # there's a snakemake hidden file in the dir
-    # db1=directory(metaphlan_db_original1),
-    # db2=directory(metaphlan_db_original2),
-    output:
-        # db1=directory(metaphlan_db_local1),
-        # db2=directory(metaphlan_db_local2),
-        done=touch(output_dirs_dict['metaphlan42'] + "/metaphlan42/data/done")
-    shell:
-        "cp -rvL {metaphlan42_db} {metaphlan42_db_local1}"
+# metaphlan42_copy_db is shared from ../rules/staging.smk.
 
 rule metaphlan42_profile:
     input:
@@ -521,12 +497,7 @@ rule motus_profile_to_condensed:
 ######### bracken
 
 
-rule braken_copy_data:
-    output:
-        db=directory(kraken_db_local),
-        done=output_dirs_dict['kraken'] + "/kraken/data/done"
-    shell:
-        "cp -r {kraken_db} {output.db}/ && touch {output.done}"
+# braken_copy_data is shared from ../rules/staging.smk.
 
 rule kraken_run:
     input:
@@ -761,14 +732,7 @@ rule map2b_to_biobox:
 ###############################################################################################
 ######### metabuli
 
-rule metabuli_copy_db:
-    input:
-        db=metabuli_db_dir,
-    output:
-        db=directory(metabuli_db_local),
-        done=touch(output_dirs_dict['metabuli'] + "/metabuli/data/done")
-    shell:
-        "cp -r {input.db} {output.db}"
+# metabuli_copy_db is shared from ../rules/staging.smk.
 
 rule metabuli_run:
     input:
@@ -804,14 +768,7 @@ rule metabuli_report_to_condensed:
 ###############################################################################################
 ######### sylph
 
-rule sylph_copy_db:
-    input:
-        db=sylph_db,
-    output:
-        db=sylph_db_local,
-        done=touch(output_dirs_dict['sylph'] + "/sylph/data/done")
-    shell:
-        "mkdir -p output.db && cp -r {input.db} {output.db}"
+# sylph_copy_db is shared from ../rules/staging.smk.
 
 rule sylph_run:
     input:
@@ -842,3 +799,11 @@ rule sylph_report_to_condensed:
         "--sample {wildcards.sample} " \
         "--bac-tax ../bac120_taxonomy_r207.tsv " \
         "--arc-tax ../ar53_taxonomy_r207.tsv > {output.profile}"
+
+
+###############################################################################################
+# Shared DB-staging rules only (../rules/staging.smk). The run/convert/OPAL rules
+# above stay bench2-specific because they diverge from the other benchmarks
+# (2-component reads, {method}-parametrised truth/opal, kingdom-level motus/kaiju,
+# genome-pairs metaphlan, single-threaded singlem).
+include: "../rules/staging.smk"

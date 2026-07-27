@@ -28,7 +28,7 @@ generate_community_script = os.path.join(workflow.basedir, '../1_novel_strains/g
 genome_fasta_paths = os.path.join(workflow.basedir, 'genome_list.tsv')
 
 # singlem-regime3 (weebill --two-stage + singlem pipe + condense --joint) paths,
-# consumed by ../rules/profilers.smk.
+# consumed by ../rules/singlem_regime3_run.smk.
 singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
 regime3_weebill_scripts = os.path.join(
     singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
@@ -41,6 +41,9 @@ print("Profiling {} over {} communities".format(tools, len(datasets)))
 wildcard_constraints:
     tool="[A-Za-z0-9._-]+",
     sample="[A-Za-z0-9._]+",
+
+# Databases this benchmark stages locally (opt-in for ../rules/staging.smk).
+staged_tools = tools
 
 # PBS/aqua jobs start in $HOME, not the workdir; cd in so workdir-relative paths
 # (bin/, genome_list.tsv, ../*_taxonomy_r207.tsv, generate_community.py's
@@ -57,7 +60,12 @@ rule all:
     input:
         expand(output_prefix + "{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools)
 
-# Shared rules (../rules): read generation, common conversions/OPAL, profilers.
+# Shared rules (../rules): read generation, DB staging, common conversions/OPAL,
+# and one file per profiler this benchmark runs.
 include: "../rules/data_generation.smk"
+include: "../rules/staging.smk"
 include: "../rules/common.smk"
-include: "../rules/profilers.smk"
+include: "../rules/singlem_run.smk"
+include: "../rules/metaphlan_run.smk"
+include: "../rules/sylph_run.smk"
+include: "../rules/singlem_regime3_run.smk"
