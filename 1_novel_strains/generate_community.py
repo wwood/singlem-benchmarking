@@ -85,8 +85,12 @@ if __name__ == '__main__':
     genomes = pd.read_csv(args.genome_list, sep='\t', header=None, names=['genome','fasta'])
     logging.info(f"Read {len(genomes)} genome fasta paths.")
 
-    bac = pl.read_csv('../bac120_metadata_r207.tsv', separator='\t', infer_schema_length=100000, ignore_errors=True)
-    ar = pl.read_csv('../ar53_metadata_r207.tsv', separator='\t', infer_schema_length=100000, ignore_errors=True)
+    # Genome sizes and taxonomy come from the GTDB metadata passed on the command
+    # line, so the ground truth is written in whatever GTDB release the caller
+    # targets (r207 for benchmarks 1/5/6, r232 for benchmark 7). Historically these
+    # were hardcoded to ../bac120_metadata_r207.tsv / ../ar53_metadata_r207.tsv.
+    bac = pl.read_csv(args.gtdb_bac_metadata, separator='\t', infer_schema_length=100000, ignore_errors=True)
+    ar = pl.read_csv(args.gtdb_ar_metadata, separator='\t', infer_schema_length=100000, ignore_errors=True)
     metadata = pl.concat([
         bac.select('accession', 'genome_size', 'gtdb_taxonomy'),
         ar.select('accession', 'genome_size', 'gtdb_taxonomy'),

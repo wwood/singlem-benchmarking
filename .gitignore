@@ -10,6 +10,7 @@ benchmarks/
 genome_pairs/
 tool_reference_data
 bac120_metadata_r207*
+bac120_metadata_r232*
 ar53_metadata*
 3_cami2_marine/simulation_short_read
 3_cami2_marine/split_reads
@@ -25,4 +26,7 @@ __pycache__
 3_cami2_marine/summary/
 5_known_species_low_coverage/reads/
 6_thousand_species_low_coverage/reads/
+7_r232_metapackage/reads/
 random_base_dir_scripts/
+ar53_taxonomy_r232.tsv
+bac120_taxonomy_r232.tsv

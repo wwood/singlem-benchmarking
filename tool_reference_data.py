@@ -53,6 +53,25 @@ metakssd_markerdb = join(output_directory, "GTDBr207_genomes_L3K11_sketch_marker
 weebill_binary = abspath(join('..', 'weebill', 'target', 'release', 'weebill'))
 weebill_db = '/scratch/microbiome/woodcrob/non_sensitive/weebill_dbs/r207.100.syl2db'
 
+# ---------------------------------------------------------------------------
+# GTDB r232-backed databases (benchmark 7). Everything above targets GTDB r207;
+# these are the r232 equivalents. The metapackage was fetched fresh with
+# `singlem data` (the /work copy was an unreadable HSM-released stub); it extracts
+# the S6.5.0 R232 ZenodoBackpack under ../tool_reference_data/singlem_data_r232/.
+# The sylph / weebill databases already live on weka scratch.
+singlem_metapackage_r232 = join(
+    output_directory, 'singlem_data_r232', 'S6.5.0.GTDB_r232.metapackage_20260319.smpkg.zb')
+# Standalone sylph db, sketched at c=100 (sylph's -c is ignored for pre-sketched
+# databases, so it profiles fine against the default c=200 query sketch).
+sylph_db_r232 = '/scratch/microbiome/woodcrob/non_sensitive/weebill_dbs/r232.100.syldb'
+# weebill (sylph fork) two-stage r232 db, the -c 100 analogue of weebill_db above.
+weebill_db_r232 = '/scratch/microbiome/woodcrob/non_sensitive/weebill_dbs/r232.100.syl2db'
+# r232 GTDB taxonomy / metadata, staged to the repo root next to the r207 copies.
+gtdb_bac_taxonomy_r232 = '../bac120_taxonomy_r232.tsv'
+gtdb_ar_taxonomy_r232 = '../ar53_taxonomy_r232.tsv'
+gtdb_bac_metadata_r232 = '../bac120_metadata_r232.tsv'
+gtdb_ar_metadata_r232 = '../ar53_metadata_r232.tsv'
+
 tools = ['singlem', 'metaphlan', 'motus', 'kraken', 'sourmash', 'kaiju', 'map2b', 'metabuli', 'sylph', 'metaphlan42', 'metakssd', 'singlem-regime3']
 
 tools_with_filled_output_profiles = ('kraken','sourmash')

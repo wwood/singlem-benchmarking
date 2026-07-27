@@ -11,6 +11,11 @@
 # `unset PYTHONPATH`: the top-level `PYTHONPATH=.. snakemake` puts the repo root
 # (which has a `singlem/` submodule dir, no __init__.py) on the path, shadowing
 # this branch's editable-installed `singlem`. The regime3 env resolves it itself.
+#
+# weebill's --two-stage profile loads the whole sylph db into memory, so peak RAM
+# scales with the db. The r207 two-stage db (12GB) fits in 16GB; the r232 one is
+# 38GB and needs more. Overridable via regime3_weebill_mem_mb (benchmark 7 raises it).
+regime3_weebill_mem_mb = globals().get("regime3_weebill_mem_mb", 16000)
 
 rule singlem_regime3_pipe_to_archive:
     input:
@@ -47,13 +52,13 @@ rule singlem_regime3_weebill_profile:
         done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.done",
     threads: num_threads
     resources:
-        mem_mb=16000,
+        mem_mb=regime3_weebill_mem_mb,
         runtime=120,  # weebill profile is fast; 2h is ample
     log:
         output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.weebill.log",
     shell:
         "{input.weebill} profile --two-stage -t {threads} -c 100 "
-        "-1 {input.r1} -2 {input.r2} -o {output.profile} {input.database} &> {log} && "
+        "-1 {input.r1} -2 {input.r2} -o {output.profile} {input.database} -u &> {log} && "
         # weebill writes only a header when nothing is detected; ensure >=1 data row
         "awk 'END {{ exit NR < 2 }}' {output.profile} && touch {output.done}"
 
