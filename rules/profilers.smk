@@ -243,7 +243,8 @@ rule singlem_regime3_annotate_weebill:
     shell:
         'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
         "PYTHONPATH={singlem_regime3_git_base_directory} python3 {regime3_weebill_scripts}/annotate_weebill.py "
-        "--profile {input.profile} --metapackage {input.db} --output {output.annotated} &> {log}"
+        "--profile {input.profile} --metapackage {input.db} --output {output.annotated} "
+        " &> {log}"
 
 rule singlem_regime3_condense_joint:
     input:
@@ -254,7 +255,7 @@ rule singlem_regime3_condense_joint:
         benchmark_dir + "/singlem-regime3-condense/{sample}-" + str(num_threads) + "threads.benchmark"
     output:
         profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.profile",
-        done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.profile.done",
+        done=touch(output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.profile.done"),
     threads: 1
     resources:
         runtime=60,  # condense is quick
@@ -263,5 +264,6 @@ rule singlem_regime3_condense_joint:
     shell:
         'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
         "singlem condense --input-archive-otu-table {input.archive} --metapackage {input.db} "
-        "--sylph-profile {input.sylph_profile} --joint --taxonomic-profile {output.profile} &> {log} && "
-        "touch {output.done}"
+        "--sylph-profile {input.sylph_profile} --joint --taxonomic-profile {output.profile} "
+        "--joint-pin-sylph-species --joint-novel-budget --joint --alpha 1 "
+        "&> {log}"

@@ -22,3 +22,7 @@ __pycache__
 # pixi environments
 .pixi/*
 !.pixi/config.toml
+3_cami2_marine/summary/
+5_known_species_low_coverage/reads/
+6_thousand_species_low_coverage/reads/
+random_base_dir_scripts/
