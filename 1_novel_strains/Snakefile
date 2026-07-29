@@ -2,6 +2,15 @@
 import extern
 import os
 
+# Benchmark 1 ('known species' / novel strains): communities simulated from
+# non-representative GTDB r207 genomes whose *species* is in the tool databases.
+# This is also the runtime/RAM benchmark (see run_benchmark.sh, which runs
+# single-threaded), so the per-tool thread counts here are deliberate.
+#
+# Read generation and the low-abundance-removal variant are bench1-specific and
+# defined below; everything else (DB staging, condensed->biobox->OPAL, per-tool
+# profiling) is shared from ../rules.
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(workflow.snakefile)), '..')))
 from tool_reference_data import *
 
@@ -9,6 +18,9 @@ num_threads = config['benchmarking_threads']
 kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
 if 'kraken_threads' in config:
     kraken_num_threads = config['kraken_threads']
+# bench1 caps metabuli parallelism the same way kraken is capped (both are
+# RAM-heavy); the shared rules/metabuli_run.smk reads this override.
+metabuli_threads = kraken_num_threads
 truth_dir = os.path.join(workflow.basedir, 'truths')
 genome_fasta_paths = os.path.join(workflow.basedir, 'shadow_genome_paths.csv')
 coverage_definitions_folder = 'coverage_definitions'
@@ -19,10 +31,33 @@ from bench1_setup import *
 generated_fastq_dir = os.path.join(workflow.basedir, 'generated_reads')
 fastq_dir = os.path.join(workflow.basedir, 'local_reads')
 
-# singlem_bin = '~/git/singlem/bin/singlem'
-singlem_bin = 'singlem'
-
 datasets = [f'marine{i}' for i in range(10)]
+
+# The sylph-condense-regime3 branch of SingleM (submodule) + its weebill scripts,
+# consumed by ../rules/singlem_regime3_run.smk.
+singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
+regime3_weebill_scripts = os.path.join(singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
+singlem_regime3_metapackage_local = join(output_dirs_dict['singlem-regime3'], 'data', os.path.basename(singlem_metapackage))
+
+# Databases this benchmark stages locally (opt-in for ../rules/staging.smk). Note
+# `tools` is narrowed to r207_tools in bench1_setup, so name the staged set
+# explicitly rather than deriving it from `tools`.
+staged_tools = {'singlem', 'metaphlan', 'kraken', 'sourmash', 'metabuli', 'sylph', 'singlem-regime3'}
+
+# Constrain wildcards so the generic {tool}/{tool} biobox+opal rules cannot
+# greedily match across path separators now that a tool name contains a hyphen
+# and shares the `singlem` prefix (singlem-regime3).
+wildcard_constraints:
+    tool="[A-Za-z0-9._-]+",
+    method="[A-Za-z0-9._]+",
+    sample="[A-Za-z0-9._]+",
+
+# Prepend `cd <workdir>` to every rule's shell. Cluster jobs submitted via the
+# aqua profile (snakemake_mqsub -> PBS) start in $HOME, not the snakemake working
+# directory, which breaks the many rules that use workdir-relative paths
+# (output_<tool>/..., ../bac120_metadata_r207.tsv) and pixi manifest discovery
+# (../pixi.toml). Harmless no-op for local execution where CWD is already here.
+shell.prefix("cd {} && ".format(workflow.basedir))
 
 #####################################################################
 
@@ -32,12 +67,27 @@ rule all:
         expand(output_prefix+"{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools),
         expand(output_prefix+"{tool}/opal_low_abund/{sample}.opal_report", sample=datasets, tool=tools),
 
+# These rules are trivial (fast Python table conversions). Run them on the
+# snakemake host rather than submitting each as its own cluster job, otherwise
+# they sit in the queue holding a full default walltime allocation (48h) for
+# work that takes seconds.
+localrules:
+    truth_condensed_to_biobox,
+    tool_condensed_to_biobox,
+    tool_condensed_to_biobox_low_abund,
+    remove_low_abundance_from_condensed,
+    sylph_report_to_condensed,
+
 rule generate_all_communities:
     input:
         [f'{truth_dir}/marine{i}.finished' for i in range(10)],
         [f'{fastq_dir}/marine{i}.finished' for i in range(10)],
         [f'{truth_dir}/marine{i}.condensed.biobox' for i in range(10)],
 
+# Read generation is bench1-specific: the coverage file for sample marineN is
+# coverage_definitions/coverage<N>.tsv (rather than the <sample>.tsv mapping the
+# shared ../rules/data_generation.smk expects), and generate_community.py
+# hardcodes some bench1-relative paths.
 rule generate_community_and_reads:
     output:
         r1=fastq_dir + "/{sample}.1.fq.gz",
@@ -49,57 +99,18 @@ rule generate_community_and_reads:
     params:
         coverage_number = lambda wildcards: wildcards.sample.replace('marine', ''),
     threads: num_threads
+    log:
+        truth_dir + "/{sample}.readgen.log",
     shell:
-        'eval "$(pixi shell-hook -e art)" && '
-        "mkdir -p {fastq_dir} {truth_dir} && {workflow.basedir}/generate_community.py --art art_illumina --threads {threads} --coverage-file {workflow.basedir}/coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-bac-metadata {gtdb_bac_metadata} --gtdb-ar-metadata {gtdb_ar_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --output-genomewise-coverage {output.genomewise}"
-
-rule truth_condensed_to_biobox:
-    input:
-        condensed = truth_dir + "/{sample}.condensed",
-    output:
-        biobox = truth_dir + "/{sample}.condensed.biobox",
-    shell:
-        'eval "$(pixi shell-hook -e singlem)" && '
-        "{workflow.basedir}/../bin/condensed_profile_to_biobox.py --input-condensed-table {input.condensed} " \
-        "--output-biobox {output.biobox}"
-
-def get_condensed_to_biobox_extra_args(tool):
-    if tool in tools_with_filled_output_profiles:
-        return ' --no-fill'
-    else:
-        return ''
-
-rule tool_condensed_to_biobox:
-    input:
-        profile = output_prefix + "{tool}/{tool}/{sample}.profile",
-        truth = truth_dir + "/{sample}.condensed.biobox",
-    params:
-        extra_args = lambda wildcards: get_condensed_to_biobox_extra_args(wildcards.tool)
-    output:
-        biobox = output_prefix + "{tool}/biobox/{sample}.biobox",
-    shell:
-        'eval "$(pixi shell-hook -e singlem)" && '
-        "{workflow.basedir}/../bin/condensed_profile_to_biobox.py {params.extra_args} --input-condensed-table {input.profile} " \
-        "--output-biobox {output.biobox} --template-biobox {input.truth} "
-
-rule opal:
-    input:
-        biobox = output_prefix+"{tool}/biobox/{sample}.biobox",
-        truth = truth_dir + "/{sample}.condensed.biobox",
-    params:
-        output_dir = output_prefix+"{tool}",
-        output_opal_dir = output_prefix+"{tool}/opal/{sample}.opal_output_directory",
-    output:
-        report=output_prefix+"{tool}/opal/{sample}.opal_report",
-        done=output_prefix+"{tool}/opal/{sample}.opal_report.done",
-    shell:
-        'eval "$(pixi shell-hook -e opal)" && '
-        "opal.py -g {input.truth} -o {params.output_opal_dir} {input.biobox} || echo 'expected opal non-zero existatus'; mv {params.output_opal_dir}/results.tsv {output.report} && rm -rf {params.output_opal_dir} && touch {output.done}"
+        # cd into the workflow dir so relative paths (../bac120_metadata_r207.tsv,
+        # ../reference_genomes/shadow/..., which generate_community.py also hardcodes)
+        # resolve and pixi finds ../pixi.toml, regardless of the submitted job's CWD.
+        # &> {log} captures stderr to a scratch file for debugging cluster jobs.
+        'cd {workflow.basedir} && eval "$(pixi shell-hook -e art)" && '
+        "mkdir -p {fastq_dir} {truth_dir} && {workflow.basedir}/generate_community.py --art art_illumina --threads {threads} --coverage-file {workflow.basedir}/coverage_definitions/coverage{params.coverage_number}.tsv --gtdb-bac-metadata {gtdb_bac_metadata} --gtdb-ar-metadata {gtdb_ar_metadata} --genome-list {genome_fasta_paths} --output-condensed {output.condensed} -1 {fastq_dir}/{wildcards.sample}.1.fq.gz -2 {fastq_dir}/{wildcards.sample}.2.fq.gz --output-genomewise-coverage {output.genomewise} &> {log}"
 
 ###############################################################################################
-###############################################################################################
-###############################################################################################
-## low abundance removal
+## low abundance removal (bench1-specific variant of the biobox/OPAL scoring)
 
 def get_remove_low_abund_extra_args(tool):
     if tool in tools_with_filled_output_profiles:
@@ -143,472 +154,22 @@ rule opal_low_abund:
     output:
         report=output_prefix+"{tool}/opal_low_abund/{sample}.opal_report",
         done=touch(output_prefix+"{tool}/opal_low_abund/{sample}.opal_report.done"),
+    resources:
+        runtime=60,  # opal is quick; request 1h (not the 48h default) so it gets backfill priority
     shell:
         'eval "$(pixi shell-hook -e opal)" && '
         "opal.py -g {input.truth} -o {params.output_opal_dir} {input.biobox} || echo 'expected opal non-zero existatus'; mv {params.output_opal_dir}/results.tsv {output.report} && rm -rf {params.output_opal_dir}"
 
-###############################################################################################
-###############################################################################################
-###############################################################################################
-#########
-######### tool-specific rules - singlem first
-
-rule singlem_copy_metapackage:
-    input:
-        singlem_metapackage
-    output:
-        db=directory(singlem_metapackage_local),
-        done=output_dirs_dict['singlem'] + "/singlem/data/done",
-    shell:
-        "cp -rL {input} {output.db} && touch {output.done}"
-
-rule singlem_run_to_profile:
-    input:
-        r1=fastq_dir + "/{sample}.1.fq.gz",
-        r2=fastq_dir + "/{sample}.2.fq.gz",
-        db=singlem_metapackage_local,
-        data_done=output_dirs_dict['singlem'] + "/singlem/data/done"
-    benchmark:
-        benchmark_dir + "/singlem/{sample}-"+str(num_threads)+"threads.benchmark"
-    output:
-        report=output_dirs_dict['singlem'] + "/singlem/{sample}.profile",
-        done=touch(output_dirs_dict['singlem'] + "/singlem/{sample}.profile.done")
-    threads:
-        num_threads
-    log:
-        output_dirs_dict['singlem'] + "/logs/singlem/{sample}.log"
-    shell:
-        'eval "$(pixi shell-hook -e singlem)" && '
-        "{singlem_bin} pipe --threads {threads} -1 {input.r1} -2 {input.r2} -p {output.report} --metapackage {input.db} &> {log}"
-
-
-###############################################################################################
-###############################################################################################
-###############################################################################################
-#########
-######### metaphlan
-
-
-rule metaphlan_copy_db:
-    # input:
-    # Cannot use the directory as input/output because humann complains when
-    # there's a snakemake hidden file in the dir
-    # db1=directory(metaphlan_db_original1),
-    # db2=directory(metaphlan_db_original2),
-    output:
-        # db1=directory(metaphlan_db_local1),
-        # db2=directory(metaphlan_db_local2),
-        done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/data/done")
-    shell:
-        "cp -rvL {metaphlan_db} {metaphlan_db_local1}"
-
-rule cat_reads_for_metaphlan:
-    # Concatenate input files because metaphlan can't handle multiple input files
-    input:
-        r1=fastq_dir + "/{sample}.1.fq.gz",
-        r2=fastq_dir + "/{sample}.2.fq.gz",
-    output:
-        cat_reads = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.cat.fq.gz",
-        done = touch(output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.cat.done")
-    shell:
-        'eval "$(pixi shell-hook -e metaphlan)" && '
-        "cat {input.r1} {input.r2} > {output.cat_reads}"
-
-rule metaphlan_profile:
-    input:
-        r1=fastq_dir + "/{sample}.1.fq.gz",
-        r2=fastq_dir + "/{sample}.2.fq.gz",
-        db_done=output_dirs_dict['metaphlan'] + "/metaphlan/data/done",
-        cat_reads = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.cat.fq.gz",
-        cat_done = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.cat.done",
-    benchmark:
-        benchmark_dir + "/metaphlan/{sample}-"+str(num_threads)+"threads.benchmark"
-    output:
-        sgb_report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.sgb_report",
-        done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile.done")
-    threads: num_threads
-    log:
-        output_dirs_dict['metaphlan'] + "/logs/metaphlan/{sample}.log"
-    shell:
-        # Concatenate input files because metaphlan can't handle multiple input files
-        'eval "$(pixi shell-hook -e metaphlan)" && '
-        "rm -f {output.sgb_report} {input.cat_reads}.bowtie2out.txt; metaphlan {input.cat_reads} --index {metaphlan_index} --nproc {threads} --input_type fastq --bowtie2db {metaphlan_db_local1} -o {output.sgb_report} &> {log}"
-
-rule metaphlan_convert_profile_to_GTDB:
-    input:
-        report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.sgb_report"
-    output:
-        gtdb_report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_profile",
-        done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_report.done")
-    log:
-        output_dirs_dict['metaphlan'] + "/logs/metaphlan/{sample}-convert.log"
-    shell:
-        'eval "$(pixi shell-hook -e metaphlan)" && '
-        "sgb_to_gtdb_profile.py -i {input.report} -o {output.gtdb_report} -d {metaphlan_db_local1}/mpa_vOct22_CHOCOPhlAnSGB_202212.pkl &> {log}"
-
-rule metaphlan_profile_to_condensed:
-    input:
-        report=output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.gtdb_profile"
-    output:
-        profile = output_dirs_dict['metaphlan'] + "/metaphlan/{sample}.profile",
-    shell:
-        'eval "$(pixi shell-hook -e singlem)" && '
-        "{workflow.basedir}/../bin/metaphlan_to_condensed.py --metaphlan {input} --sample {wildcards.sample} > {output.profile} "
-
-###############################################################################################
-###############################################################################################
-###############################################################################################
-#########
-######### motus
-
-# rule motus_copy_db:
-#     input:
-#         db=motus_db_path_original,
-#     output:
-#         db=directory(motus_db_path_local),
-#         done=touch(output_dirs_dict['motus'] + "/motus/data/done")
-#     shell:
-#         "mkdir -p {output.db} && rmdir {output.db} && cp -rvL {input.db} {output.db}"
-
-# rule motus_run:
-#     input:
-#         r1=fastq_dir + "/{sample}.1.fq.gz",
-#         r2=fastq_dir + "/{sample}.2.fq.gz",
-#         done=output_dirs_dict['motus'] + "/motus/data/done"
-#     benchmark:
-#         benchmark_dir + "/motus/{sample}-"+str(num_threads)+"threads.benchmark"
-#     output:
-#         report=output_dirs_dict['motus'] + "/motus/{sample}.motus",
-#         done=touch(output_dirs_dict['motus'] + "/motus/{sample}.profile.done")
-#     threads: num_threads
-#     conda:
-#         "envs/motus.yml"
-#     log:
-#         output_dirs_dict['motus'] + "/logs/motus/{sample}.log"
-#     shell:
-#         "motus profile -t {threads} -db {motus_db_path_local} -f {input.r1} -r {input.r2} -o {output.report} &> {log}"
-
-# rule motus_profile_to_condensed:
-#     input:
-#         report=output_dirs_dict['motus'] + "/motus/{sample}.motus"
-#     output:
-#         profile = output_dirs_dict['motus'] + "/motus/{sample}.profile",
-#     conda:
-#         "envs/singlem.yml"
-#     shell:
-#         "{workflow.basedir}/../bin/motus_to_condensed.py --motus {input.report} " \
-#         "--gtdb {motus_gtdb_tsv} " \
-#         " > {output.profile} "
-
-
-###############################################################################################
-###############################################################################################
-###############################################################################################
-######### bracken
-
-
-rule braken_copy_data:
-    output:
-        db=directory(kraken_db_local),
-        done=output_dirs_dict['kraken'] + "/kraken/data/done"
-    shell:
-        "cp -r {kraken_db} {output.db}/ && touch {output.done}"
-
-rule kraken_run:
-    input:
-        reads_copied1 = fastq_dir + "/{sample}.1.fq.gz",
-        reads_copied2 = fastq_dir + "/{sample}.2.fq.gz",
-        db=kraken_db_local,
-        copy_braken_data_done=output_dirs_dict['kraken'] + "/kraken/data/done"
-    benchmark:
-        benchmark_dir + "/kraken/{sample}-"+str(num_threads)+"threads.benchmark"
-    threads: kraken_num_threads
-    output:
-        report=output_dirs_dict['kraken'] + "/kraken/{sample}.kraken",
-        done=touch(output_dirs_dict['kraken'] + "/kraken/{sample}.kraken.done")
-    log:
-        output_dirs_dict['kraken'] + "/logs/kraken/{sample}.log"
-    shell:
-        'eval "$(pixi shell-hook -e kraken)" && '
-        "kraken2 --db {input.db} --threads {num_threads} --output /dev/null --report {output.report} --paired {input.reads_copied1} {input.reads_copied2} &> {log}"
-
-rule braken_run:
-    input:
-        db=kraken_db_local,
-        kraken_report=output_dirs_dict['kraken'] + "/kraken/{sample}.kraken",
-        kraken_done=output_dirs_dict['kraken'] + "/kraken/{sample}.kraken.done"
-    output:
-        s=output_dirs_dict['kraken'] + "/braken/{sample}.report.S",
-        g=output_dirs_dict['kraken'] + "/braken/{sample}.report.G",
-        f=output_dirs_dict['kraken'] + "/braken/{sample}.report.F",
-        o=output_dirs_dict['kraken'] + "/braken/{sample}.report.O",
-        c=output_dirs_dict['kraken'] + "/braken/{sample}.report.C",
-        p=output_dirs_dict['kraken'] + "/braken/{sample}.report.P",
-        d=output_dirs_dict['kraken'] + "/braken/{sample}.report.D",
-        done=touch(output_dirs_dict['kraken'] + "/braken/{sample}.done")
-    log:
-        output_dirs_dict['kraken'] + "/logs/bracken/{sample}.log"
-    shell:
-        'eval "$(pixi shell-hook -e bracken)" && '
-        "bash -c 'bracken -d {input.db} -r 150 -l S -t 10 -o {output.s} -i {input.kraken_report} && " \
-        "bracken -d {input.db} -r 150 -l G -t 10 -o {output.g} -i {input.kraken_report} && " \
-        "bracken -d {input.db} -r 150 -l F -t 10 -o {output.f} -i {input.kraken_report} && " \
-        "bracken -d {input.db} -r 150 -l O -t 10 -o {output.o} -i {input.kraken_report} && " \
-        "bracken -d {input.db} -r 150 -l C -t 10 -o {output.c} -i {input.kraken_report} && " \
-        "bracken -d {input.db} -r 150 -l P -t 10 -o {output.p} -i {input.kraken_report} && " \
-        "bracken -d {input.db} -r 150 -l D -t 10 -o {output.d} -i {input.kraken_report}' &> {log}"
-
-
-rule bracken_to_profile:
-    input:
-        output_dirs_dict['kraken'] + "/braken/{sample}.report.S",
-        output_dirs_dict['kraken'] + "/braken/{sample}.report.G",
-        output_dirs_dict['kraken'] + "/braken/{sample}.report.F",
-        output_dirs_dict['kraken'] + "/braken/{sample}.report.O",
-        output_dirs_dict['kraken'] + "/braken/{sample}.report.C",
-        output_dirs_dict['kraken'] + "/braken/{sample}.report.P",
-        output_dirs_dict['kraken'] + "/braken/{sample}.report.D",
-        output_dirs_dict['kraken'] + "/braken/{sample}.done"
-    params:
-        report_prefix = output_dirs_dict['kraken']+"/braken/{sample}.report",
-        biobox_dir = output_dirs_dict['kraken']+'/biobox',
-        truth = truth_dir + "/{sample}.condensed.biobox",
-    output:
-        profile = output_dirs_dict['kraken'] + "/kraken/{sample}.profile",
-    log:
-        output_dirs_dict['kraken'] + "/logs/bracken_to_profile/{sample}.log"
-    shell:
-        # Convert reports to singlem condense format
-        'eval "$(pixi shell-hook -e singlem)" && '
-        "mkdir -p {params.biobox_dir} && " \
-        "{workflow.basedir}/../bin/kraken_to_condensed.py --report-prefix {params.report_prefix} " \
-        "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \
-        "--archaeal-taxonomy ../ar53_taxonomy_r207.tsv > {output.profile} 2> {log}"
-
-###############################################################################################
-###############################################################################################
-###############################################################################################
-######### sourmash
-
-rule copy_db:
-    input:
-        db1 = sourmash_db_taxonomy,
-        db2 = sourmash_db_dna,
-    output:
-        db1=sourmash_db_taxonomy_local,
-        db2=sourmash_db_dna_local,
-        done=output_dirs_dict['sourmash'] + "/sourmash/data/done"
-    resources:
-        mem_mb=4000,
-        runtime='1h'
-    params:
-        output_dir = output_dirs_dict['sourmash'],
-    shell:
-        "mkdir -p {params.output_dir}/sourmash/data && cp -rvL {input.db1} {output.db1} && cp -rvL {input.db2} {output.db2} && touch {output.done}"
-
-rule sourmash_run:
-    input:
-        r1=fastq_dir + "/{sample}.1.fq.gz",
-        r2=fastq_dir + "/{sample}.2.fq.gz",
-        db1=sourmash_db_taxonomy_local,
-        db2=sourmash_db_dna_local,
-        done=output_dirs_dict['sourmash'] + "/sourmash/data/done"
-    benchmark:
-        benchmark_dir + "/sourmash/{sample}-"+str(num_threads)+"threads.benchmark"
-    threads: num_threads
-    output:
-        report=output_dirs_dict['sourmash'] + "/sourmash/{sample}.csv",
-        done=touch(output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile.done")
-    params:
-        output_dir = output_dirs_dict['sourmash'],
-        sourmash_prefix = lambda wildcards: output_dirs_dict['sourmash'] + "/sourmash/"+wildcards.sample
-    log:
-        output_dirs_dict['sourmash'] + "/logs/sourmash/{sample}.log"
-    shell:
-        # Sourmash does not seem to have a --threads option
-        'eval "$(pixi shell-hook -e sourmash)" && '
-        "sourmash sketch dna -p k=31,abund --merge blah -o {params.sourmash_prefix}.sig {input.r1} {input.r2} "\
-        "&& echo \"running gather..\" "\
-        "&& sourmash gather -k 31 --dna {params.sourmash_prefix}.sig {sourmash_db_dna} -o {params.sourmash_prefix}.gather_gtdbrs207_reps.csv "\
-        "&& echo \"running tax ..\" "\
-        "&& sourmash tax metagenome -g {params.sourmash_prefix}.gather_gtdbrs207_reps.csv -t {sourmash_db_taxonomy} >{output.report}"
-
-rule sourmash_to_condensed:
-    input:
-        output_dirs_dict['sourmash'] + "/sourmash/{sample}.csv",
-    output:
-        profile = output_dirs_dict['sourmash'] + "/sourmash/{sample}.profile",
-    shell:
-        "{workflow.basedir}/../bin/sourmash_to_condensed.py --summary-csv {input} " \
-        "--sample {wildcards.sample} " \
-        " > {output} "
-
-###############################################################################################
-###############################################################################################
-###############################################################################################
-######### kaiju
-
-# rule kaiju_copy_db:
-#     # input:
-#     #     db = kaiju_db_original_progenomes_fmi,
-#     #     nodes = kaiju_db_original_progenomes_nodes,
-#     #     names = kaiju_db_original_progenomes_names,
-#     output:
-#         db=kaiju_db,
-#         nodes = kaiju_db_progenomes_nodes,
-#         names = kaiju_db_progenomes_names,
-#         done=output_dirs_dict['kaiju'] + "/kaiju/data/done"
-#     shell:
-#         "mkdir -p {output_dirs_dict[kaiju]}/kaiju/data && " \
-#         "cp -rvL {kaiju_db_original_progenomes_fmi} {output.db} " \
-#         "&& cp -rvL {kaiju_db_original_progenomes_nodes} {output.nodes} " \
-#         "&& cp -rvL {kaiju_db_original_progenomes_names} {output.names} "\
-#         "&& touch {output.done}"
-        
-# rule kaiju_run:
-#     input:
-#         r1=fastq_dir + "/{sample}.1.fq.gz",
-#         r2=fastq_dir + "/{sample}.2.fq.gz",
-#         db=kaiju_db,
-#         nodes = kaiju_db_progenomes_nodes,
-#         names = kaiju_db_progenomes_names,
-#         done=output_dirs_dict['kaiju'] + "/kaiju/data/done"
-#     benchmark:
-#         benchmark_dir + "/kaiju/{sample}-"+str(num_threads)+"threads.benchmark"
-#     threads: num_threads
-#     output:
-#         report=output_dirs_dict['kaiju'] + "/kaiju-run/{sample}.report",
-#         done=touch(output_dirs_dict['kaiju'] + "/kaiju/{sample}.profile.done")
-#     conda:
-#         "envs/kaiju.yml"
-#     log:
-#         output_dirs_dict['kaiju'] + "/logs/kaiju/{sample}.log"
-#     params:
-#         output_dir = output_dirs_dict['kaiju'],
-#         kaiju_prefix = lambda wildcards: output_dirs_dict['kaiju'] + "/kaiju/"+wildcards.sample
-#     shell:
-#         # kaiju -z 25 -t nodes.dmp -f kaiju_db_progenomes.fmi -i <(zcat ~/m/msingle/mess/124_singlem-benchmarking/2_phylogenetic_novelty/local_reads/GCA_020697715.1_genomic.1.fq.gz ~/m/msingle/mess/124_singlem-benchmarking/2_phylogenetic_novelty/local_reads/GCA_020697715.1_genomic.2.fq.gz) -o kaiju.out
-#         "kaiju -z {threads} -t {input.nodes} -f {input.db} -i <(zcat {input.r1} {input.r2}) -o {output.report} &> {log}"
-
-# rule kaiju_to_summarised_table:
-#     input:
-#         output_dirs_dict['kaiju'] + "/kaiju-run/{sample}.report",
-#     output:
-#         profile = output_dirs_dict['kaiju'] + "/kaiju/{sample}.summary.report",
-#         done=touch(output_dirs_dict['kaiju'] + "/kaiju/{sample}.summary.report.done")
-#     conda:
-#         "envs/kaiju.yml"
-#     log:
-#         output_dirs_dict['kaiju'] + "/logs/kaiju_to_summarised_table/{sample}.log"
-#     shell:
-#         # kaiju2table -t nodes.dmp -n names.dmp -r genus -o kaiju_summary.tsv kaiju.out
-#         "kaiju2table -t {kaiju_db_progenomes_nodes} -n {kaiju_db_progenomes_names} -r phylum -o {output.profile} {input} &> {log}"
-
-# rule kaiju_to_condensed:
-#     input:
-#         output_dirs_dict['kaiju'] + "/kaiju/{sample}.summary.report",
-#     output:
-#         profile = output_dirs_dict['kaiju'] + "/kaiju/{sample}.profile",
-#     conda:
-#         "envs/kaiju_to_kingdom.yml"
-#     shell:
-#         "{workflow.basedir}/../bin/kaiju_to_kingdom_condensed.py --input {input} " \
-#         "--sample {wildcards.sample} " \
-#         "--data-dir {kaiju_db_original_dir} " \
-#         " > {output} "
-
-
-###############################################################################################
-###############################################################################################
-###############################################################################################
-######### MAP2B
-
-# rule map2b_copy_data:
-#     output:
-#         db=directory(map2b_db_local),
-#         done=touch(output_dirs_dict['map2b'] + "/map2b/data/done")
-#     shell:
-#         "cp -r {map2b_db} {output.db}/"
-
-# rule map2b_sample_setup:
-#     input:
-#         r1=fastq_dir + "/{sample}.1.fq.gz",
-#         r2=fastq_dir + "/{sample}.2.fq.gz",
-#     output:
-#         listfile=output_dirs_dict['map2b'] + "/map2b/listfiles/{sample}",
-#         done=touch(output_dirs_dict['map2b'] + "/map2b/done/setup/{sample}.done")
-#     shell:
-#         "echo {wildcards.sample} {input.r1} {input.r2} |sed 's/ /\t/g' > {output.listfile}"
-
-# rule map2b_run:
-#     input:
-#         listfile=output_dirs_dict['map2b'] + "/map2b/listfiles/{sample}",
-#         done=output_dirs_dict['map2b'] + "/map2b/data/done"
-#     output:
-#         tsv=output_dirs_dict['map2b'] + "/map2b/{sample}/Abundance.xls",
-#         done=touch(output_dirs_dict['map2b'] + "/map2b/done/run/{sample}.done")
-#     threads: num_threads
-#     benchmark:
-#         benchmark_dir + "/map2b/{sample}-"+str(num_threads)+"threads.benchmark"
-#     conda:
-#         "envs/MAP2B-20230420-conda.yml"
-#     log:
-#         output_dirs_dict['map2b'] + "/logs/map2b/{sample}.log"
-#     params:
-#         output_dir = lambda wildcards, output: os.path.dirname(output.tsv),
-#     shell:
-#         "python3 {map2b_checkout_dir}/bin/MAP2B.py -i {input.listfile} -d {map2b_db_local} -o {params.output_dir} -p {threads} &> {log}"
-
-# rule map2b_to_biobox:
-#     input:
-#         tsv=output_dirs_dict['map2b'] + "/map2b/{sample}/Abundance.xls",
-#     output:
-#         profile = output_dirs_dict['map2b'] + "/map2b/{sample}.profile",
-#     shell:
-#         "{workflow.basedir}/../bin/map2b_to_condensed.py "
-#         "--abundance {input} "
-#         "--sample {wildcards.sample} "
-#         "> {output} "
-
-###############################################################################################
-###############################################################################################
-###############################################################################################
-######### metabuli
-
-rule metabuli_copy_db:
-    input:
-        db=metabuli_db_dir,
-    output:
-        db=directory(metabuli_db_local),
-        done=touch(output_dirs_dict['metabuli'] + "/metabuli/data/done")
-    shell:
-        "cp -r {input.db} {output.db}"
-
-rule metabuli_run:
-    input:
-        r1=fastq_dir + "/{sample}.1.fq.gz",
-        r2=fastq_dir + "/{sample}.2.fq.gz",
-        db=metabuli_db_local,
-        done=output_dirs_dict['metabuli'] + "/metabuli/data/done"
-    output:
-        report=output_dirs_dict['metabuli'] + "/output/{sample}_report.tsv",
-        done=touch(output_dirs_dict['metabuli'] + "/output/{sample}.done")
-    threads: kraken_num_threads
-    benchmark:
-        benchmark_dir + "/metabuli/{sample}-"+str(num_threads)+"threads.benchmark"
-    params:
-        output_dir = output_dirs_dict['metabuli'],
-    shell:
-        'eval "$(pixi shell-hook -e metabuli)" && '
-        "metabuli classify --threads {threads} {input.r1} {input.r2} {input.db} {params.output_dir}/output {wildcards.sample}"
-
-rule metabuli_report_to_condensed:
-    input:
-        report=output_dirs_dict['metabuli'] + "/output/{sample}_report.tsv",
-    output:
-        profile = output_dirs_dict['metabuli'] + "/metabuli/{sample}.profile",
-    shell:
-        'eval "$(pixi shell-hook -e singlem)" && '
-        "{workflow.basedir}/../bin/metabuli_to_condensed.py --input {input} " \
-        "--bacterial-taxonomy ../bac120_taxonomy_r207.tsv " \
-        "--archaeal-taxonomy ../ar53_taxonomy_r207.tsv > {output.profile}"
+# Shared rules (../rules): DB staging, common conversions/OPAL, and one file per
+# profiler this benchmark runs. Read generation and low_abund are bench1-specific
+# (above). singlem-regime3 rules are staged/defined for convenience even though
+# `tools` (r207_tools) does not target them in `rule all`.
+include: "../rules/staging.smk"
+include: "../rules/common.smk"
+include: "../rules/singlem_run.smk"
+include: "../rules/metaphlan_run.smk"
+include: "../rules/kraken_run.smk"
+include: "../rules/sourmash_run.smk"
+include: "../rules/metabuli_run.smk"
+include: "../rules/sylph_run.smk"
+include: "../rules/singlem_regime3_run.smk"

@@ -1,0 +1,73 @@
+import extern
+import os
+
+# Benchmark 6: 1000 distinct known GTDB r207 species, every one simulated below
+# 1x coverage (0.04-1.0x, median 0.22x) and below 10% relative abundance
+# (max 0.39%). This is benchmark 5's coverage-floor probe carried up to a complex
+# community: no member reaches SingleM's ~1.5x marker-gene sensitivity, and no
+# member is abundant enough for a profiler to coast on. It separates the two
+# things benchmark 5 conflates -- being below the floor, and being one of only a
+# handful of taxa -- and gives the joint method a thousand chances to invent a
+# species rather than five.
+#
+# Community definition (genome_list.tsv, coverage_definitions/known1000.tsv) is
+# produced by generate_definitions.py and committed; see the README.
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(workflow.snakefile)), '..')))
+from tool_reference_data import *
+
+num_threads = config['benchmarking_threads']
+
+# Per-benchmark setup: tools, output_dirs_dict, local db paths, datasets.
+sys.path.append(os.path.abspath(os.path.dirname(os.path.abspath(workflow.snakefile))))
+from bench6_setup import *
+
+fastq_dir = 'reads'
+truth_dir = 'truths'
+
+# Read generation inputs (consumed by ../rules/data_generation.smk).
+generate_community_script = os.path.join(workflow.basedir, '../1_novel_strains/generate_community.py')
+genome_fasta_paths = os.path.join(workflow.basedir, 'genome_list.tsv')
+
+# singlem-regime3 (weebill --two-stage + singlem pipe + condense --joint) paths,
+# consumed by ../rules/singlem_regime3_run.smk.
+singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
+regime3_weebill_scripts = os.path.join(
+    singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
+
+print("Profiling {} over {} communities".format(tools, len(datasets)))
+
+# Constrain wildcards so the generic {tool}/{tool} biobox+opal rules cannot
+# greedily match across path separators (a tool name contains a hyphen and
+# shares the `singlem` prefix: singlem-regime3).
+wildcard_constraints:
+    tool="[A-Za-z0-9._-]+",
+    sample="[A-Za-z0-9._]+",
+
+# Databases this benchmark stages locally (opt-in for ../rules/staging.smk).
+staged_tools = tools
+
+# PBS/aqua jobs start in $HOME, not the workdir; cd in so workdir-relative paths
+# (bin/, genome_list.tsv, ../*_taxonomy_r207.tsv, generate_community.py's
+# ../bac120_metadata_r207.tsv) and the pixi manifest resolve on compute nodes.
+shell.prefix("cd {} && ".format(workflow.basedir))
+
+# Trivial table conversions run on the orchestrator host, not as 48h queue jobs.
+localrules:
+    truth_condensed_to_biobox,
+    tool_condensed_to_biobox,
+    sylph_report_to_condensed,
+
+rule all:
+    input:
+        expand(output_prefix + "{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools)
+
+# Shared rules (../rules): read generation, DB staging, common conversions/OPAL,
+# and one file per profiler this benchmark runs.
+include: "../rules/data_generation.smk"
+include: "../rules/staging.smk"
+include: "../rules/common.smk"
+include: "../rules/singlem_run.smk"
+include: "../rules/metaphlan_run.smk"
+include: "../rules/sylph_run.smk"
+include: "../rules/singlem_regime3_run.smk"

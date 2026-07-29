@@ -89,9 +89,15 @@ if __name__ == '__main__':
     elif total_coverage > 101:
         raise Exception(f'Total coverage is greater than 101%: {total_coverage}')
 
-    if total_coverage == 0:
+    # Fill in the known paired genome's taxonomy when no species were detected.
+    # MetaPhlAn 4.x reports fully-missed samples as `UNCLASSIFIED\t100.0`, which
+    # counts towards total_coverage, so `total_coverage == 0` never fires for
+    # them; keying off an empty species set is the general condition and gives
+    # MetaPhlAn credit for the community's known component even when it detects
+    # nothing (see commit 5426056).
+    if len(taxon_to_coverage) == 0:
         if args.genome_pairs:
-            logging.warning(f'No coverage for {args.sample}, setting known taxonomy to 100%')
+            logging.warning(f'No species detected for {args.sample}, setting known taxonomy to 100%')
             genome_pairs = pd.read_csv(args.genome_pairs, sep='\t')
             paired_taxonomy = genome_pairs[genome_pairs['genome_ID'] == args.sample]['paired_taxonomy'].values[0]
 

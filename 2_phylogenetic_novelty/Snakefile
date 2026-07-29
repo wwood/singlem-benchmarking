@@ -7,7 +7,7 @@ num_threads = config['benchmarking_threads']
 kraken_num_threads = 999 # never let kraken be parallelised, because otherwise it will exhaust the RAM.
 kraken_num_threads = 1
 
-relabund_tools = ['singlem', 'metaphlan', 'motus', 'sourmash', 'map2b', 'sylph', 'metaphlan42']
+relabund_tools = ['singlem', 'metaphlan', 'motus', 'sourmash', 'map2b', 'sylph', 'metaphlan42', 'singlem-regime3']
 reads_wise_tools = ['kraken', 'kaiju', 'metabuli']
 tools = relabund_tools + reads_wise_tools
 
@@ -47,6 +47,10 @@ print("Profiling {} over {} genomes".format(tools, len(novelties)))
 ##################################################################### things that should be in config
 
 singlem_git_base_directory = os.path.join(workflow.basedir, '../singlem')
+# The sylph-condense-regime3 branch of SingleM, checked out as a separate
+# submodule and installed into the `singlem-regime3` pixi environment.
+singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
+regime3_weebill_scripts = os.path.join(singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
 
 ##################################################################### reference databases
 
@@ -88,15 +92,44 @@ metabuli_db_local = output_dirs_dict['metabuli'] + '/metabuli/data/gtdb207'
 
 sylph_db_local = output_dirs_dict['sylph'] + '/sylph/data/gtdb_database.syldb'
 
+# Databases this benchmark stages locally via the shared ../rules/staging.smk.
+# Only the DB-copy rules are shared with the other benchmarks; every run/convert
+# rule below stays bench2-specific (2-component reads, {method} truth/opal,
+# kingdom-level motus/kaiju, genome-pairs metaphlan). sourmash/kaiju/motus/map2b
+# are not listed: bench2 either has no copy rule for them or stages them
+# differently, so their (commented-out or bespoke) handling stays local.
+staged_tools = {'singlem', 'metaphlan', 'metaphlan42', 'kraken', 'metabuli',
+                'sylph', 'singlem-regime3'}
+
 #####################################################################
 
 
+# Constrain wildcards so the generic {tool}/{method} rules cannot greedily match
+# across path separators. This matters now that a tool name contains a hyphen and
+# shares the `singlem` prefix (singlem-regime3), which could otherwise make the
+# generic condensed->biobox / opal rules ambiguous.
+wildcard_constraints:
+    tool="[A-Za-z0-9._-]+",
+    method="[A-Za-z0-9._]+",
+    sample="[A-Za-z0-9._]+",
+
 rule all:
     input:
-        expand(output_prefix+"{tool}/opal/{sample}.relabund.opal_report", sample=novelties['sample'], 
+        expand(output_prefix+"{tool}/opal/{sample}.relabund.opal_report", sample=novelties['sample'],
             tool=[t for t in tools if t in relabund_tools]),
         expand(output_prefix+"{tool}/opal/{sample}.reads_wise.opal_report", sample=novelties['sample'],
             tool=[t for t in tools if t in reads_wise_tools]),
+
+# Convenience targets for running a chosen subset of tools over all samples.
+rule all_bench2_singlem_metaphlan_regime3:
+    input:
+        expand(output_prefix+"{tool}/opal/{sample}.relabund.opal_report",
+            sample=novelties['sample'], tool=['singlem', 'metaphlan', 'singlem-regime3'])
+
+rule all_bench2_sylph:
+    input:
+        expand(output_prefix+"sylph/opal/{sample}.relabund.opal_report",
+            sample=novelties['sample'])
 
 def get_paired_genome_fasta(wildcards):
     return paired_genomes.filter(pl.col('sample')==wildcards.sample).get_column('example_genome')[0]
@@ -181,15 +214,12 @@ rule opal:
 ###############################################################################################
 #########
 ######### tool-specific rules - singlem first
-
-rule singlem_copy_metapackage:
-    input:
-        singlem_metapackage
-    output:
-        db=directory(singlem_metapackage_local),
-        done=output_dirs_dict['singlem'] + "/singlem/data/done",
-    shell:
-        "cp -rL {input} {output.db} && touch {output.done}"
+#########
+######### DB staging (cp of each tool's reference database) is shared from
+######### ../rules/staging.smk; see the include at the bottom of this file and
+######### `staged_tools` near the top. Only bench2-specific run/convert rules
+######### (2-component read-gen, {method} truth/opal, kingdom-level motus/kaiju,
+######### genome-pairs metaphlan, threads:1 singlem) live in this file.
 
 rule singlem_run_to_profile:
     input:
@@ -213,22 +243,108 @@ rule singlem_run_to_profile:
 ###############################################################################################
 ###############################################################################################
 #########
+######### singlem-regime3 (sylph-condense-regime3 joint SingleM + weebill/sylph)
+#########
+######### Chain: singlem pipe --no-sylph -> archive OTU table; weebill (sylph
+######### fork) profile --two-stage -> raw sylph TSV; annotate it with GTDB
+######### taxonomy from the metapackage; then singlem condense --joint
+######### --sylph-profile produces the final condensed profile that the generic
+######### condensed->biobox + opal rules consume.
+
+singlem_regime3_metapackage_local = join(output_dirs_dict['singlem-regime3'], 'data', os.path.basename(singlem_metapackage))
+
+# singlem_regime3_copy_metapackage is shared from ../rules/staging.smk.
+
+rule singlem_regime3_pipe_to_archive:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        db=singlem_regime3_metapackage_local,
+        data_done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/data/done"
+    benchmark:
+        benchmark_dir + "/singlem-regime3-pipe/{sample}-"+str(num_threads)+"threads.benchmark"
+    output:
+        archive=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.json",
+        done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.done"
+    threads: 1
+    log:
+        output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.pipe.log"
+    shell:
+        # Unset the PYTHONPATH inherited from the top-level `PYTHONPATH=.. snakemake`
+        # invocation: the repo root contains a `singlem/` submodule dir (no
+        # top-level __init__.py) that shadows this branch's editable-installed
+        # `singlem` package as a namespace package. The editable install resolves
+        # `singlem` correctly on its own.
+        'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
+        "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} "
+        "--no-sylph --archive-otu-table {output.archive} --metapackage {input.db} &> {log} && "
+        "touch {output.done}"
+
+rule singlem_regime3_weebill_profile:
+    input:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        database=weebill_db,
+        weebill=weebill_binary,
+    benchmark:
+        benchmark_dir + "/singlem-regime3-weebill/{sample}-"+str(num_threads)+"threads.benchmark"
+    output:
+        profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.tsv",
+        done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.done"
+    threads: num_threads
+    resources:
+        mem_mb=16000
+    log:
+        output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.weebill.log"
+    shell:
+        "{input.weebill} profile --two-stage -t {threads} -c 100 "
+        "-1 {input.r1} -2 {input.r2} -o {output.profile} {input.database} &> {log} && "
+        # weebill writes only a header when nothing is detected; ensure at least one data row
+        "awk 'END {{ exit NR < 2 }}' {output.profile} && touch {output.done}"
+
+rule singlem_regime3_annotate_weebill:
+    input:
+        profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.tsv",
+        db=singlem_regime3_metapackage_local,
+    output:
+        annotated=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.annotated.tsv",
+    log:
+        output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.annotate.log"
+    shell:
+        # Point PYTHONPATH at the regime3 checkout (not the inherited repo-root
+        # PYTHONPATH, which shadows singlem via the ./singlem submodule dir).
+        'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
+        "PYTHONPATH={singlem_regime3_git_base_directory} python3 {regime3_weebill_scripts}/annotate_weebill.py "
+        "--profile {input.profile} --metapackage {input.db} --output {output.annotated} &> {log}"
+
+rule singlem_regime3_condense_joint:
+    input:
+        archive=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.json",
+        sylph_profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.annotated.tsv",
+        db=singlem_regime3_metapackage_local,
+    benchmark:
+        benchmark_dir + "/singlem-regime3-condense/{sample}-"+str(num_threads)+"threads.benchmark"
+    output:
+        profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.profile",
+        done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.profile.done"
+    threads: 1
+    log:
+        output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.condense.log"
+    shell:
+        'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
+        "singlem condense --input-archive-otu-table {input.archive} --metapackage {input.db} "
+        "--sylph-profile {input.sylph_profile} --joint --taxonomic-profile {output.profile} &> {log} && "
+        "touch {output.done}"
+
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
+#########
 ######### metaphlan
 
 
-rule metaphlan_copy_db:
-    input:
-        # Cannot use the directory as input/output because humann complains when
-        # there's a snakemake hidden file in the dir
-
-        # db1=directory(metaphlan_db_original1),
-        # db2=directory(metaphlan_db_original2),
-    output:
-        # db1=directory(metaphlan_db_local1),
-        # db2=directory(metaphlan_db_local2),
-        done=touch(output_dirs_dict['metaphlan'] + "/metaphlan/data/done")
-    shell:
-        "cp -rvL {metaphlan_db} {metaphlan_db_local1}"
+# metaphlan_copy_db is shared from ../rules/staging.smk.
 
 rule metaphlan_profile:
     input:
@@ -280,18 +396,7 @@ rule metaphlan_profile_to_condensed:
 ######### metaphlan42
 
 
-rule metaphlan42_copy_db:
-    # input:
-    # Cannot use the directory as input/output because humann complains when
-    # there's a snakemake hidden file in the dir
-    # db1=directory(metaphlan_db_original1),
-    # db2=directory(metaphlan_db_original2),
-    output:
-        # db1=directory(metaphlan_db_local1),
-        # db2=directory(metaphlan_db_local2),
-        done=touch(output_dirs_dict['metaphlan42'] + "/metaphlan42/data/done")
-    shell:
-        "cp -rvL {metaphlan42_db} {metaphlan42_db_local1}"
+# metaphlan42_copy_db is shared from ../rules/staging.smk.
 
 rule metaphlan42_profile:
     input:
@@ -392,12 +497,7 @@ rule motus_profile_to_condensed:
 ######### bracken
 
 
-rule braken_copy_data:
-    output:
-        db=directory(kraken_db_local),
-        done=output_dirs_dict['kraken'] + "/kraken/data/done"
-    shell:
-        "cp -r {kraken_db} {output.db}/ && touch {output.done}"
+# braken_copy_data is shared from ../rules/staging.smk.
 
 rule kraken_run:
     input:
@@ -632,14 +732,7 @@ rule map2b_to_biobox:
 ###############################################################################################
 ######### metabuli
 
-rule metabuli_copy_db:
-    input:
-        db=metabuli_db_dir,
-    output:
-        db=directory(metabuli_db_local),
-        done=touch(output_dirs_dict['metabuli'] + "/metabuli/data/done")
-    shell:
-        "cp -r {input.db} {output.db}"
+# metabuli_copy_db is shared from ../rules/staging.smk.
 
 rule metabuli_run:
     input:
@@ -675,14 +768,7 @@ rule metabuli_report_to_condensed:
 ###############################################################################################
 ######### sylph
 
-rule sylph_copy_db:
-    input:
-        db=sylph_db,
-    output:
-        db=sylph_db_local,
-        done=touch(output_dirs_dict['sylph'] + "/sylph/data/done")
-    shell:
-        "mkdir -p output.db && cp -r {input.db} {output.db}"
+# sylph_copy_db is shared from ../rules/staging.smk.
 
 rule sylph_run:
     input:
@@ -708,10 +794,16 @@ rule sylph_report_to_condensed:
         report=output_dirs_dict['sylph'] + "/output/{sample}.tsv",
     output:
         profile = output_dirs_dict['sylph'] + "/sylph/{sample}.profile",
-    conda:
-        "envs/singlem.yml"
     shell:
         "python3 {workflow.basedir}/../bin/sylph_to_condensed.py --sylph-genome {input} " \
         "--sample {wildcards.sample} " \
         "--bac-tax ../bac120_taxonomy_r207.tsv " \
         "--arc-tax ../ar53_taxonomy_r207.tsv > {output.profile}"
+
+
+###############################################################################################
+# Shared DB-staging rules only (../rules/staging.smk). The run/convert/OPAL rules
+# above stay bench2-specific because they diverge from the other benchmarks
+# (2-component reads, {method}-parametrised truth/opal, kingdom-level motus/kaiju,
+# genome-pairs metaphlan, single-threaded singlem).
+include: "../rules/staging.smk"

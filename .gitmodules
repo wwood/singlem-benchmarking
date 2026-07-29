@@ -1,3 +1,10 @@
 [submodule "singlem"]
 	path = singlem
 	url = https://github.com/wwood/singlem
+[submodule "singlem_sylph_condense_regime"]
+	path = singlem_sylph_condense_regime
+	url = https://github.com/wwood/singlem
+	branch = sylph-condense-regime3
+[submodule "weebill"]
+	path = weebill
+	url = https://github.com/wwood/weebill.git
