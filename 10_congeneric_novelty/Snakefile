@@ -1,0 +1,123 @@
+import extern
+import os
+
+# Benchmark 10: novelty *within* the genus, at two abundances.
+#
+# Four genomes in two unrelated genera (Streptococcus, Collinsella). Each genus
+# contributes one species that is known in GTDB r207 -- and so is in every tool's
+# database -- at 50x, plus one congener whose species is new in r214 and therefore
+# absent from all of them. The novel member is carried at 100x in Streptococcus and
+# at 10x in Collinsella, so the same question is asked once with the unknown
+# dominating its known congener 2:1 and once with it at a fifth of it.
+#
+# The question is specifically about how singlem-regime3 parses novelty once the
+# sylph species layer has been accounted for. Regime3 gets a whole-genome species
+# profile from weebill and marker-gene evidence from singlem pipe, and `condense
+# --joint` has to decide what is left over after the sylph species are subtracted.
+# Here the leftover has a known answer: it is exactly the two novel congeners, and
+# it should surface as genus-level abundance under g__Streptococcus and
+# g__Collinsella -- not as extra abundance on the known congener (the 50x member is
+# the nearest database neighbour and the easiest thing to mistake it for), and not
+# as nothing at all.
+#
+# Benchmark 8 crosses novelty with congenericity but reads out at one abundance per
+# member; benchmark 9 has one abundant unknown with no known congener at all. This
+# one holds genus, novelty depth and the known congener fixed and varies only the
+# unknown's abundance, which is what isolates the abundance dependence of the
+# regime3 leftover.
+#
+# **Interpret at both species and genus level.** Species level is the two known
+# members plus anything invented for the two unknowns; genus level is whether the
+# unknowns were placed at the rank they can be placed at, and with how much
+# abundance. See ../ARCHITECTURE.md.
+#
+# Reads are simulated here, but NOT by ../rules/data_generation.smk: that rule
+# takes coverage from coverage_definitions/<sample>.tsv and taxonomy from the GTDB
+# metadata, and two of these four genomes have no r207 metadata row, so its inner
+# join would drop exactly the members under test. This benchmark's own
+# generate_community.py reads both coverage and truth taxonomy from community.tsv.
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(workflow.snakefile)), '..')))
+from tool_reference_data import *
+
+num_threads = config['benchmarking_threads']
+
+# Per-benchmark setup: tools, output_dirs_dict, local db paths, datasets.
+sys.path.append(os.path.abspath(os.path.dirname(os.path.abspath(workflow.snakefile))))
+from bench10_setup import *
+
+fastq_dir = 'reads'
+truth_dir = 'truths'
+
+# The community definition (genome, fasta, coverage, role, truth taxonomy).
+community_definition = 'community.tsv'
+generate_community_script = os.path.join(workflow.basedir, 'generate_community.py')
+
+# singlem-regime3 (weebill --two-stage + singlem pipe + condense --joint) paths,
+# consumed by ../rules/singlem_regime3_run.smk.
+singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
+regime3_weebill_scripts = os.path.join(
+    singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
+
+print("Profiling {} over {} communities".format(tools, len(datasets)))
+
+# Constrain wildcards so the generic {tool}/{tool} biobox+opal rules cannot
+# greedily match across path separators (a tool name contains a hyphen and
+# shares the `singlem` prefix: singlem-regime3).
+wildcard_constraints:
+    tool="[A-Za-z0-9._-]+",
+    sample="[A-Za-z0-9._]+",
+
+# Databases this benchmark stages locally (opt-in for ../rules/staging.smk).
+staged_tools = tools
+
+# PBS/aqua jobs start in $HOME, not the workdir; cd in so workdir-relative paths
+# (community.tsv, ../reference_genomes/, ../2_phylogenetic_novelty/genomes/,
+# ../*_taxonomy_r207.tsv, bin/) and the pixi manifest resolve on compute nodes.
+shell.prefix("cd {} && ".format(workflow.basedir))
+
+# Trivial table conversions run on the orchestrator host, not as 48h queue jobs.
+localrules:
+    truth_condensed_to_biobox,
+    tool_condensed_to_biobox,
+    sylph_report_to_condensed,
+
+rule all:
+    input:
+        expand(output_prefix + "{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools)
+
+# Read simulation. The local analogue of ../rules/data_generation.smk's
+# generate_community_and_reads -- see the note at the top of this file for why it
+# cannot be the shared rule.
+rule generate_community_and_reads:
+    input:
+        community=community_definition,
+        script=generate_community_script,
+    output:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+        condensed=truth_dir + "/{sample}.condensed",
+        genomewise=truth_dir + "/{sample}.genomewise.csv",
+        done=touch(truth_dir + "/{sample}.finished"),
+        done2=touch(fastq_dir + "/{sample}.finished"),
+    threads: num_threads
+    resources:
+        runtime=120,  # 210x over 4 small genomes; minutes
+    log:
+        truth_dir + "/{sample}.readgen.log",
+    shell:
+        'eval "$(pixi shell-hook -e art)" && '
+        "mkdir -p {fastq_dir} {truth_dir} && "
+        "{input.script} --art art_illumina --threads {threads} "
+        "--community {input.community} --sample {wildcards.sample} "
+        "--output-condensed {output.condensed} --output-genomewise {output.genomewise} "
+        "-1 {output.r1} -2 {output.r2} &> {log}"
+
+# Shared rules (../rules): DB staging, common conversions/OPAL, and one file per
+# profiler this benchmark runs. Read generation is local -- see above.
+include: "../rules/staging.smk"
+include: "../rules/common.smk"
+include: "../rules/singlem_run.smk"
+include: "../rules/metaphlan_run.smk"
+include: "../rules/sylph_run.smk"
+include: "../rules/singlem_regime3_run.smk"

@@ -1,0 +1,349 @@
+tool	rank	metric	value
+metaphlan	kingdom	Bray-Curtis distance	0.00268949072016785
+metaphlan	phylum	Bray-Curtis distance	0.058102998002983
+metaphlan	class	Bray-Curtis distance	0.0744337820176056
+metaphlan	order	Bray-Curtis distance	0.0904787277560376
+metaphlan	family	Bray-Curtis distance	0.12856216329596
+metaphlan	genus	Bray-Curtis distance	0.183000593649738
+metaphlan	species	Bray-Curtis distance	0.300773046407678
+metaphlan	phylum	Shannon diversity	2.1481636819988
+metaphlan	phylum	Shannon equitability	0.599456489247494
+metaphlan	class	Shannon diversity	2.4743455030381
+metaphlan	class	Shannon equitability	0.623215007086056
+metaphlan	order	Shannon diversity	3.76877224503384
+metaphlan	order	Shannon equitability	0.78450369179078
+metaphlan	family	Shannon diversity	4.59433934062851
+metaphlan	family	Shannon equitability	0.856198262490706
+metaphlan	genus	Shannon diversity	5.63366832739314
+metaphlan	genus	Shannon equitability	0.915953856798377
+metaphlan	species	Shannon diversity	6.37662148977123
+metaphlan	species	Shannon equitability	0.956451599778227
+metaphlan	kingdom	True positives	2
+metaphlan	kingdom	False negatives	0
+metaphlan	kingdom	False positives	0
+metaphlan	kingdom	Recall	1
+metaphlan	kingdom	Purity	1
+metaphlan	kingdom	F1 score	1
+metaphlan	kingdom	Jaccard index	1
+metaphlan	phylum	True positives	36
+metaphlan	phylum	False negatives	5
+metaphlan	phylum	False positives	0
+metaphlan	phylum	Recall	0.878048780487805
+metaphlan	phylum	Purity	1
+metaphlan	phylum	F1 score	0.935064935064935
+metaphlan	phylum	Jaccard index	0.878048780487805
+metaphlan	class	True positives	53
+metaphlan	class	False negatives	16
+metaphlan	class	False positives	0
+metaphlan	class	Recall	0.768115942028986
+metaphlan	class	Purity	1
+metaphlan	class	F1 score	0.868852459016394
+metaphlan	class	Jaccard index	0.768115942028986
+metaphlan	order	True positives	122
+metaphlan	order	False negatives	35
+metaphlan	order	False positives	0
+metaphlan	order	Recall	0.777070063694268
+metaphlan	order	Purity	1
+metaphlan	order	F1 score	0.874551971326165
+metaphlan	order	Jaccard index	0.777070063694268
+metaphlan	family	True positives	214
+metaphlan	family	False negatives	55
+metaphlan	family	False positives	0
+metaphlan	family	Recall	0.795539033457249
+metaphlan	family	Purity	1
+metaphlan	family	F1 score	0.886128364389234
+metaphlan	family	Jaccard index	0.795539033457249
+metaphlan	genus	True positives	469
+metaphlan	genus	False negatives	100
+metaphlan	genus	False positives	0
+metaphlan	genus	Recall	0.824253075571178
+metaphlan	genus	Purity	1
+metaphlan	genus	F1 score	0.903660886319846
+metaphlan	genus	Jaccard index	0.824253075571178
+metaphlan	species	True positives	739
+metaphlan	species	False negatives	261
+metaphlan	species	False positives	47
+metaphlan	species	Recall	0.739
+metaphlan	species	Purity	0.940203562340967
+metaphlan	species	F1 score	0.827547592385218
+metaphlan	species	Jaccard index	0.705826170009551
+metaphlan	kingdom	L1 norm error	0.0053789814403357
+metaphlan	phylum	L1 norm error	0.116205996005966
+metaphlan	class	L1 norm error	0.148867564035211
+metaphlan	order	L1 norm error	0.180957455512075
+metaphlan	family	L1 norm error	0.257124326591919
+metaphlan	genus	L1 norm error	0.366001187299477
+metaphlan	species	L1 norm error	0.600844209465954
+metaphlan	phylum	Sum of abundances	1
+metaphlan	class	Sum of abundances	1
+metaphlan	order	Sum of abundances	1
+metaphlan	family	Sum of abundances	1
+metaphlan	genus	Sum of abundances	1
+metaphlan	species	Sum of abundances	0.997666402100237
+metaphlan	phylum	Taxon counts	36
+metaphlan	class	Taxon counts	53
+metaphlan	order	Taxon counts	122
+metaphlan	family	Taxon counts	214
+metaphlan	genus	Taxon counts	469
+metaphlan	species	Taxon counts	786
+singlem	kingdom	Bray-Curtis distance	0.00079456605704182
+singlem	phylum	Bray-Curtis distance	0.0270082899808388
+singlem	class	Bray-Curtis distance	0.0402301208138151
+singlem	order	Bray-Curtis distance	0.088374334159451
+singlem	family	Bray-Curtis distance	0.150510947171264
+singlem	genus	Bray-Curtis distance	0.352821127622595
+singlem	species	Bray-Curtis distance	0.837979807270334
+singlem	phylum	Shannon diversity	2.00530589944184
+singlem	phylum	Shannon equitability	0.589588216859633
+singlem	class	Shannon diversity	2.260675271716
+singlem	class	Shannon equitability	0.641078884570961
+singlem	order	Shannon diversity	3.11850440530326
+singlem	order	Shannon equitability	0.739068304455936
+singlem	family	Shannon diversity	3.33773324569702
+singlem	family	Shannon equitability	0.717181281010279
+singlem	genus	Shannon diversity	2.55399647762896
+singlem	genus	Shannon equitability	0.533472769217731
+singlem	species	Shannon diversity	0.785982119545691
+singlem	species	Shannon equitability	0.19892018197953
+singlem	kingdom	True positives	2
+singlem	kingdom	False negatives	0
+singlem	kingdom	False positives	0
+singlem	kingdom	Recall	1
+singlem	kingdom	Purity	1
+singlem	kingdom	F1 score	1
+singlem	kingdom	Jaccard index	1
+singlem	phylum	True positives	30
+singlem	phylum	False negatives	11
+singlem	phylum	False positives	0
+singlem	phylum	Recall	0.731707317073171
+singlem	phylum	Purity	1
+singlem	phylum	F1 score	0.845070422535211
+singlem	phylum	Jaccard index	0.731707317073171
+singlem	class	True positives	34
+singlem	class	False negatives	35
+singlem	class	False positives	0
+singlem	class	Recall	0.492753623188406
+singlem	class	Purity	1
+singlem	class	F1 score	0.660194174757282
+singlem	class	Jaccard index	0.492753623188406
+singlem	order	True positives	68
+singlem	order	False negatives	89
+singlem	order	False positives	0
+singlem	order	Recall	0.43312101910828
+singlem	order	Purity	1
+singlem	order	F1 score	0.604444444444444
+singlem	order	Jaccard index	0.43312101910828
+singlem	family	True positives	105
+singlem	family	False negatives	164
+singlem	family	False positives	0
+singlem	family	Recall	0.390334572490706
+singlem	family	Purity	1
+singlem	family	F1 score	0.561497326203209
+singlem	family	Jaccard index	0.390334572490706
+singlem	genus	True positives	120
+singlem	genus	False negatives	449
+singlem	genus	False positives	0
+singlem	genus	Recall	0.210896309314587
+singlem	genus	Purity	1
+singlem	genus	F1 score	0.34833091436865
+singlem	genus	Jaccard index	0.210896309314587
+singlem	species	True positives	49
+singlem	species	False negatives	951
+singlem	species	False positives	3
+singlem	species	Recall	0.049
+singlem	species	Purity	0.942307692307692
+singlem	species	F1 score	0.0931558935361217
+singlem	species	Jaccard index	0.0488534396809571
+singlem	kingdom	L1 norm error	0.00158913211408364
+singlem	phylum	L1 norm error	0.0531489785871177
+singlem	class	L1 norm error	0.0782563376760895
+singlem	order	L1 norm error	0.16562346138381
+singlem	family	L1 norm error	0.267352350996977
+singlem	genus	L1 norm error	0.5308801238128
+singlem	species	L1 norm error	0.949721650429502
+singlem	phylum	Sum of abundances	0.967876478844997
+singlem	class	Sum of abundances	0.945217565670744
+singlem	order	Sum of abundances	0.874112693001805
+singlem	family	Sum of abundances	0.77629837577702
+singlem	genus	Sum of abundances	0.504672147583718
+singlem	species	Sum of abundances	0.133346701423702
+singlem	phylum	Taxon counts	30
+singlem	class	Taxon counts	34
+singlem	order	Taxon counts	68
+singlem	family	Taxon counts	105
+singlem	genus	Taxon counts	120
+singlem	species	Taxon counts	52
+singlem-regime3	kingdom	Bray-Curtis distance	0.000766863948257638
+singlem-regime3	phylum	Bray-Curtis distance	0.0128535075013302
+singlem-regime3	class	Bray-Curtis distance	0.0146564979546591
+singlem-regime3	order	Bray-Curtis distance	0.0247213394053298
+singlem-regime3	family	Bray-Curtis distance	0.028792870199187
+singlem-regime3	genus	Bray-Curtis distance	0.0395184110758878
+singlem-regime3	species	Bray-Curtis distance	0.0844638870278641
+singlem-regime3	phylum	Shannon diversity	2.14067155597688
+singlem-regime3	phylum	Shannon equitability	0.576445405535557
+singlem-regime3	class	Shannon diversity	2.54955361926436
+singlem-regime3	class	Shannon equitability	0.602146785040984
+singlem-regime3	order	Shannon diversity	3.84756157704819
+singlem-regime3	order	Shannon equitability	0.760952241083371
+singlem-regime3	family	Shannon diversity	4.68518166787546
+singlem-regime3	family	Shannon equitability	0.83798829870417
+singlem-regime3	genus	Shannon diversity	5.77083496221339
+singlem-regime3	genus	Shannon equitability	0.910428226041138
+singlem-regime3	species	Shannon diversity	6.7412288236649
+singlem-regime3	species	Shannon equitability	0.980509274172771
+singlem-regime3	kingdom	True positives	2
+singlem-regime3	kingdom	False negatives	0
+singlem-regime3	kingdom	False positives	0
+singlem-regime3	kingdom	Recall	1
+singlem-regime3	kingdom	Purity	1
+singlem-regime3	kingdom	F1 score	1
+singlem-regime3	kingdom	Jaccard index	1
+singlem-regime3	phylum	True positives	41
+singlem-regime3	phylum	False negatives	0
+singlem-regime3	phylum	False positives	0
+singlem-regime3	phylum	Recall	1
+singlem-regime3	phylum	Purity	1
+singlem-regime3	phylum	F1 score	1
+singlem-regime3	phylum	Jaccard index	1
+singlem-regime3	class	True positives	69
+singlem-regime3	class	False negatives	0
+singlem-regime3	class	False positives	0
+singlem-regime3	class	Recall	1
+singlem-regime3	class	Purity	1
+singlem-regime3	class	F1 score	1
+singlem-regime3	class	Jaccard index	1
+singlem-regime3	order	True positives	157
+singlem-regime3	order	False negatives	0
+singlem-regime3	order	False positives	0
+singlem-regime3	order	Recall	1
+singlem-regime3	order	Purity	1
+singlem-regime3	order	F1 score	1
+singlem-regime3	order	Jaccard index	1
+singlem-regime3	family	True positives	268
+singlem-regime3	family	False negatives	1
+singlem-regime3	family	False positives	0
+singlem-regime3	family	Recall	0.996282527881041
+singlem-regime3	family	Purity	1
+singlem-regime3	family	F1 score	0.998137802607076
+singlem-regime3	family	Jaccard index	0.996282527881041
+singlem-regime3	genus	True positives	566
+singlem-regime3	genus	False negatives	3
+singlem-regime3	genus	False positives	0
+singlem-regime3	genus	Recall	0.994727592267135
+singlem-regime3	genus	Purity	1
+singlem-regime3	genus	F1 score	0.997356828193833
+singlem-regime3	genus	Jaccard index	0.994727592267135
+singlem-regime3	species	True positives	954
+singlem-regime3	species	False negatives	46
+singlem-regime3	species	False positives	14
+singlem-regime3	species	Recall	0.954
+singlem-regime3	species	Purity	0.985537190082645
+singlem-regime3	species	F1 score	0.969512195121951
+singlem-regime3	species	Jaccard index	0.940828402366864
+singlem-regime3	kingdom	L1 norm error	0.00153372789651528
+singlem-regime3	phylum	L1 norm error	0.0257070150026605
+singlem-regime3	class	L1 norm error	0.0293129959093181
+singlem-regime3	order	L1 norm error	0.0494426788106595
+singlem-regime3	family	L1 norm error	0.057585740398374
+singlem-regime3	genus	L1 norm error	0.0790368221517755
+singlem-regime3	species	L1 norm error	0.168927774055728
+singlem-regime3	phylum	Sum of abundances	1
+singlem-regime3	class	Sum of abundances	1
+singlem-regime3	order	Sum of abundances	1
+singlem-regime3	family	Sum of abundances	1
+singlem-regime3	genus	Sum of abundances	1
+singlem-regime3	species	Sum of abundances	1
+singlem-regime3	phylum	Taxon counts	41
+singlem-regime3	class	Taxon counts	69
+singlem-regime3	order	Taxon counts	157
+singlem-regime3	family	Taxon counts	268
+singlem-regime3	genus	Taxon counts	566
+singlem-regime3	species	Taxon counts	968
+sylph	kingdom	Bray-Curtis distance	0.000625607932565664
+sylph	phylum	Bray-Curtis distance	0.0132742616473252
+sylph	class	Bray-Curtis distance	0.0142140389006555
+sylph	order	Bray-Curtis distance	0.0245841167647083
+sylph	family	Bray-Curtis distance	0.0314364219067485
+sylph	genus	Bray-Curtis distance	0.0435694635719224
+sylph	species	Bray-Curtis distance	0.0897501268437637
+sylph	phylum	Shannon diversity	2.14453831862458
+sylph	phylum	Shannon equitability	0.577486657079419
+sylph	class	Shannon diversity	2.55222176399015
+sylph	class	Shannon equitability	0.602776940357788
+sylph	order	Shannon diversity	3.84564740074699
+sylph	order	Shannon equitability	0.760573664492182
+sylph	family	Shannon diversity	4.67935310759313
+sylph	family	Shannon equitability	0.837505791076235
+sylph	genus	Shannon diversity	5.76075290612953
+sylph	genus	Shannon equitability	0.909091262809166
+sylph	species	Shannon diversity	6.74042054790835
+sylph	species	Shannon equitability	0.980244497317991
+sylph	kingdom	True positives	2
+sylph	kingdom	False negatives	0
+sylph	kingdom	False positives	0
+sylph	kingdom	Recall	1
+sylph	kingdom	Purity	1
+sylph	kingdom	F1 score	1
+sylph	kingdom	Jaccard index	1
+sylph	phylum	True positives	41
+sylph	phylum	False negatives	0
+sylph	phylum	False positives	0
+sylph	phylum	Recall	1
+sylph	phylum	Purity	1
+sylph	phylum	F1 score	1
+sylph	phylum	Jaccard index	1
+sylph	class	True positives	69
+sylph	class	False negatives	0
+sylph	class	False positives	0
+sylph	class	Recall	1
+sylph	class	Purity	1
+sylph	class	F1 score	1
+sylph	class	Jaccard index	1
+sylph	order	True positives	157
+sylph	order	False negatives	0
+sylph	order	False positives	0
+sylph	order	Recall	1
+sylph	order	Purity	1
+sylph	order	F1 score	1
+sylph	order	Jaccard index	1
+sylph	family	True positives	267
+sylph	family	False negatives	2
+sylph	family	False positives	0
+sylph	family	Recall	0.992565055762082
+sylph	family	Purity	1
+sylph	family	F1 score	0.996268656716418
+sylph	family	Jaccard index	0.992565055762082
+sylph	genus	True positives	565
+sylph	genus	False negatives	4
+sylph	genus	False positives	0
+sylph	genus	Recall	0.992970123022847
+sylph	genus	Purity	1
+sylph	genus	F1 score	0.99647266313933
+sylph	genus	Jaccard index	0.992970123022847
+sylph	species	True positives	952
+sylph	species	False negatives	48
+sylph	species	False positives	17
+sylph	species	Recall	0.952
+sylph	species	Purity	0.982456140350877
+sylph	species	F1 score	0.966988318943626
+sylph	species	Jaccard index	0.936086529006883
+sylph	kingdom	L1 norm error	0.00125121586513133
+sylph	phylum	L1 norm error	0.0265485232946504
+sylph	class	L1 norm error	0.0284280778013111
+sylph	order	L1 norm error	0.0491682335294166
+sylph	family	L1 norm error	0.062872843813497
+sylph	genus	L1 norm error	0.0871389271438448
+sylph	species	L1 norm error	0.179500253687528
+sylph	phylum	Sum of abundances	1
+sylph	class	Sum of abundances	1
+sylph	order	Sum of abundances	1
+sylph	family	Sum of abundances	1
+sylph	genus	Sum of abundances	1
+sylph	species	Sum of abundances	1
+sylph	phylum	Taxon counts	41
+sylph	class	Taxon counts	69
+sylph	order	Taxon counts	157
+sylph	family	Taxon counts	267
+sylph	genus	Taxon counts	565
+sylph	species	Taxon counts	969

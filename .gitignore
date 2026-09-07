@@ -30,3 +30,19 @@ __pycache__
 random_base_dir_scripts/
 ar53_taxonomy_r232.tsv
 bac120_taxonomy_r232.tsv
+8_known50/reads/
+8_known50/*.fq.gz
+9_abundant_unknown/reads/
+9_abundant_unknown/*.fq.gz
+
+# benchmark 10: simulated reads (large, regenerable)
+10_congeneric_novelty/reads/
+
+# benchmarks 11-16: simulated long reads (regenerable, and much larger than the
+# short-read benchmarks' -- ~10x for the same coverage)
+11_longread_2component_nanopore/reads/
+12_longread_2component_hifi/reads/
+13_thousand_species_nanopore/reads/
+14_thousand_species_hifi/reads/
+15_phylogenetic_novelty_nanopore/reads/
+16_phylogenetic_novelty_hifi/reads/

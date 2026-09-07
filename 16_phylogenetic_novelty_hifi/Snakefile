@@ -1,0 +1,157 @@
+import extern
+import os
+import polars as pl
+
+# Benchmark 16: benchmark 2's phylogenetic-novelty community -- one **novel** lineage
+# plus one known species at equal (10x) abundance -- sequenced as **PacBio HiFi**.
+#
+# This is benchmark 15 with the error rate removed and everything else held fixed: the
+# same 120 samples read from benchmark 2's own committed tables, the same six novelty
+# depths (species / genus / family / order / class / phylum, 20 each), the same
+# coverages and fragment lengths; only Badread's error/qscore models change (pacbio2021,
+# ~99.9% accuracy vs Nanopore's ~95%).
+#
+# The 15-vs-16 comparison is the reason this benchmark exists. Placing a novel lineage
+# means measuring how far a sequence diverges from the nearest database relative, and at
+# the shallow end of the novelty gradient that divergence (~5% for a novel species) is
+# the same order as Nanopore's per-base error rate -- so error and novelty are
+# confounded in benchmark 15 in a way they are not at HiFi accuracy. The expected
+# signature is therefore a 15-vs-16 gap that is largest at species/genus novelty and
+# narrows toward phylum, where the true divergence dwarfs any error rate.
+#
+# **Interpret at a high rank -- kingdom/domain, not species**, as for benchmarks 2 and
+# 15: by construction one member has no correct species label available, so the question
+# is whether the profiler places it at the highest rank it can support rather than
+# inventing a known species for it or dropping it entirely.
+#
+# As in benchmark 15, reads are single-end (so the *_longread_run.smk rules apply) and
+# all three tools report relative abundance, so there is one truth per sample and no
+# {method} wildcard -- which is what lets this use the shared ../rules/common.smk rules.
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(workflow.snakefile)), '..')))
+from tool_reference_data import *
+
+num_threads = config['benchmarking_threads']
+
+# Per-benchmark setup: tools, output_dirs_dict, local db paths, read tech, bench2_dir.
+sys.path.append(os.path.abspath(os.path.dirname(os.path.abspath(workflow.snakefile))))
+from bench16_setup import *
+
+fastq_dir = 'reads'
+truth_dir = 'truths'
+
+# ---------------------------------------------------------------------------
+# The community, read from benchmark 2's committed tables. Paths are resolved against
+# workflow.basedir so they work regardless of snakemake's --directory.
+bench2_basedir = os.path.join(workflow.basedir, bench2_dir)
+
+novelties = pl.read_csv(os.path.join(bench2_basedir, 'stratified_genome_metadata.tsv'),
+                        separator='\t', has_header=True)
+novelties.columns = ['sample', 'novelty', 'r214_taxonomy']
+
+# The novel member's *r207* classification is the ground truth: it is what the novel
+# genome can legitimately be called given an r207 database, i.e. a lineage truncated at
+# whatever rank still exists there. (The r214 taxonomy in the table above is the full
+# lineage the genome eventually received, which no r207-backed tool could report.)
+r207_novelties = pl.read_csv(os.path.join(bench2_basedir, 'stratified_gtdbtk_r207.tsv'),
+                             separator='\t', has_header=True)
+r207_novelties.columns = ['sample', 'r207_taxonomy']
+
+paired_genomes = (
+    pl.read_csv(os.path.join(bench2_basedir, 'genome_pairs.tsv'), separator='\t', has_header=True)
+    .with_columns(
+        pl.col("paired_genome")
+            .str.replace("^", os.path.join(bench2_basedir, "genome_pairs", ""))
+            .str.replace("$", ".fna"),
+        )
+    )
+paired_genomes.columns = ['sample', 'example_genome', 'example_taxonomy']
+
+datasets = novelties['sample'].to_list()
+
+# singlem-regime3 (weebill --two-stage + singlem pipe + condense --joint) paths,
+# consumed by ../rules/singlem_regime3_longread_run.smk.
+singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
+regime3_weebill_scripts = os.path.join(
+    singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
+
+print("Profiling {} over {} genomes (PacBio HiFi)".format(tools, len(datasets)))
+
+# Constrain wildcards so the generic {tool}/{tool} biobox+opal rules cannot greedily
+# match across path separators (a tool name contains a hyphen and shares the `singlem`
+# prefix: singlem-regime3). Sample names here contain dots (GCA_013154095.1_genomic).
+wildcard_constraints:
+    tool="[A-Za-z0-9._-]+",
+    sample="[A-Za-z0-9._]+",
+
+# Databases this benchmark stages locally (opt-in for ../rules/staging.smk).
+staged_tools = tools
+
+# PBS/aqua jobs start in $HOME, not the workdir; cd in so workdir-relative paths
+# (bin/, ../2_phylogenetic_novelty/genomes/, ../*_taxonomy_r207.tsv) and the pixi
+# manifest resolve on compute nodes.
+shell.prefix("cd {} && ".format(workflow.basedir))
+
+# Trivial table conversions run on the orchestrator host, not as 48h queue jobs.
+localrules:
+    truth_condensed_to_biobox,
+    tool_condensed_to_biobox,
+    sylph_longread_report_to_condensed,
+
+rule all:
+    input:
+        expand(output_prefix + "{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools)
+
+
+def get_paired_genome_fasta(wildcards):
+    return paired_genomes.filter(pl.col('sample') == wildcards.sample).get_column('example_genome')[0]
+
+
+def get_paired_taxonomy(wildcards):
+    return paired_genomes.filter(pl.col('sample') == wildcards.sample).get_column('example_taxonomy')[0]
+
+
+def get_novel_taxonomy(wildcards):
+    return r207_novelties.filter(pl.col('sample') == wildcards.sample).get_column('r207_taxonomy')[0]
+
+
+# Read simulation. The long-read analogue of benchmark 2's generate_community_and_reads:
+# it cannot use ../rules/longread_data_generation.smk because that rule takes taxonomy
+# from the GTDB metadata by inner join, and the novel member of every pair is by
+# construction absent from r207 -- the join would drop exactly the genome under test.
+# Coverage and truth taxonomy are therefore stated per genome, as in benchmark 2.
+rule generate_longread_2component_community_and_reads:
+    output:
+        reads=fastq_dir + "/{sample}.fq.gz",
+        condensed=truth_dir + "/{sample}.condensed",
+        done=touch(fastq_dir + "/{sample}.finished"),
+    params:
+        genome_fasta=os.path.join(bench2_basedir, 'genomes/{sample}.fna'),
+        taxonomy=get_novel_taxonomy,
+        paired_genome_fasta=get_paired_genome_fasta,
+        paired_taxonomy=get_paired_taxonomy,
+    threads: num_threads
+    resources:
+        runtime=240,  # two genomes at 10x through single-threaded Badread; ~1h in practice
+    log:
+        truth_dir + "/{sample}.readgen.log",
+    shell:
+        'eval "$(pixi shell-hook -e badread)" && '
+        "mkdir -p {fastq_dir} {truth_dir} && "
+        "{workflow.basedir}/../bin/generate_longread_2component_community.py "
+        "--read-tech {longread_read_tech} --threads {threads} "
+        "--genome-fasta {params.genome_fasta} "
+        "--taxonomy '{params.taxonomy}' "
+        "--example-fasta {params.paired_genome_fasta} "
+        "--example-taxonomy '{params.paired_taxonomy}' "
+        "--sample {wildcards.sample} "
+        "--output-condensed {output.condensed} "
+        "-r {output.reads} &> {log}"
+
+# Shared rules (../rules): DB staging, common conversions/OPAL, and one file per
+# profiler. Read generation is local -- see above.
+include: "../rules/staging.smk"
+include: "../rules/common.smk"
+include: "../rules/singlem_longread_run.smk"
+include: "../rules/sylph_longread_run.smk"
+include: "../rules/singlem_regime3_longread_run.smk"

@@ -9,6 +9,29 @@ The benchmarks are:
 3. `3_cami2_marine` - benchmark profilers on CAMI2 marine datasets, after converting the taxonomy to GTDB R207-based taxonomy.
 4. `4_complex_and_novel` - benchmark profilers on a complex community (defined by the CAMI2 marine coverages), where 0-100% of the community is new in GTDB R214 compared to R207.
 
+Benchmarks 5-10 add further community designs (low coverage, novelty against close
+relatives, an R232-backed repeat); see `ARCHITECTURE.md` for all of them and for how each
+is meant to be interpreted.
+
+Benchmarks 11-16 are the **long-read** family, simulated with
+[Badread](https://github.com/rrwick/Badread) in matched Nanopore R10.4.1 / PacBio HiFi
+pairs:
+
+11. `11_longread_2component_nanopore` / 12. `12_longread_2component_hifi` - two known
+    species at 10x each. Deliberately easy: the control that establishes long-read input
+    works before the harder designs use it.
+13. `13_thousand_species_nanopore` / 14. `14_thousand_species_hifi` - benchmark 6's 1000
+    species, all below 1x coverage, as long reads.
+15. `15_phylogenetic_novelty_nanopore` / 16. `16_phylogenetic_novelty_hifi` - benchmark
+    2's novel-lineage pairs as long reads.
+
+Each pair holds genomes, coverages and read lengths fixed and varies only per-base
+accuracy (~95% vs ~99.9%), so it separates that from the read-length effect. These
+benchmarks run `singlem`, `sylph` and `singlem-regime3` only — the long-read-capable
+subset — and SingleM runs at 0.21.3 (a separate `singlem-longread` pixi environment)
+because long-read support landed in 0.20.0, after the 0.18.0 the other benchmarks pin.
+`ARCHITECTURE.md` records the consequences of both choices.
+
 To get this repository, git clone with recursive option to get the submodules:
 
 ```bash

@@ -93,6 +93,27 @@ pyarrow = "*"
 # which is absent in the compute-node sandbox.
 pigz = "*"
 
+# Long-read simulation (benchmarks 11-16). Badread's defaults model Oxford
+# Nanopore R10.4.1; PacBio HiFi is the same binary with --error_model /
+# --qscore_model pacbio2021 and a qscore (2-value) --identity. This mirrors the
+# `art` feature above: the simulator plus what generate_*_community.py needs
+# (polars/extern for the driver, pigz for compressing the output fastq).
+[feature.badread.dependencies]
+python = ">=3.10,<3.14"
+badread = "==0.4.2"
+extern = "*"
+polars = "*"
+pyarrow = "*"
+pigz = "*"
+
+# SingleM for the long-read benchmarks. The `singlem` feature above is pinned to
+# 0.18.0, which predates SingleM's long-read support (added in 0.20.0): it runs on
+# long reads without erroring but recovers substantially less of the community, so
+# benchmarking it there would measure the version rather than the read technology.
+# Benchmarks 11-16 use this environment instead; benchmarks 1-10 keep 0.18.0.
+[feature.singlem-longread.dependencies]
+singlem = "==0.21.3"
+
 [feature.coverm.dependencies]
 coverm = ">=0.8.0"      # newest; supports `coverm genome --mapper strobealign`
 strobealign = "*"       # strobealign mapping backend (faster/lower-RAM than minimap2)
@@ -245,6 +266,8 @@ kaiju = { features = ["kaiju"], no-default-feature = true }
 kaiju-to-kingdom = { features = ["kaiju-to-kingdom"], no-default-feature = true }
 opal = { features = ["opal"], no-default-feature = true }
 art = { features = ["art"], no-default-feature = true }
+badread = { features = ["badread"], no-default-feature = true }
+singlem-longread = { features = ["singlem-longread"], no-default-feature = true }
 coverm = { features = ["coverm"], no-default-feature = true }
 map2b = { features = ["map2b"], no-default-feature = true }
 metaphlan42 = { features = ["metaphlan42"], no-default-feature = true }

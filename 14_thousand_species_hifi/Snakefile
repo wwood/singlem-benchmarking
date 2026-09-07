@@ -1,0 +1,91 @@
+import extern
+import os
+
+# Benchmark 14: benchmark 6's community -- 1000 distinct known GTDB r207 species,
+# every one below 1x coverage (median ~0.22x) -- sequenced as **PacBio HiFi**.
+#
+# This is benchmark 13 with the error rate removed and everything else held fixed:
+# same 1000 genomes, same per-genome coverages, same simulated fragment lengths, only
+# Badread's error/qscore models change (pacbio2021 with a normal qscore distribution,
+# ~99.9% accuracy vs Nanopore's ~95%).
+#
+# The three-way 6 / 13 / 14 comparison is the point. Benchmark 6 is short and accurate,
+# 13 is long and error-prone, 14 is long and accurate. Reading 13 against 14 separates
+# the two things long reads change at once: the *packaging* of a fixed number of bases
+# into ~100x fewer, ~100x longer reads (shared by 13 and 14, so it survives the
+# comparison) from the per-base error rate (present only in 13). If a marker-gene method
+# loses ground in 13 and recovers it in 14, the cause was error; if it loses the same
+# ground in both, the cause was that a sub-1x genome simply produces too few long reads
+# to hit any given 60bp window.
+#
+# **Interpret at the species level**, as the accuracy-controlled arm of the 6/13/14
+# set. Every member is below SingleM's ~1.5x marker-gene floor and there is no abundant
+# head, so this is the coverage floor probed with the most favourable long reads
+# currently available -- close to the best case for long-read profiling at low coverage.
+#
+# Cost note: as for benchmark 13, Badread simulation of ~1 Gbp over 1000 genomes takes
+# hours; see longread_runtime below.
+#
+# Reads are single-end, so this benchmark uses the *_longread_run.smk rules rather
+# than the paired-end ones -- see ../rules/longread_data_generation.smk.
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(workflow.snakefile)), '..')))
+from tool_reference_data import *
+
+num_threads = config['benchmarking_threads']
+
+# Per-benchmark setup: tools, output_dirs_dict, local db paths, datasets, read tech.
+sys.path.append(os.path.abspath(os.path.dirname(os.path.abspath(workflow.snakefile))))
+from bench14_setup import *
+
+fastq_dir = 'reads'
+truth_dir = 'truths'
+
+# Read generation inputs (consumed by ../rules/longread_data_generation.smk).
+genome_fasta_paths = os.path.join(workflow.basedir, 'genome_list.tsv')
+
+# 1000 genomes x ~0.25x through single-threaded Badread: hours, not minutes.
+longread_runtime = 1440
+
+# singlem-regime3 (weebill --two-stage + singlem pipe + condense --joint) paths,
+# consumed by ../rules/singlem_regime3_longread_run.smk.
+singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
+regime3_weebill_scripts = os.path.join(
+    singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
+
+print("Profiling {} over {} communities (PacBio HiFi)".format(tools, len(datasets)))
+
+# Constrain wildcards so the generic {tool}/{tool} biobox+opal rules cannot
+# greedily match across path separators (a tool name contains a hyphen and
+# shares the `singlem` prefix: singlem-regime3).
+wildcard_constraints:
+    tool="[A-Za-z0-9._-]+",
+    sample="[A-Za-z0-9._]+",
+
+# Databases this benchmark stages locally (opt-in for ../rules/staging.smk).
+staged_tools = tools
+
+# PBS/aqua jobs start in $HOME, not the workdir; cd in so workdir-relative paths
+# (bin/, genome_list.tsv, ../*_taxonomy_r207.tsv, the generator's
+# ../bac120_metadata_r207.tsv) and the pixi manifest resolve on compute nodes.
+shell.prefix("cd {} && ".format(workflow.basedir))
+
+# Trivial table conversions run on the orchestrator host, not as 48h queue jobs.
+localrules:
+    truth_condensed_to_biobox,
+    tool_condensed_to_biobox,
+    sylph_longread_report_to_condensed,
+
+rule all:
+    input:
+        expand(output_prefix + "{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools)
+
+# Shared rules (../rules): long-read generation, DB staging, common conversions/OPAL,
+# and one file per profiler. The *_longread_run.smk variants take a single
+# {sample}.fq.gz instead of paired {sample}.{1,2}.fq.gz.
+include: "../rules/longread_data_generation.smk"
+include: "../rules/staging.smk"
+include: "../rules/common.smk"
+include: "../rules/singlem_longread_run.smk"
+include: "../rules/sylph_longread_run.smk"
+include: "../rules/singlem_regime3_longread_run.smk"
