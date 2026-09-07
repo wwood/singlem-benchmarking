@@ -1,0 +1,97 @@
+import extern
+import os
+
+# Benchmark 13: benchmark 6's community -- 1000 distinct known GTDB r207 species,
+# every one below 1x coverage (median ~0.22x) and below 0.4% relative abundance --
+# sequenced as Oxford Nanopore R10.4.1 reads instead of 150bp paired Illumina.
+#
+# genome_list.tsv and coverage_definitions/nanopore1000.tsv are byte-for-byte copies
+# of benchmark 6's, so the community, the per-genome coverages and the truth are held
+# fixed and the read technology is the single variable. Read it against benchmark 6
+# the way benchmark 7 is read against benchmark 6: same community, one axis changed
+# (there the database release, here the sequencing chemistry).
+#
+# The coverage floor is where long reads should matter most, and in opposite
+# directions for the two method families. A 0.2x genome yields very few reads, but each
+# Nanopore read is ~15kb rather than 150bp, so a given coverage is delivered in ~100x
+# fewer reads -- far fewer independent chances to land on any particular 60bp
+# marker-gene window, which is what SingleM needs, while each read that does land
+# spans whole genes. sylph's k-mer containment cares about total bases and is largely
+# indifferent to how they are packaged, but its k-mers must survive a ~5% per-base
+# error rate. Benchmark 14 repeats this at HiFi accuracy to separate the length effect
+# from the error effect.
+#
+# **Interpret at the species level**, and specifically as a paired comparison with
+# benchmark 6. As there, no member reaches SingleM's ~1.5x marker-gene sensitivity and
+# there is no abundant taxon to coast on, so per-taxon abundance error cannot be
+# dominated by a few well-covered genomes -- and there are a thousand chances to invent
+# a species that is not present.
+#
+# Cost note: Badread is single-threaded per genome and simulates roughly 0.4 Mbp/s, so
+# generating ~1 Gbp for 1000 genomes takes hours even at 8-way concurrency (hence
+# longread_runtime below). The reads are also ~10x larger on disk than benchmark 6's.
+#
+# Reads are single-end, so this benchmark uses the *_longread_run.smk rules rather
+# than the paired-end ones -- see ../rules/longread_data_generation.smk.
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(workflow.snakefile)), '..')))
+from tool_reference_data import *
+
+num_threads = config['benchmarking_threads']
+
+# Per-benchmark setup: tools, output_dirs_dict, local db paths, datasets, read tech.
+sys.path.append(os.path.abspath(os.path.dirname(os.path.abspath(workflow.snakefile))))
+from bench13_setup import *
+
+fastq_dir = 'reads'
+truth_dir = 'truths'
+
+# Read generation inputs (consumed by ../rules/longread_data_generation.smk).
+genome_fasta_paths = os.path.join(workflow.basedir, 'genome_list.tsv')
+
+# 1000 genomes x ~0.25x through single-threaded Badread: hours, not minutes. 24h so a
+# slow queue node cannot lose the whole simulation to a timeout.
+longread_runtime = 1440
+
+# singlem-regime3 (weebill --two-stage + singlem pipe + condense --joint) paths,
+# consumed by ../rules/singlem_regime3_longread_run.smk.
+singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
+regime3_weebill_scripts = os.path.join(
+    singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
+
+print("Profiling {} over {} communities (nanopore R10.4.1)".format(tools, len(datasets)))
+
+# Constrain wildcards so the generic {tool}/{tool} biobox+opal rules cannot
+# greedily match across path separators (a tool name contains a hyphen and
+# shares the `singlem` prefix: singlem-regime3).
+wildcard_constraints:
+    tool="[A-Za-z0-9._-]+",
+    sample="[A-Za-z0-9._]+",
+
+# Databases this benchmark stages locally (opt-in for ../rules/staging.smk).
+staged_tools = tools
+
+# PBS/aqua jobs start in $HOME, not the workdir; cd in so workdir-relative paths
+# (bin/, genome_list.tsv, ../*_taxonomy_r207.tsv, the generator's
+# ../bac120_metadata_r207.tsv) and the pixi manifest resolve on compute nodes.
+shell.prefix("cd {} && ".format(workflow.basedir))
+
+# Trivial table conversions run on the orchestrator host, not as 48h queue jobs.
+localrules:
+    truth_condensed_to_biobox,
+    tool_condensed_to_biobox,
+    sylph_longread_report_to_condensed,
+
+rule all:
+    input:
+        expand(output_prefix + "{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools)
+
+# Shared rules (../rules): long-read generation, DB staging, common conversions/OPAL,
+# and one file per profiler. The *_longread_run.smk variants take a single
+# {sample}.fq.gz instead of paired {sample}.{1,2}.fq.gz.
+include: "../rules/longread_data_generation.smk"
+include: "../rules/staging.smk"
+include: "../rules/common.smk"
+include: "../rules/singlem_longread_run.smk"
+include: "../rules/sylph_longread_run.smk"
+include: "../rules/singlem_regime3_longread_run.smk"

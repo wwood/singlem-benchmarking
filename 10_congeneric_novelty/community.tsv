@@ -1,0 +1,28 @@
+# Benchmark 10's community, written out in full: four genomes, two genera, one
+# known species and one novel species in each. Unlike benchmarks 5/6/7 the
+# coverage and the truth taxonomy are stated here rather than looked up in the
+# GTDB metadata, because two of the four genomes are absent from r207 and so have
+# no metadata row to look up. `taxonomy` is the ground-truth lineage: full species
+# for the known members, genus-only for the two whose species is new in r214.
+#
+# role: known_50x  = species present in every r207 database, at 50x
+#       novel_10x  = species new in r214 (genus known), at 10x
+#       novel_100x = species new in r214 (genus known), at 100x
+#
+# The two known members must be unambiguously assignable, or the benchmark measures
+# GTDB's species boundaries instead of the tools. Both were checked against
+# ../shadow_vs_gtdb.skani.csv for ANI to their *own* species' r207 representative
+# minus ANI to the nearest *other* species' representative:
+#   GCF_000964315.1  s__Streptococcus equinus  own 97.10  next 89.22  margin +7.88
+#   GCF_902375985.1  s__Collinsella ihuae      own 100.00 next 84.11  margin +15.89
+# Both are non-representative strains, so the species is in the databases via a
+# different genome -- the known-species condition the shadow pool exists to give.
+# An earlier draft used GCA_900762955.1 (s__Collinsella sp900758375), which sits
+# *closer to another species' representative than to its own* (94.98 vs 95.19,
+# margin -0.21): all four tools called it a different Collinsella species, so that
+# leg of the design tested nothing. Keep the margin comfortably positive.
+genome	fasta	coverage	role	taxonomy
+GCF_000964315.1	../reference_genomes/shadow/GCF_000964315.1.fna	50	known_50x	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Streptococcaceae;g__Streptococcus;s__Streptococcus equinus
+GCA_019794795.1_genomic	../2_phylogenetic_novelty/genomes/GCA_019794795.1_genomic.fna	100	novel_100x	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Streptococcaceae;g__Streptococcus
+GCF_902375985.1	../reference_genomes/shadow/GCF_902375985.1.fna	50	known_50x	d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__Collinsella ihuae
+GCA_019795105.1_genomic	../2_phylogenetic_novelty/genomes/GCA_019795105.1_genomic.fna	10	novel_10x	d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella

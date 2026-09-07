@@ -1,0 +1,4 @@
+Simulated dataset
+12 genomes; 6 known in r207 and 6 new in r214; 50% of genomes from genus Streptomyces
+Simulated reads: sample5.0.fq.gz, sample5.1.fq.gz
+Coverage truth: sample5.condensed

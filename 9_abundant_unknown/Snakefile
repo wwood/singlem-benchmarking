@@ -1,0 +1,108 @@
+import extern
+import os
+
+# Benchmark 9: a 10-genome community that is mostly known, with one novel member
+# that is also one of the more abundant. Nine genomes are known in GTDB r207 (so
+# present in every tool's r207 database); the tenth is new in r214 and absent from
+# all of them, and it is carried at genus-level abundance rather than as a trace
+# member (the truth's genus-only lineage, g__Kineosporia, at ~10x against a
+# community whose known members sit at 1.3x - 27.6x).
+#
+# The question is what a profiler does with an abundant unknown: does it report
+# the lineage at the highest rank it can actually support (genus/family) and leave
+# the species unassigned, or does it spend that abundance on the nearest known
+# species -- an error that costs proportionally more here than in a benchmark where
+# the novel member is faint. Because the other nine are ordinary known species at
+# comfortable coverage, any species-level loss is attributable to the one unknown.
+#
+# Unlike benchmarks 5/6/7, the reads and the ground truth are NOT simulated here:
+# they ship with the dataset (marine0.{1,2}.fq.gz, marine0.condensed) and are
+# staged into the reads/ and truths/ layout the shared rules expect. So
+# ../rules/data_generation.smk is not included.
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(workflow.snakefile)), '..')))
+from tool_reference_data import *
+
+num_threads = config['benchmarking_threads']
+
+# Per-benchmark setup: tools, output_dirs_dict, local db paths, datasets.
+sys.path.append(os.path.abspath(os.path.dirname(os.path.abspath(workflow.snakefile))))
+from bench9_setup import *
+
+fastq_dir = 'reads'
+truth_dir = 'truths'
+
+# The provided (as-shipped) reads and truth live in the benchmark root (i.e. an
+# empty path prefix); they are staged into fastq_dir / truth_dir below.
+provided_prefix = ''
+
+# singlem-regime3 (weebill --two-stage + singlem pipe + condense --joint) paths,
+# consumed by ../rules/singlem_regime3_run.smk.
+singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
+regime3_weebill_scripts = os.path.join(
+    singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
+
+print("Profiling {} over {} communities".format(tools, len(datasets)))
+
+# Constrain wildcards so the generic {tool}/{tool} biobox+opal rules cannot
+# greedily match across path separators (a tool name contains a hyphen and
+# shares the `singlem` prefix: singlem-regime3).
+wildcard_constraints:
+    tool="[A-Za-z0-9._-]+",
+    sample="[A-Za-z0-9._]+",
+
+# Databases this benchmark stages locally (opt-in for ../rules/staging.smk).
+staged_tools = tools
+
+# PBS/aqua jobs start in $HOME, not the workdir; cd in so workdir-relative paths
+# (reads/, truths/, ../*_taxonomy_r207.tsv) and the pixi manifest resolve on
+# compute nodes.
+shell.prefix("cd {} && ".format(workflow.basedir))
+
+# Trivial link/conversion steps run on the orchestrator host, not as 48h queue jobs.
+localrules:
+    stage_provided_reads,
+    stage_provided_truth,
+    truth_condensed_to_biobox,
+    tool_condensed_to_biobox,
+    sylph_report_to_condensed,
+
+rule all:
+    input:
+        expand(output_prefix + "{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools)
+
+# The dataset's reads/truth live in the benchmark root; symlink them into the
+# reads/ and truths/ layout every shared rule addresses (rather than pointing
+# fastq_dir/truth_dir at '.', which would scatter generated bioboxes and logs
+# among the committed inputs).
+rule stage_provided_reads:
+    input:
+        r1=provided_prefix + "{sample}.1.fq.gz",
+        r2=provided_prefix + "{sample}.2.fq.gz",
+    output:
+        r1=fastq_dir + "/{sample}.1.fq.gz",
+        r2=fastq_dir + "/{sample}.2.fq.gz",
+    resources:
+        runtime=60,
+    shell:
+        "mkdir -p {fastq_dir} && "
+        "ln -sf $(realpath {input.r1}) {output.r1} && ln -sf $(realpath {input.r2}) {output.r2}"
+
+rule stage_provided_truth:
+    input:
+        condensed=provided_prefix + "{sample}.condensed",
+    output:
+        condensed=truth_dir + "/{sample}.condensed",
+    resources:
+        runtime=60,
+    shell:
+        "mkdir -p {truth_dir} && ln -sf $(realpath {input.condensed}) {output.condensed}"
+
+# Shared rules (../rules): DB staging, common conversions/OPAL, and one file per
+# profiler this benchmark runs. Read generation is not included -- see above.
+include: "../rules/staging.smk"
+include: "../rules/common.smk"
+include: "../rules/singlem_run.smk"
+include: "../rules/metaphlan_run.smk"
+include: "../rules/sylph_run.smk"
+include: "../rules/singlem_regime3_run.smk"

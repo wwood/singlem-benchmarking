@@ -1,0 +1,4 @@
+Simulated dataset
+10 genomes; 9 known in r207, 1 new in r214
+Simulated reads: marine0.1.fq.gz, marine0.2.fq.gz
+Coverage truth: marine0.condensed

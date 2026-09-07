@@ -49,10 +49,14 @@ it is found at these coverages, not whether it is in the database.
 - `bench6_setup.py` — tools, output dirs and local DB paths.
 - `Snakefile` — per-benchmark variables; `include`s the shared rule library.
 - `run.sh` — submit the whole benchmark to the aqua queue.
+- `plot.ipynb` — Bray–Curtis and F1 comparisons (R kernel), built up two → three →
+  four tools; writes `accuracy_results.csv` and `species_level_summary.csv`.
+- `make_plot_notebook.py` — regenerates `plot.ipynb` from readable R source.
 
-Shared rules in `../rules/` (`data_generation.smk`, `common.smk`, `profilers.smk`)
-provide read generation, biobox/OPAL conversion and the per-tool profiling; see
-benchmark 5's README for the division of labour.
+Shared rules in `../rules/` (`data_generation.smk`, `staging.smk`, `common.smk`,
+and one `<tool>_run.smk` per profiler) provide read generation, database staging,
+biobox/OPAL conversion and the per-tool profiling; see `../ARCHITECTURE.md` for
+the division of labour.
 
 To regenerate the community definition (only needed if the selection or the
 distribution should change — the committed files are what the benchmark uses):
@@ -90,15 +94,55 @@ The full four-tool comparison on the queue:
 Outputs land in `output_<tool>/opal/known1000.opal_report`, with runtime/RAM in
 `benchmarks/<tool>/known1000-8threads.benchmark`.
 
+## Results
+
+`plot.ipynb` plots these; re-execute it after a rerun with
+
+```bash
+pixi run jupyter nbconvert --to notebook --execute --inplace \
+  6_thousand_species_low_coverage/plot.ipynb
+```
+
+The notebook plots Bray–Curtis and **recall** rather than F1: purity is 0.94–0.99
+for every tool here, so F1 compresses the one axis on which they differ. At the
+species level the truth holds exactly 1000 species, so recall is *species found /
+1000*. Purity and F1 are still shown in the final four-metric panel and in the
+tables.
+
+Species level, sample `known1000` (1000 species present):
+
+| tool | Bray–Curtis ↓ | Recall ↑ | species found | Purity | F1 | FP |
+|---|---|---|---|---|---|---|
+| SingleM regime3 | 0.084 | 0.954 | 954 / 1000 | 0.986 | 0.970 | 14 |
+| sylph | 0.090 | 0.952 | 952 / 1000 | 0.982 | 0.967 | 17 |
+| MetaPhlAn | 0.301 | 0.739 | 739 / 1000 | 0.940 | 0.828 | 47 |
+| SingleM | 0.838 | 0.049 | 49 / 1000 | 0.942 | 0.093 | 3 |
+
+Purity is high for every tool, so the whole spread is in recall: below the
+marker-gene floor vanilla SingleM sees 49 of 1000 species while what little it
+reports is almost all correct. The joint method closes that gap almost entirely
+(954) and now edges past sylph (952) on both recall and abundance error, with the
+fewest false positives of the four. MetaPhlAn sits between vanilla SingleM and the
+whole-genome methods and carries the most false positives — the "thousand chances
+to invent a species" this benchmark was designed to expose costs it 47.
+
+These regime3 numbers are from the current
+`singlem_sylph_condense_regime` submodule (`c9c5675`, joint pinning + novel
+budget) run with weebill `-u` and `condense --alpha 1`. Earlier runs of this
+benchmark, before those changes, gave regime3 recall 0.870 and Bray–Curtis 0.229.
+
 ## A note on the singlem-regime3 configuration
 
-`../rules/profilers.smk` runs weebill without `-u` (`--estimate-unknown`), so
-condense receives an `Eff_cov` profile and must calibrate alpha itself. That
-calibration is biased low at exactly these coverages — on benchmark 5 it lands
-near 0.09 where the community's own totals imply ~0.75, which leaves relative
-abundances intact but inflates absolute genome-equivalent coverage several-fold.
-Running weebill with `-u` reports `True_cov` instead, already on singlem's scale,
-and condense then takes alpha as 1 automatically. Since this benchmark lives
-entirely in the regime where the difference shows up, it is worth running both
-ways; switching the shared rule affects benchmarks 1, 2, 3 and 5 as well, so it
-has been left alone here.
+`../rules/singlem_regime3_run.smk` now runs weebill **with** `-u`
+(`--estimate-unknown`), so condense receives a `True_cov` profile already on
+singlem's scale and is given `--alpha 1` explicitly, together with
+`--joint-pin-sylph-species` and `--joint-novel-budget`.
+
+This resolves the calibration problem earlier versions of this benchmark
+documented: without `-u`, condense received `Eff_cov` and had to calibrate alpha
+itself, which is biased low at exactly these coverages (on benchmark 5 it landed
+near 0.09 where the community's own totals imply ~0.75) — leaving relative
+abundances intact but inflating absolute genome-equivalent coverage several-fold.
+Since this benchmark lives entirely in the regime where that difference shows up,
+it is the one most affected by the fix: regime3's species-level Bray–Curtis
+improved from 0.229 to 0.084 and recall from 0.870 to 0.954.

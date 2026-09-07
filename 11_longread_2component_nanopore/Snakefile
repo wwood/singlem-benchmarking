@@ -1,0 +1,92 @@
+import extern
+import os
+
+# Benchmark 11: the simplest possible long-read community -- two known GTDB r207
+# species at 10x coverage each -- sequenced as Oxford Nanopore R10.4.1 reads
+# (Badread's default error/qscore models, which its docs describe as R10.4.1 of
+# mediocre quality; see bin/generate_longread_community.py).
+#
+# This is the first long-read benchmark in the repository, and it is deliberately
+# easy: both members are known species comfortably above every tool's sensitivity
+# floor, at equal abundance, with no novelty and nothing to confuse them with. The
+# question is therefore not "how accurate is this tool" but "does long-read input
+# work at all, and does it cost anything relative to Illumina" -- if a tool loses a
+# species here, the cause is the read technology rather than the community. It is the
+# control for benchmarks 13 and 15, which carry the same read technology into a hard
+# community (1000 sub-1x species) and a novel-lineage community respectively.
+#
+# Benchmark 12 is this same community and coverage as PacBio HiFi, so the pair
+# isolates the effect of read accuracy (~95% vs ~99.9%) at matched read length and
+# depth.
+#
+# **Interpret at the species level.** Both members have a correct species answer
+# available in every tool's database, so anything short of recovering both species at
+# roughly equal abundance is a failure. Being a two-member community, presence/absence
+# saturates easily; the informative readout is abundance accuracy and whether the
+# profile is polluted with spurious extra species (long-read error rates give a
+# marker-gene method more chances to mis-assign a window than Illumina does).
+#
+# Reads are single-end, so this benchmark uses the *_longread_run.smk rules rather
+# than the paired-end ones -- see ../rules/longread_data_generation.smk.
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(workflow.snakefile)), '..')))
+from tool_reference_data import *
+
+num_threads = config['benchmarking_threads']
+
+# Per-benchmark setup: tools, output_dirs_dict, local db paths, datasets, read tech.
+sys.path.append(os.path.abspath(os.path.dirname(os.path.abspath(workflow.snakefile))))
+from bench11_setup import *
+
+fastq_dir = 'reads'
+truth_dir = 'truths'
+
+# Read generation inputs (consumed by ../rules/longread_data_generation.smk).
+genome_fasta_paths = os.path.join(workflow.basedir, 'genome_list.tsv')
+
+# Two small genomes at 10x: Badread finishes in minutes, so the shared rule's 12h
+# default (sized for benchmark 13's 1000 genomes) is far more than needed.
+longread_runtime = 120
+
+# singlem-regime3 (weebill --two-stage + singlem pipe + condense --joint) paths,
+# consumed by ../rules/singlem_regime3_longread_run.smk.
+singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
+regime3_weebill_scripts = os.path.join(
+    singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
+
+print("Profiling {} over {} communities (nanopore R10.4.1)".format(tools, len(datasets)))
+
+# Constrain wildcards so the generic {tool}/{tool} biobox+opal rules cannot
+# greedily match across path separators (a tool name contains a hyphen and
+# shares the `singlem` prefix: singlem-regime3).
+wildcard_constraints:
+    tool="[A-Za-z0-9._-]+",
+    sample="[A-Za-z0-9._]+",
+
+# Databases this benchmark stages locally (opt-in for ../rules/staging.smk).
+staged_tools = tools
+
+# PBS/aqua jobs start in $HOME, not the workdir; cd in so workdir-relative paths
+# (bin/, genome_list.tsv, ../*_taxonomy_r207.tsv, the generator's
+# ../bac120_metadata_r207.tsv) and the pixi manifest resolve on compute nodes.
+shell.prefix("cd {} && ".format(workflow.basedir))
+
+# Trivial table conversions run on the orchestrator host, not as 48h queue jobs.
+localrules:
+    truth_condensed_to_biobox,
+    tool_condensed_to_biobox,
+    sylph_longread_report_to_condensed,
+
+rule all:
+    input:
+        expand(output_prefix + "{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools)
+
+# Shared rules (../rules): long-read generation, DB staging, common conversions/OPAL,
+# and one file per profiler. The *_longread_run.smk variants take a single
+# {sample}.fq.gz instead of paired {sample}.{1,2}.fq.gz.
+include: "../rules/longread_data_generation.smk"
+include: "../rules/staging.smk"
+include: "../rules/common.smk"
+include: "../rules/singlem_longread_run.smk"
+include: "../rules/sylph_longread_run.smk"
+include: "../rules/singlem_regime3_longread_run.smk"
