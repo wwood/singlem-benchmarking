@@ -1,5 +1,5 @@
 # singlem-regime3 joint method: weebill (sylph fork) --two-stage + singlem pipe
-# --no-sylph, combined by `singlem condense --joint`. Ends at
+# --no-weebill, combined by `singlem condense --joint`. Ends at
 # output_singlem-regime3/singlem-regime3/{sample}.profile (condensed format).
 # Metapackage staging is in rules/staging.smk (singlem_regime3_copy_metapackage).
 #
@@ -30,13 +30,13 @@ rule singlem_regime3_pipe_to_archive:
         done=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.done",
     threads: num_threads
     resources:
-        runtime=180,  # singlem pipe --no-sylph; 3h ceiling
+        runtime=180,  # singlem pipe --no-weebill; 3h ceiling
     log:
         output_dirs_dict['singlem-regime3'] + "/logs/singlem-regime3/{sample}.pipe.log",
     shell:
         'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
         "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} "
-        "--no-sylph --archive-otu-table {output.archive} --metapackage {input.db} &> {log} && "
+        "--no-weebill --archive-otu-table {output.archive} --metapackage {input.db} &> {log} && "
         "touch {output.done}"
 
 rule singlem_regime3_weebill_profile:
@@ -80,7 +80,7 @@ rule singlem_regime3_annotate_weebill:
 rule singlem_regime3_condense_joint:
     input:
         archive=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.json",
-        sylph_profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.annotated.tsv",
+        weebill_profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.annotated.tsv",
         db=singlem_regime3_metapackage_local,
     benchmark:
         benchmark_dir + "/singlem-regime3-condense/{sample}-" + str(num_threads) + "threads.benchmark"
@@ -95,6 +95,6 @@ rule singlem_regime3_condense_joint:
     shell:
         'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
         "singlem condense --input-archive-otu-table {input.archive} --metapackage {input.db} "
-        "--sylph-profile {input.sylph_profile} --joint --taxonomic-profile {output.profile} "
-        "--joint-pin-sylph-species --joint-novel-budget --joint --alpha 1 "
+        "--weebill-profile {input.weebill_profile} --joint --taxonomic-profile {output.profile} "
+        "--joint-pin-weebill-species --joint-novel-budget --alpha 1 "
         "&> {log}"

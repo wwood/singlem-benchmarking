@@ -44,7 +44,7 @@ longread_runtime = 120
 # consumed by ../rules/singlem_regime3_longread_run.smk.
 singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
 regime3_weebill_scripts = os.path.join(
-    singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
+    singlem_regime3_git_base_directory, 'extras/singlem_weebill_benchmark/scripts')
 
 print("Profiling {} over {} communities (PacBio HiFi)".format(tools, len(datasets)))
 

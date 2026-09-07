@@ -1,13 +1,20 @@
 # singlem-regime3 joint method on **long, single-end** reads: weebill (sylph fork)
-# --two-stage + singlem pipe --no-sylph, combined by `singlem condense --joint`.
+# --two-stage + singlem pipe --no-weebill, combined by `singlem condense --joint`.
 # The long-read counterpart of rules/singlem_regime3_run.smk. The only changes are
 # the read arguments -- `-1 <reads>` for singlem pipe and `-r <reads>` for weebill,
 # in place of the paired -1/-2 -- so the two files are otherwise line-for-line the
 # same and the same alpha / --joint flags are used.
 #
 # Unlike `singlem`, no version swap is needed here: the singlem-regime3 environment
-# is built from the singlem_sylph_condense_regime submodule, which is already at
-# 0.21.3 and so has long-read support.
+# is built from the singlem_sylph_condense_regime submodule, which now tracks
+# origin/dev (0.21.4.dev, post-0.21.4) and so has long-read support.
+#
+# The submodule moved from the `sylph-condense-regime3` branch to origin/dev, which
+# renamed this interface sylph -> weebill throughout: `--no-sylph` is now
+# `--no-weebill`, `--sylph-profile` is `--weebill-profile`,
+# `--joint-pin-sylph-species` is `--joint-pin-weebill-species`, `singlem/sylph.py`
+# is `singlem/weebill.py` (WeebillProfiler), and the benchmark scripts directory
+# `extras/singlem_sylph_weebill_benchmark` is `extras/singlem_weebill_benchmark`.
 #
 # Metapackage staging is in rules/staging.smk (singlem_regime3_copy_metapackage).
 #
@@ -39,7 +46,7 @@ rule singlem_regime3_longread_pipe_to_archive:
     shell:
         'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
         "singlem pipe --threads {threads} -1 {input.reads} "
-        "--no-sylph --archive-otu-table {output.archive} --metapackage {input.db} &> {log} && "
+        "--no-weebill --archive-otu-table {output.archive} --metapackage {input.db} &> {log} && "
         "touch {output.done}"
 
 rule singlem_regime3_longread_weebill_profile:
@@ -82,7 +89,7 @@ rule singlem_regime3_longread_annotate_weebill:
 rule singlem_regime3_longread_condense_joint:
     input:
         archive=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.json",
-        sylph_profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.annotated.tsv",
+        weebill_profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.annotated.tsv",
         db=singlem_regime3_metapackage_local,
     benchmark:
         benchmark_dir + "/singlem-regime3-condense/{sample}-" + str(num_threads) + "threads.benchmark"
@@ -97,6 +104,6 @@ rule singlem_regime3_longread_condense_joint:
     shell:
         'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
         "singlem condense --input-archive-otu-table {input.archive} --metapackage {input.db} "
-        "--sylph-profile {input.sylph_profile} --joint --taxonomic-profile {output.profile} "
-        "--joint-pin-sylph-species --joint-novel-budget --joint --alpha 1 "
+        "--weebill-profile {input.weebill_profile} --joint --taxonomic-profile {output.profile} "
+        "--joint-pin-weebill-species --joint-novel-budget --alpha 1 "
         "&> {log}"

@@ -50,7 +50,7 @@ singlem_git_base_directory = os.path.join(workflow.basedir, '../singlem')
 # The sylph-condense-regime3 branch of SingleM, checked out as a separate
 # submodule and installed into the `singlem-regime3` pixi environment.
 singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
-regime3_weebill_scripts = os.path.join(singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
+regime3_weebill_scripts = os.path.join(singlem_regime3_git_base_directory, 'extras/singlem_weebill_benchmark/scripts')
 
 ##################################################################### reference databases
 
@@ -245,10 +245,10 @@ rule singlem_run_to_profile:
 #########
 ######### singlem-regime3 (sylph-condense-regime3 joint SingleM + weebill/sylph)
 #########
-######### Chain: singlem pipe --no-sylph -> archive OTU table; weebill (sylph
+######### Chain: singlem pipe --no-weebill -> archive OTU table; weebill (sylph
 ######### fork) profile --two-stage -> raw sylph TSV; annotate it with GTDB
 ######### taxonomy from the metapackage; then singlem condense --joint
-######### --sylph-profile produces the final condensed profile that the generic
+######### --weebill-profile produces the final condensed profile that the generic
 ######### condensed->biobox + opal rules consume.
 
 singlem_regime3_metapackage_local = join(output_dirs_dict['singlem-regime3'], 'data', os.path.basename(singlem_metapackage))
@@ -277,7 +277,7 @@ rule singlem_regime3_pipe_to_archive:
         # `singlem` correctly on its own.
         'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
         "singlem pipe --threads {threads} -1 {input.r1} -2 {input.r2} "
-        "--no-sylph --archive-otu-table {output.archive} --metapackage {input.db} &> {log} && "
+        "--no-weebill --archive-otu-table {output.archive} --metapackage {input.db} &> {log} && "
         "touch {output.done}"
 
 rule singlem_regime3_weebill_profile:
@@ -320,7 +320,7 @@ rule singlem_regime3_annotate_weebill:
 rule singlem_regime3_condense_joint:
     input:
         archive=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.archive.json",
-        sylph_profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.annotated.tsv",
+        weebill_profile=output_dirs_dict['singlem-regime3'] + "/singlem-regime3/{sample}.weebill.annotated.tsv",
         db=singlem_regime3_metapackage_local,
     benchmark:
         benchmark_dir + "/singlem-regime3-condense/{sample}-"+str(num_threads)+"threads.benchmark"
@@ -333,7 +333,7 @@ rule singlem_regime3_condense_joint:
     shell:
         'unset PYTHONPATH && eval "$(pixi shell-hook -e singlem-regime3)" && '
         "singlem condense --input-archive-otu-table {input.archive} --metapackage {input.db} "
-        "--sylph-profile {input.sylph_profile} --joint --taxonomic-profile {output.profile} &> {log} && "
+        "--weebill-profile {input.weebill_profile} --joint --taxonomic-profile {output.profile} &> {log} && "
         "touch {output.done}"
 
 

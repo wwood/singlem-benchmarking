@@ -36,7 +36,7 @@ datasets = [f'marine{i}' for i in range(10)]
 # The sylph-condense-regime3 branch of SingleM (submodule) + its weebill scripts,
 # consumed by ../rules/singlem_regime3_run.smk.
 singlem_regime3_git_base_directory = os.path.join(workflow.basedir, '../singlem_sylph_condense_regime')
-regime3_weebill_scripts = os.path.join(singlem_regime3_git_base_directory, 'extras/singlem_sylph_weebill_benchmark/scripts')
+regime3_weebill_scripts = os.path.join(singlem_regime3_git_base_directory, 'extras/singlem_weebill_benchmark/scripts')
 singlem_regime3_metapackage_local = join(output_dirs_dict['singlem-regime3'], 'data', os.path.basename(singlem_metapackage))
 
 # Databases this benchmark stages locally (opt-in for ../rules/staging.smk). Note
