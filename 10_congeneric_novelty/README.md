@@ -82,12 +82,12 @@ This benchmark therefore has:
   taxonomy**. Coverages are used as written, not shuffled against a randomised
   metadata merge as the shared generator does, because here which genome gets which
   coverage *is* the experiment.
-- `generate_community.py` — same ART invocation as
-  `../1_novel_strains/generate_community.py` (HSXt, 150 bp paired, `-m 400 -s 10`),
-  reading coverage and taxonomy from `community.tsv`.
 - `bench10_setup.py` — tools, output dirs and local DB paths.
-- `Snakefile` — the local `generate_community_and_reads` rule; `include`s the shared
-  rule library for everything downstream.
+- `Snakefile` — `include`s `../rules/data_generation_community.smk`, which simulates
+  the community with `../bin/generate_community_from_tsv.py` (the same ART invocation
+  as `../1_novel_strains/generate_community.py` — HSXt, 150 bp paired, `-m 400
+  -s 10` — but reading coverage and taxonomy from `community.tsv`), plus the shared
+  rule library for everything downstream. Benchmarks 8 and 9 use the same rule.
 - `run.sh` — submit the whole benchmark to the aqua queue.
 
 Four tools are run — `singlem`, `sylph`, `singlem-regime3`, `metaphlan` — matching

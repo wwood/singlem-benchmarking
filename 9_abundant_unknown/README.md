@@ -26,8 +26,9 @@ whether the unknown was placed correctly at the rank it could be placed at.
 
 ## The community
 
-Ground truth (`marine0.condensed`), 10 lineages — nine resolved to species, one
-stopping at genus (the novel member):
+The 10 genomes, their coverages and their truth taxonomy are all in `community.tsv`.
+The truth it produces (`truths/marine0.condensed`) has 10 lineages — nine resolved to
+species, one stopping at genus (the novel member):
 
 | coverage | lineage |
 |---|---|
@@ -42,21 +43,29 @@ stopping at genus (the novel member):
 | 1.33× | `s__Flavobacterium hydatis` |
 | 1.33× | `s__Beduini massiliensis` |
 
-Reads: `marine0.{1,2}.fq.gz` (2 × 150 bp, ~54/64 MB gzipped — a small, fast
-dataset).
+Reads are simulated into `reads/marine0.{1,2}.fq.gz` (2 × 150 bp, ~54/64 MB gzipped
+— a small, fast dataset) and are gitignored.
 
 ## Layout
 
-Unlike benchmarks 5/6/7 the reads and truth are **not** simulated here — they ship
-with the dataset. `stage_provided_reads` / `stage_provided_truth` in the Snakefile
-symlink them into the `reads/` and `truths/` layout the shared rules address, so
-`../rules/data_generation.smk` is not included and there is no
-`coverage_definitions/` or `genome_list.tsv`.
+Reads and truth are simulated by `../rules/data_generation_community.smk`, not by
+`../rules/data_generation.smk`: the latter looks the truth taxonomy up in the GTDB
+r207 metadata, and the novel genome has no r207 metadata row, so its inner join would
+drop exactly the member under test. `community.tsv` therefore states coverage *and*
+truth taxonomy directly, and there is no `coverage_definitions/` or `genome_list.tsv`.
 
-- `marine0.{1,2}.fq.gz`, `marine0.condensed` — the provided reads and ground truth.
+- `community.tsv` — the whole community: genome, fasta, coverage, role, truth taxonomy.
+- `marine0.condensed` — the ground truth recorded from the original run, which
+  `community.tsv` reproduces exactly. Kept as a reference; the workflow reads and
+  writes `truths/marine0.condensed`.
 - `bench9_setup.py` — tools, output dirs and local DB paths.
-- `Snakefile` — staging rules for the provided data; `include`s the shared rule library.
+- `Snakefile` — `include`s the shared rule library.
 - `run.sh` — submit the whole benchmark to the aqua queue.
+
+The nine known genomes come from `../reference_genomes/shadow/`; the novel one is
+downloaded from NCBI into `../novel_r214_genomes/` by
+`../gather_tool_databases.smk`'s `bench89_novel_genomes_download`, so run that first
+in a fresh checkout.
 
 Four tools are run — `singlem`, `sylph`, `singlem-regime3`, `metaphlan` — matching
 benchmarks 5 and 6. Shared rules in `../rules/` provide database staging,
@@ -83,6 +92,10 @@ Outputs land in `output_<tool>/opal/marine0.opal_report`, with runtime/RAM in
 
 Sample `marine0`, 8 threads. The truth has 9 species and 10 genera; TP/FP/FN are
 OPAL's presence/absence counts at that rank.
+
+The numbers below were produced from the original simulated reads. A fresh run draws
+new reads from `community.tsv` (ART is not seeded), so expect small shifts in
+Bray–Curtis; the design and the truth are unchanged.
 
 **Species level** — the nine known members, plus any species invented for the unknown:
 

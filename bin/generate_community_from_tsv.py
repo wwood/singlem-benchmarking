@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
-"""Simulate benchmark 10's community and write its ground-truth condensed profile.
+"""Simulate a fully-specified community and write its ground-truth condensed profile.
 
 Same ART invocation as ../1_novel_strains/generate_community.py (HSXt, 150bp
 paired, -m 400 -s 10), but the coverage *and* the truth taxonomy come from the
-community file rather than from the GTDB metadata. That is the whole reason this
-benchmark cannot use the shared ../rules/data_generation.smk: two of the four
-genomes are new in GTDB r214 and have no r207 metadata row, so the shared path's
-inner join against the metadata would silently drop them -- simulating a
-two-genome community and writing a truth that omits exactly the members under
-test.
+community file rather than from the GTDB metadata. That is why benchmarks 8, 9 and
+10 cannot use the shared ../rules/data_generation.smk: each contains genomes that
+are new in GTDB r214 and so have no r207 metadata row, and the shared path's inner
+join against the metadata would silently drop them -- simulating a smaller
+community and writing a truth that omits exactly the members under test.
 
 Coverages are also taken as written, not shuffled positionally against a
-randomised metadata merge as the shared generator does. Here which genome gets
-which coverage *is* the experiment (novel@10x vs novel@100x), so the pairing in
-community.tsv has to be the pairing simulated.
+randomised metadata merge as the shared generator does. In these benchmarks which
+genome gets which coverage *is* the experiment (e.g. novel@10x vs novel@100x), so
+the pairing in community.tsv has to be the pairing simulated.
 
-    cd 10_congeneric_novelty && pixi run -e art python3 generate_community.py \
+Genomes may share a truth lineage; their coverages are then summed into one row
+(benchmark 8's three novel Streptomyces become a single g__Streptomyces row).
+
+    cd 10_congeneric_novelty && pixi run -e art ../bin/generate_community_from_tsv.py \
         --community community.tsv --sample congeneric4 \
         --output-condensed truths/congeneric4.condensed \
         --output-genomewise truths/congeneric4.genomewise.csv \
@@ -67,10 +69,11 @@ for fasta in community['fasta']:
     if not os.path.exists(fasta):
         raise SystemExit("community fasta does not exist: {}".format(fasta))
 
-# Sum coverage per truth lineage. Two genomes sharing a lineage would be summed
-# into one row -- which is why the community is one novel species per genus: two
-# novel congeners would collapse into a single genus-only row and the 10x and 100x
-# levels would stop being separable in the truth.
+# Sum coverage per truth lineage. Genomes sharing a lineage collapse into one row,
+# which is deliberate in benchmark 8 (three novel Streptomyces -> one 1013x
+# g__Streptomyces row) but must be avoided wherever the per-genome coverage is the
+# variable under test: benchmark 10 uses one novel species per genus precisely so
+# that its 10x and 100x levels stay separable in the truth.
 tax_to_coverage = OrderedDict()
 for taxonomy, coverage in zip(community['taxonomy'], community['coverage']):
     tax_to_coverage[taxonomy] = tax_to_coverage.get(taxonomy, 0) + coverage

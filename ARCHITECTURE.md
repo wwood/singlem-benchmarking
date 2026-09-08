@@ -68,7 +68,8 @@ locations), then `include` the shared rules it needs.
 | file | contents |
 |---|---|
 | `rules/common.smk` | tool-agnostic scoring: `truth_condensed_to_biobox`, `tool_condensed_to_biobox`, `opal`. |
-| `rules/data_generation.smk` | generic ART read simulation (`generate_community_and_reads`) from a `<sample>.tsv` coverage file. Truth taxonomy comes from the GTDB metadata by inner join, so it can only simulate genomes that *are* in the target release — a community containing genomes newer than that release needs its own generator (benchmark 10). |
+| `rules/data_generation.smk` | generic ART read simulation (`generate_community_and_reads`) from a `<sample>.tsv` coverage file. Truth taxonomy comes from the GTDB metadata by inner join, so it can only simulate genomes that *are* in the target release. |
+| `rules/data_generation_community.smk` | the same ART simulation driven by a committed `community.tsv` (genome, fasta, coverage, role, truth taxonomy) instead of a coverage file plus a metadata join, via `bin/generate_community_from_tsv.py`. Used by benchmarks 8, 9 and 10, whose communities all contain genomes newer than the target release and so have no metadata row to join against. |
 | `rules/longread_data_generation.smk` | the long-read counterpart: Badread simulation from the same coverage-file inputs, with `longread_read_tech` ∈ {`nanopore`, `pacbio-hifi`}. Emits **one** `<sample>.fq.gz`, not a pair. Same metadata-join caveat as the ART rule. |
 | `rules/staging.smk` | database-copy / index rules for every tool, **opt-in** via a `staged_tools` set. |
 | `rules/singlem_run.smk` | SingleM `pipe` → condensed. |
@@ -284,13 +285,13 @@ fixed while varying only the unknown's abundance isolates the abundance dependen
 of that leftover, which benchmarks 8 (one abundance per member) and 9 (no known
 congener) do not separate.
 
-This is the one benchmark that simulates its own reads **without**
-`rules/data_generation.smk`: that rule takes taxonomy from the GTDB metadata by
-inner join, and two of the four genomes have no r207 metadata row, so it would
-silently drop exactly the members under test. Instead `community.tsv` states
-coverage *and* truth taxonomy per genome and a local `generate_community.py` (same
-ART invocation) consumes it, using the coverages as written rather than shuffling
-them positionally — here which genome gets which coverage *is* the experiment.
+Like benchmarks 8 and 9 it simulates its reads via
+`rules/data_generation_community.smk` rather than `rules/data_generation.smk`: the
+latter takes taxonomy from the GTDB metadata by inner join, and two of the four
+genomes have no r207 metadata row, so it would silently drop exactly the members
+under test. Instead `community.tsv` states coverage *and* truth taxonomy per genome,
+and the coverages are used as written rather than shuffled positionally — here which
+genome gets which coverage *is* the experiment.
 
 With only two genera and two species, presence/absence is nearly saturated (three of
 four tools score F1 1.000 at both ranks), so this benchmark is read on **abundance
@@ -366,18 +367,36 @@ scoring rules.
 13/14 simulate ~0.94 Gbp over 1000 genomes and take several hours even at 8-way
 concurrency (their read-generation rule requests 24 h of queue time).
 
-### Benchmarks with provided (non-simulated) reads
+### Benchmarks defined by a `community.tsv`
 
-Benchmarks 8 and 9 differ structurally from 5/6/7 in one respect: their reads and
-ground truth **ship with the dataset** rather than being simulated by
-`rules/data_generation.smk`. Each therefore has no `coverage_definitions/` or
-`genome_list.tsv`, does not include `data_generation.smk`, and instead defines two
-local rules — `stage_provided_reads` and `stage_provided_truth` — that symlink
-`<sample>.{1,2}.fq.gz` and `<sample>.condensed` from the benchmark root into the
-`reads/` and `truths/` layout every shared rule addresses. Everything from the
-condensed profile onward is the standard shared pipeline. (Benchmark 3 also uses
-non-simulated reads, but stages them with its own `stage_reads.sh` and builds its
-truth from the CAMI metadata.)
+Benchmarks 8, 9 and 10 differ from 5/6/7 in where the community definition lives.
+Instead of `coverage_definitions/<sample>.tsv` plus `genome_list.tsv` plus a join
+against the GTDB r207 metadata for the truth taxonomy, each commits a single
+`community.tsv` giving genome, fasta path, coverage, role and truth taxonomy per
+member, and includes `rules/data_generation_community.smk`. They must: every one of
+these communities contains genomes whose species is new in r214, which have no r207
+metadata row, so `rules/data_generation.smk`'s inner join would drop exactly the
+members under test.
+
+Their known members come from the Zenodo shadow pool (`reference_genomes/shadow/`).
+Benchmarks 8 and 9's novel members are not in that tarball and were never packaged,
+so `gather_tool_databases.smk`'s `bench89_novel_genomes_download` fetches them from
+NCBI by accession into `novel_r214_genomes/`; benchmark 10's come from benchmark 2's
+`genomes/`. Everything from the condensed profile onward is the standard shared
+pipeline.
+
+Benchmarks 8 and 9 were originally run from reads handed over as files, with no
+recorded community definition. Their `community.tsv` was reconstructed from those
+reads: ART names every read `<source contig>-<index>`, so each read can be traced to
+the genome it came from — the shadow pool by contig name, the novel members by NCBI
+lookup of the WGS accession (RefSeq copies prefix contigs `NZ_`, GenBank ones do not,
+which decides which of the two was used). All 34.5 M and 0.71 M read pairs are
+accounted for, every stated coverage is within 3% of the coverage measured from the
+reads, and each file reproduces its recorded `<sample>.condensed` exactly. Because
+ART is not seeded, a re-run draws new reads and shifts the recorded numbers slightly.
+
+(Benchmark 3 also uses non-simulated reads, but stages real CAMI reads with its own
+`stage_reads.sh` and builds its truth from the CAMI metadata.)
 
 ### Interpretation at a glance
 

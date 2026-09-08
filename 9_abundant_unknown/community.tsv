@@ -1,0 +1,37 @@
+# Benchmark 9's community, written out in full: 10 genomes, nine known in GTDB r207
+# and one whose species is new in r214 -- and the novel one is the second most
+# abundant member of the community. Coverage and truth taxonomy are stated here
+# rather than looked up in the GTDB metadata, because the novel genome has no r207
+# metadata row -- see ../rules/data_generation_community.smk.
+#
+# role: known    = species present in every r207 database; truth is the full species
+#       novel    = species new in r214 (genus known); truth stops at genus
+#
+# Unlike benchmark 8 the coverages are not round: they come from a marine relative-
+# abundance draw, which is why the nine known members sit in a narrow 1.3x-27.6x band
+# while the unknown is carried at 10.2x. Because those nine are ordinary known species
+# comfortably above the marker-gene floor, any species-level loss is attributable to
+# the one unknown rather than to sensitivity.
+#
+# Reads for the nine known genomes come from ../reference_genomes/shadow (the Zenodo
+# shadow pool, gathered by ../gather_tool_databases.smk); the novel one is downloaded
+# from NCBI by that same file's bench89_novel_genomes_download rule.
+#
+# Provenance: this file was reconstructed from the reads of the original run, whose
+# per-genome origin is recoverable from the ART read names (each is
+# <source contig>-<index>). Every known genome's taxonomy is its r207 GTDB lineage,
+# every coverage here is within 3% of the reads*2*150/genome_length measured from
+# those reads (ART under-delivers slightly, since a fragment cannot straddle a contig
+# end, so fragmented assemblies lose the most), and the truth this file produces
+# reproduces the recorded marine0.condensed exactly.
+genome	fasta	coverage	role	taxonomy
+GCF_009496435.1	../reference_genomes/shadow/GCF_009496435.1.fna	2.42345	known	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Streptococcaceae;g__Streptococcus;s__Streptococcus mitis_BM
+GCA_018371015.1	../reference_genomes/shadow/GCA_018371015.1.fna	1.34402	known	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Streptococcaceae;g__Streptococcus;s__Streptococcus lactarius
+GCA_011776145.1	../reference_genomes/shadow/GCA_011776145.1.fna	15.8367	known	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__UBA4486;f__UBA4486;g__SZUA-592;s__SZUA-592 sp011772965
+GCA_000766055.1	../reference_genomes/shadow/GCA_000766055.1.fna	1.83154	known	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Listeriaceae;g__Listeria_A;s__Listeria_A newyorkensis
+GCF_002217335.1	../reference_genomes/shadow/GCF_002217335.1.fna	1.33383	known	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae;g__Flavobacterium;s__Flavobacterium hydatis
+GCF_003951395.1	../reference_genomes/shadow/GCF_003951395.1.fna	2.42111	known	d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Sphingomonadales;f__Sphingomonadaceae;g__Sphingomonas;s__Sphingomonas koreensis
+GCF_902375445.1	../reference_genomes/shadow/GCF_902375445.1.fna	1.32555	known	d__Bacteria;p__Firmicutes;c__Bacilli;o__Erysipelotrichales;f__Coprobacillaceae;g__Beduini;s__Beduini massiliensis
+GCF_005403265.1	../reference_genomes/shadow/GCF_005403265.1.fna	27.5551	known	d__Bacteria;p__Firmicutes_C;c__Negativicutes;o__Veillonellales;f__Veillonellaceae;g__Veillonella;s__Veillonella tobetsuensis
+GCA_017505305.1	../reference_genomes/shadow/GCA_017505305.1.fna	2.10816	known	d__Bacteria;p__Elusimicrobiota;c__Elusimicrobia;o__Elusimicrobiales;f__Elusimicrobiaceae;g__UBA1174;s__UBA1174 sp900556855
+GCF_021129235.1	../novel_r214_genomes/GCF_021129235.1.fna	10.1608	novel	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Actinomycetales;f__Kineosporiaceae;g__Kineosporia
