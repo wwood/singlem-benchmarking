@@ -28,6 +28,14 @@ kaiju_db_original_progenomes_fmi = kaiju_db_original_dir + '/kaiju_db_progenomes
 kaiju_db_original_progenomes_nodes = kaiju_db_original_dir + '/nodes.dmp'
 kaiju_db_original_progenomes_names = kaiju_db_original_dir + '/names.dmp'
 
+# Benchmarks 8 and 9's novel-in-r214 community members, fetched from NCBI rather
+# than from the Zenodo shadow pool; see bench89_novel_genomes_download.
+novel_r214_genome_accessions_file = 'novel_r214_genome_accessions.txt'
+with open(novel_r214_genome_accessions_file) as f:
+    novel_r214_genome_accessions = [line.strip() for line in f if line.strip()]
+novel_r214_genome_fastas = expand("novel_r214_genomes/{accession}.fna",
+                                  accession=novel_r214_genome_accessions)
+
 map2b_checkout_dir = join(output_directory, 'MAP2B-checkout')
 map2b_db = os.path.join(map2b_checkout_dir, 'database/GTDB')
 
@@ -50,6 +58,8 @@ rule all:
         ["3_cami2_marine/split_reads/marine{sample_number}.done".format(sample_number=sample_number) for sample_number in range(10)],
         "2_phylogenetic_novelty/genomes",
         "2_phylogenetic_novelty/genome_pairs",
+        # benchmarks 8 and 9's novel-in-r214 members; see the rule at the bottom.
+        novel_r214_genome_fastas,
         "9_zymo/zymo_refseq.v2-download.done"
 
 rule dev:
@@ -403,4 +413,30 @@ rule bench2_genomes_extract:
     shell:
         """
         cd 2_phylogenetic_novelty && tar -xzf bench2_genomes.tar.gz &> ../{log}
+        """
+
+# Benchmarks 8 and 9 both mix genomes from the Zenodo shadow pool (known in GTDB
+# r207) with genomes whose species is new in r214. The novel ones are not in that
+# tarball, and unlike benchmark 2's they were never packaged, so fetch them from NCBI
+# by accession. Which accession is listed matters: it is the one whose contig names
+# the original reads were simulated from, which is decidable from the read names --
+# RefSeq (GCF_) copies prefix their contigs NZ_, GenBank (GCA_) ones do not. Five of
+# the seven are RefSeq; GCA_934272745.1 has no RefSeq copy, and GCA_021151785.1's
+# reads carry bare JAGKWP0100000NN.1 contig names, so it was the GenBank copy.
+rule bench89_novel_genomes_download:
+    input:
+        accessions = novel_r214_genome_accessions_file,
+    output:
+        fastas = novel_r214_genome_fastas,
+    log:
+        "novel_r214_genomes-download.log"
+    shell:
+        # datasets nests each genome as
+        # ncbi_dataset/data/<ACC>/<ACC>_<asm>_genomic.fna; flatten to <ACC>.fna,
+        # which is the name community.tsv refers to.
+        """
+        bash -c 'mkdir -p novel_r214_genomes && cd novel_r214_genomes && \
+        datasets download genome accession --inputfile ../{input.accessions} && \
+        unzip -o ncbi_dataset.zip && \
+        while read acc; do cp ncbi_dataset/data/$acc/*.fna $acc.fna; done < ../{input.accessions}' &> {log}
         """

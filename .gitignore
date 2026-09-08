@@ -30,10 +30,11 @@ __pycache__
 random_base_dir_scripts/
 ar53_taxonomy_r232.tsv
 bac120_taxonomy_r232.tsv
+# benchmarks 8-9: simulated reads (large, regenerable from their community.tsv) and
+# the novel-in-r214 genomes they need, downloaded by gather_tool_databases.smk
 8_known50/reads/
-8_known50/*.fq.gz
 9_abundant_unknown/reads/
-9_abundant_unknown/*.fq.gz
+novel_r214_genomes/
 
 # benchmark 10: simulated reads (large, regenerable)
 10_congeneric_novelty/reads/

@@ -1,0 +1,38 @@
+# Benchmark 8's community, written out in full: 12 genomes, six known in GTDB r207
+# and six whose species is new in r214, with six of the 12 from a single genus
+# (Streptomyces) independently of that split. Coverage and truth taxonomy are stated
+# here rather than looked up in the GTDB metadata, because the six novel genomes have
+# no r207 metadata row -- see ../rules/data_generation_community.smk.
+#
+# role: known    = species present in every r207 database; truth is the full species
+#       novel    = species new in r214 (genus known); truth stops at genus
+#
+# The three novel Streptomyces share one truth lineage and so are summed into a
+# single g__Streptomyces row at 1000 + 10 + 3 = 1013x. That is deliberate: the
+# benchmark asks whether a profiler leaves that 1013x at the genus, or spends it on
+# the nearest known congener (the 200x S. rimosus is the obvious candidate).
+#
+# Reads for the six known genomes come from ../reference_genomes/shadow (the Zenodo
+# shadow pool, gathered by ../gather_tool_databases.smk); the six novel ones are
+# downloaded from NCBI by that same file's bench89_novel_genomes_download rule.
+#
+# Provenance: this file was reconstructed from the reads of the original run, whose
+# per-genome origin is recoverable from the ART read names (each is
+# <source contig>-<index>). Every known genome's taxonomy is its r207 GTDB lineage,
+# every coverage here is within 1.3% of the reads*2*150/genome_length measured from
+# those reads (ART under-delivers slightly, since a fragment cannot straddle a contig
+# end), and the truth this file produces reproduces the recorded sample5.condensed
+# exactly.
+genome	fasta	coverage	role	taxonomy
+GCF_000716455.1	../reference_genomes/shadow/GCF_000716455.1.fna	200	known	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptomycetales;f__Streptomycetaceae;g__Streptomyces;s__Streptomyces rimosus
+GCF_013358065.1	../reference_genomes/shadow/GCF_013358065.1.fna	30	known	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptomycetales;f__Streptomycetaceae;g__Streptomyces;s__Streptomyces lunaelactis
+GCF_009863095.1	../reference_genomes/shadow/GCF_009863095.1.fna	0.1	known	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptomycetales;f__Streptomycetaceae;g__Streptomyces;s__Streptomyces sp900091845
+GCA_002498425.1	../reference_genomes/shadow/GCA_002498425.1.fna	20	known	d__Archaea;p__Thermoplasmatota;c__Thermoplasmata;o__Methanomassiliicoccales;f__Methanomethylophilaceae;g__VadinCA11;s__VadinCA11 sp002498365
+GCF_000406125.1	../reference_genomes/shadow/GCF_000406125.1.fna	100	known	d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae;g__Dickeya;s__Dickeya poaceiphila
+GCF_000964315.1	../reference_genomes/shadow/GCF_000964315.1.fna	0.6	known	d__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Streptococcaceae;g__Streptococcus;s__Streptococcus equinus
+GCF_021462825.1	../novel_r214_genomes/GCF_021462825.1.fna	1000	novel	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptomycetales;f__Streptomycetaceae;g__Streptomyces
+GCF_023515955.1	../novel_r214_genomes/GCF_023515955.1.fna	10	novel	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptomycetales;f__Streptomycetaceae;g__Streptomyces
+GCF_022614595.1	../novel_r214_genomes/GCF_022614595.1.fna	3	novel	d__Bacteria;p__Actinobacteriota;c__Actinomycetia;o__Streptomycetales;f__Streptomycetaceae;g__Streptomyces
+GCA_934272745.1	../novel_r214_genomes/GCA_934272745.1.fna	2	novel	d__Bacteria;p__Firmicutes_A;c__Clostridia;o__Christensenellales;f__Borkfalkiaceae;g__SIG402
+GCA_021151785.1	../novel_r214_genomes/GCA_021151785.1.fna	1	novel	d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Flavobacteriales;f__Flavobacteriaceae;g__Flavobacterium
+GCF_927798115.1	../novel_r214_genomes/GCF_927798115.1.fna	0.5	novel	d__Bacteria;p__Firmicutes;c__Bacilli;o__Paenibacillales;f__Paenibacillaceae;g__Paenibacillus

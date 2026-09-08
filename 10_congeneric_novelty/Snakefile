@@ -31,11 +31,12 @@ import os
 # unknowns were placed at the rank they can be placed at, and with how much
 # abundance. See ../ARCHITECTURE.md.
 #
-# Reads are simulated here, but NOT by ../rules/data_generation.smk: that rule
-# takes coverage from coverage_definitions/<sample>.tsv and taxonomy from the GTDB
-# metadata, and two of these four genomes have no r207 metadata row, so its inner
-# join would drop exactly the members under test. This benchmark's own
-# generate_community.py reads both coverage and truth taxonomy from community.tsv.
+# Reads are simulated by ../rules/data_generation_community.smk, not by
+# ../rules/data_generation.smk: the latter takes coverage from
+# coverage_definitions/<sample>.tsv and taxonomy from the GTDB metadata, and two of
+# these four genomes have no r207 metadata row, so its inner join would drop exactly
+# the members under test. The community.smk path reads both coverage and truth
+# taxonomy from community.tsv instead.
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(workflow.snakefile)), '..')))
 from tool_reference_data import *
@@ -49,9 +50,10 @@ from bench10_setup import *
 fastq_dir = 'reads'
 truth_dir = 'truths'
 
-# The community definition (genome, fasta, coverage, role, truth taxonomy).
+# The community definition (genome, fasta, coverage, role, truth taxonomy), read by
+# ../rules/data_generation_community.smk.
 community_definition = 'community.tsv'
-generate_community_script = os.path.join(workflow.basedir, 'generate_community.py')
+community_runtime = 120  # 210x over 4 small genomes; minutes
 
 # singlem-regime3 (weebill --two-stage + singlem pipe + condense --joint) paths,
 # consumed by ../rules/singlem_regime3_run.smk.
@@ -86,35 +88,9 @@ rule all:
     input:
         expand(output_prefix + "{tool}/opal/{sample}.opal_report", sample=datasets, tool=tools)
 
-# Read simulation. The local analogue of ../rules/data_generation.smk's
-# generate_community_and_reads -- see the note at the top of this file for why it
-# cannot be the shared rule.
-rule generate_community_and_reads:
-    input:
-        community=community_definition,
-        script=generate_community_script,
-    output:
-        r1=fastq_dir + "/{sample}.1.fq.gz",
-        r2=fastq_dir + "/{sample}.2.fq.gz",
-        condensed=truth_dir + "/{sample}.condensed",
-        genomewise=truth_dir + "/{sample}.genomewise.csv",
-        done=touch(truth_dir + "/{sample}.finished"),
-        done2=touch(fastq_dir + "/{sample}.finished"),
-    threads: num_threads
-    resources:
-        runtime=120,  # 210x over 4 small genomes; minutes
-    log:
-        truth_dir + "/{sample}.readgen.log",
-    shell:
-        'eval "$(pixi shell-hook -e art)" && '
-        "mkdir -p {fastq_dir} {truth_dir} && "
-        "{input.script} --art art_illumina --threads {threads} "
-        "--community {input.community} --sample {wildcards.sample} "
-        "--output-condensed {output.condensed} --output-genomewise {output.genomewise} "
-        "-1 {output.r1} -2 {output.r2} &> {log}"
-
-# Shared rules (../rules): DB staging, common conversions/OPAL, and one file per
-# profiler this benchmark runs. Read generation is local -- see above.
+# Shared rules (../rules): read generation from community.tsv, DB staging, common
+# conversions/OPAL, and one file per profiler this benchmark runs.
+include: "../rules/data_generation_community.smk"
 include: "../rules/staging.smk"
 include: "../rules/common.smk"
 include: "../rules/singlem_run.smk"

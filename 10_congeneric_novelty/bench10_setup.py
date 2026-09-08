@@ -13,8 +13,8 @@ output_dirs_dict = dict(zip(tools, output_dirs))
 
 benchmark_dir = 'benchmarks'
 # No coverage_definitions_folder: the community (coverage *and* truth taxonomy) is
-# stated in community.tsv and simulated by this benchmark's own
-# generate_community.py, not by ../rules/data_generation.smk. See the Snakefile.
+# stated in community.tsv and simulated by ../rules/data_generation_community.smk,
+# not by ../rules/data_generation.smk. See the Snakefile.
 # fastq_dir and truth_dir are set in the Snakefile; see the note there.
 
 # Single synthetic community: two genera x (one known species at 50x + one

@@ -13,12 +13,13 @@ output_dirs = list([output_prefix + tool for tool in tools])
 output_dirs_dict = dict(zip(tools, output_dirs))
 
 benchmark_dir = 'benchmarks'
-# No coverage_definitions_folder: reads and truth are provided with the dataset
-# rather than simulated here, so ../rules/data_generation.smk is not included.
-# fastq_dir and truth_dir are set in the Snakefile; see the note there.
+# No coverage_definitions_folder: coverage and truth taxonomy come from
+# community.tsv via ../rules/data_generation_community.smk rather than from the
+# GTDB metadata. fastq_dir and truth_dir are set in the Snakefile; see the note
+# there.
 
-# Single provided community. The reads (sample5.{1,2}.fq.gz) and ground truth
-# (sample5.condensed) ship with the benchmark directory.
+# Single community, defined in full in community.tsv and simulated into
+# reads/sample5.{1,2}.fq.gz with truths/sample5.condensed.
 datasets = ['sample5']
 
 ##################################################################### reference databases
